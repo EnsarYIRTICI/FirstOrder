@@ -35,7 +35,7 @@ if ($IsWindows)
     {
         if ($isWin11)
         {
-            $userInput = Read-Host "Chocolatey yüklü. PowerShell Core kurulsun mu? (e/h)"
+            $userInput = Read-Host "Chocolatey ile PowerShell Core kurulsun mu? (e/h)"
             if ($userInput.ToLower() -eq "e")
             {
                 Write-Host "Seçilen yazılımlar Chocolatey ile kuruluyor..."
@@ -45,7 +45,7 @@ if ($IsWindows)
 
         if ($isWin10)
         {
-            $userInput = Read-Host "Chocolatey yüklü. 'PowerShell Core' ve 'Windows Terminal' kurulsun mu? (e/h)" 
+            $userInput = Read-Host "Chocolatey ile 'PowerShell Core' ve 'Windows Terminal' kurulsun mu? (e/h)" 
             if ($userInput.ToLower() -eq "e") 
             {
                 Write-Host "Seçilen yazılımlar Chocolatey ile kuruluyor..."
@@ -53,11 +53,11 @@ if ($IsWindows)
             }
         }
 
-        $userInput = Read-Host "Chocolatey yüklü. Yaygın yazılımlar kurulsun mu? (e/h)"
+        $userInput = Read-Host "Chocolatey ile Yaygın yazılımlar kurulsun mu? (e/h)"
         if ($userInput.ToLower() -eq "e")
         {
             Write-Host "Seçilen yazılımlar Chocolatey ile kuruluyor..."
-            choco install git nvm nodejs temurin21 vscode visualstudio2022community androidstudio docker-desktop openssl openssh virtualbox winscp qbittorrent steam discord opera tor-browser winrar cpu-z crystaldiskmark lghub googlechrome googledrive itunes icloud -y
+            choco install git wget nvm nodejs temurin21 micro vscode visualstudio2022community androidstudio docker-desktop openssl openssh virtualbox winscp qbittorrent steam discord opera tor-browser winrar cpu-z crystaldiskmark lghub googlechrome googledrive itunes icloud -y
         }
     }
 
@@ -75,7 +75,7 @@ if ($IsWindows)
     # Yaygın yazılım kurulumları (Winget)
     if ($wingetInstalled)
     {
-        $userInput = Read-Host "Winget yüklü. Yaygın yazılımlar kurulsun mu? (e/h)"
+        $userInput = Read-Host "Winget ile diğer Yaygın yazılımlar kurulsun mu? (e/h)"
         if ($userInput.ToLower() -eq "e")
         {
             Write-Host "Seçilen yazılımlar WinGet ile kuruluyor..."
@@ -101,7 +101,7 @@ elseif ($IsLinux)
         {
             Write-Host "Seçilen yazılımlar APT ile kuruluyor..."
             sudo apt update
-            sudo apt install -y git nvm nodejs openjdk-21 vscode python3 python3-pip docker.io virtualbox qBittorrent discord
+            sudo apt install -y micro net-tools nodejs npm docker.io
         }
     }
     else 

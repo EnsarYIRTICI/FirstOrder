@@ -1,7 +1,5 @@
 class SystemSetup {
-
     SystemSetup() {}
-
 
     [void]AssertAdminRights() {
         if ($this.IsWindows) {
