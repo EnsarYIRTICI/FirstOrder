@@ -1,9 +1,6 @@
 ## Windows 10/11
 
-#### - Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-#### - .\system.ps1
-#### - .\package.ps1
-
+#### Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
 ## Linux/Debian
 
@@ -14,5 +11,3 @@
 
 #### sudo apt update && sudo apt install -y powershell
 #### pwsh
-#### .\system.ps1
-#### .\package.ps1
