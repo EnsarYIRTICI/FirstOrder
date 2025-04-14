@@ -1,100 +1,135 @@
 . "$PSScriptRoot\service\functions.ps1"
 
-Assert-AdminRights
-
 # Sürüm bilgileri
+
 $PSVersion = $PSVersionTable.PSVersion
 $osVersion = [System.Environment]::OSVersion.Version
-$windowsMajor = $osVersion.Major
-$windowsBuild = $osVersion.Build
 
-$isWin10 = $windowsMajor -eq 10 -and $windowsBuild -lt 22000
-$isWin11 = $windowsMajor -eq 10 -and $windowsBuild -ge 22000
+$setup = [SystemSetup]::new()
 
-# Paket kontrolü
-$chocoInstalled = Get-Command choco -ErrorAction SilentlyContinue
-$wingetInstalled = Get-Command winget -ErrorAction SilentlyContinue
+$setup.AssertAdminRights()
 
-# Chocolatey kurulumu
-if ($chocoInstalled) {
-    if (Confirm-Action "Chocolatey yüklü. Chocolatey yeniden kurulsun mu?") 
-    {
-        Install-Chocolatey
-    }
-
-} else {
-    if (Confirm-Action "Chocolatey kurulsun mu?") 
-    {
-        Install-Chocolatey
-        $chocoInstalled = Get-Command choco -ErrorAction SilentlyContinue
-    }
-}
-
-
-# Yaygın yazılım kurulumları
-if($chocoInstalled)
+if ($IsWindows)
 {
-    if($isWin11)
-    {
-        if (Confirm-Action "Chocolatey yüklü. PowerShell Core kurulsun mu?")
-         {
-            Write-Log "Seçilen yazılımlar Chocolatey ile kuruluyor..."
-            choco install pwsh -y
-        }
-    }
+    $windowsMajor = $osVersion.Major
+    $windowsBuild = $osVersion.Build
 
-    if($isWin10)
+    $isWin10 = $windowsMajor -eq 10 -and $windowsBuild -lt 22000
+    $isWin11 = $windowsMajor -eq 10 -and $windowsBuild -ge 22000
+
+    $chocoInstalled = Get-Command choco -ErrorAction SilentlyContinue
+    $wingetInstalled = Get-Command winget -ErrorAction SilentlyContinue
+
+    if (-not $chocoInstalled) 
     {
-        if (Confirm-Action "Chocolatey yüklü. 'PowerShell Core' ve 'Windows Terminal' kurulsun mu?") 
+        $userInput = Read-Host "Chocolatey bulunamadı. Kurulsun mu? (e/h)"
+        if ($userInput.ToLower() -eq "e") 
         {
-            Write-Log "Seçilen yazılımlar Chocolatey ile kuruluyor..."
-            choco install pwsh microsoft-windows-terminal -y
+            $setup.InstallChocolatey()
+            $chocoInstalled = Get-Command choco -ErrorAction SilentlyContinue
+        }
+    } 
+
+    # Yaygın yazılım kurulumları (Chocolatey)
+    if ($chocoInstalled)
+    {
+        if ($isWin11)
+        {
+            $userInput = Read-Host "Chocolatey yüklü. PowerShell Core kurulsun mu? (e/h)"
+            if ($userInput.ToLower() -eq "e")
+            {
+                Write-Host "Seçilen yazılımlar Chocolatey ile kuruluyor..."
+                choco install pwsh -y
+            }
+        }
+
+        if ($isWin10)
+        {
+            $userInput = Read-Host "Chocolatey yüklü. 'PowerShell Core' ve 'Windows Terminal' kurulsun mu? (e/h)" 
+            if ($userInput.ToLower() -eq "e") 
+            {
+                Write-Host "Seçilen yazılımlar Chocolatey ile kuruluyor..."
+                choco install pwsh microsoft-windows-terminal -y
+            }
+        }
+
+        $userInput = Read-Host "Chocolatey yüklü. Yaygın yazılımlar kurulsun mu? (e/h)"
+        if ($userInput.ToLower() -eq "e")
+        {
+            Write-Host "Seçilen yazılımlar Chocolatey ile kuruluyor..."
+            choco install git nvm nodejs temurin21 vscode visualstudio2022community androidstudio docker-desktop openssl openssh virtualbox winscp qbittorrent steam discord opera tor-browser winrar cpu-z crystaldiskmark lghub googlechrome googledrive itunes icloud -y
         }
     }
 
-    if(Confirm-Action "Chocolatey yüklü. Yaygın yazılımlar kurulsun mu?")
+    # Winget kurulumu
+    if (-not $wingetInstalled) 
     {
-        Write-Log "Seçilen yazılımlar Chocolatey ile kuruluyor..."
-        choco install git nvm nodejs temurin21 vscode visualstudio2022community androidstudio docker-desktop openssl openssh virtualbox winscp qbittorrent steam discord opera tor-browser winrar cpu-z crystaldiskmark lghub googlechrome googledrive itunes icloud -y
+        $userInput = Read-Host "Winget bulunamadı. Kurulsun mu? (e/h)"
+        if ($userInput.ToLower() -eq "e")
+        {
+            $setup.InstallWinget()
+            $wingetInstalled = Get-Command winget -ErrorAction SilentlyContinue
+        }
     }
+
+    # Yaygın yazılım kurulumları (Winget)
+    if ($wingetInstalled)
+    {
+        $userInput = Read-Host "Winget yüklü. Yaygın yazılımlar kurulsun mu? (e/h)"
+        if ($userInput.ToLower() -eq "e")
+        {
+            Write-Host "Seçilen yazılımlar WinGet ile kuruluyor..."
+            winget install --id "Python.Python.3.13" --accept-package-agreements --accept-source-agreements
+            winget install --id "WhatsApp.WhatsApp" --accept-package-agreements --accept-source-agreements
+
+            if ($isWin11)
+            {
+                winget install --id "Intel.Unison" --accept-package-agreements --accept-source-agreements
+            }
+        }
+    }
+
 }
-
-
-# Winget kurulumu
-if ($wingetInstalled) 
+elseif ($IsLinux)
 {
-    if (Confirm-Action "Winget yüklü. Yeniden kurulsun mu?")
-    {
-        Install-Winget
-    }
-} else {
-    if (Confirm-Action "Winget bulunamadı. Kurulsun mu?")
-     {
-        Install-Winget
-        $wingetInstalled = Get-Command winget -ErrorAction SilentlyContinue
-    }
-}
+    $aptInstalled = Get-Command apt -ErrorAction SilentlyContinue
 
-# Yaygın yazılım kurulumları
-if($wingetInstalled)
+    if ($aptInstalled) 
+    {
+        $userInput = Read-Host "APT ile yaygın yazılımlar kurulsun mu? (e/h)"
+        if ($userInput.ToLower() -eq "e") 
+        {
+            Write-Host "Seçilen yazılımlar APT ile kuruluyor..."
+            sudo apt update
+            sudo apt install -y git nvm nodejs openjdk-21 vscode python3 python3-pip docker.io virtualbox qBittorrent discord
+        }
+    }
+    else 
+    {
+        Write-Host "Hiçbir paket yöneticisi bulunamadı. Çıkılıyor..."
+    }
+
+}
+elseif ($IsMacOS) 
 {
-    if($isWin11)
+    $brewInstalled = Get-Command brew -ErrorAction SilentlyContinue
+
+    if ($brewInstalled) 
     {
-        if (Confirm-Action "Winget yüklü. Yaygın yazılımlar kurulsun mu?") 
+        $userInput = Read-Host "Homebrew ile yaygın yazılımlar kurulsun mu? (e/h)"
+        if ($userInput.ToLower() -eq "e") 
         {
-            Write-Log "Seçilen yazılımlar WinGet ile kuruluyor..."
-            winget install "Intel® Unison™" "Python 3.13" "WhatsApp" --accept-package-agreements --accept-source-agreements
+            Write-Host "Seçilen yazılımlar Homebrew ile kuruluyor..."
+            brew update
+            brew install git nvm nodejs openjdk@21 visual-studio-code python3 docker virtualbox qbittorrent discord
         }
     }
-    
-    if($isWin10){
-        if (Confirm-Action "Winget yüklü. Yaygın yazılımlar kurulsun mu?") 
+    else 
+    {
+        $userInput = Read-Host "Hiçbir paket yöneticisi bulunamadı. Çıkılsın mı? (e/h)"
+        if ($userInput.ToLower() -eq "e") 
         {
-            Write-Log "Seçilen yazılımlar WinGet ile kuruluyor..."
-            winget install "Python 3.13" "WhatsApp" --accept-package-agreements --accept-source-agreements
+            Write-Host "Hiçbir paket yöneticisi bulunamadı. Çıkılıyor..."
         }
     }
 }
-
-
-
