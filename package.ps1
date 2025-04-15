@@ -56,8 +56,22 @@ if ($IsWindows)
         $userInput = Read-Host "Chocolatey ile Yaygın yazılımlar kurulsun mu? (e/h)"
         if ($userInput.ToLower() -eq "e")
         {
+            # Yaygın yazılımlar dizisi
+            $commonPackages = @(
+                "git", "wget", "nvm", "nodejs", "temurin21", "micro", "thunderbird",
+                "vscode", "visualstudio2022community", "androidstudio", "docker-desktop",
+                "openssl", "openssh", "virtualbox", "winscp", "qbittorrent", "steam",
+                "discord", "opera", "tor-browser", "winrar", "cpu-z", "crystaldiskmark",
+                "lghub", "googlechrome", "googledrive", "itunes", "icloud"
+            )
+            
             Write-Host "Seçilen yazılımlar Chocolatey ile kuruluyor..."
-            choco install git wget nvm nodejs temurin21 micro vscode visualstudio2022community androidstudio docker-desktop openssl openssh virtualbox winscp qbittorrent steam discord opera tor-browser winrar cpu-z crystaldiskmark lghub googlechrome googledrive itunes icloud -y
+
+            # Kurulum döngüsü
+            foreach ($pkg in $commonPackages) 
+            {
+                choco install $pkg -y
+            }
         }
     }
 
@@ -79,12 +93,24 @@ if ($IsWindows)
         if ($userInput.ToLower() -eq "e")
         {
             Write-Host "Seçilen yazılımlar WinGet ile kuruluyor..."
-            winget install --id "Python.Python.3.13" --accept-package-agreements --accept-source-agreements
-            winget install --id "WhatsApp.WhatsApp" --accept-package-agreements --accept-source-agreements
 
-            if ($isWin11)
+            # Yaygın yazılımlar dizisi
+            $wingetPackages = @(
+                "Python.Python.3.13",
+                "WhatsApp.WhatsApp"
+            )
+
+            # Windows 11'e özel yazılımları ekle
+            if ($isWin11) 
             {
-                winget install --id "Intel.Unison" --accept-package-agreements --accept-source-agreements
+                $wingetPackages += "Intel.Unison"
+            }
+
+            # Kurulum döngüsü
+            foreach ($pkg in $wingetPackages) 
+            {
+                Write-Host "Kuruluyor: $pkg"
+                winget install --id $pkg --accept-package-agreements --accept-source-agreements
             }
         }
     }
@@ -100,8 +126,19 @@ elseif ($IsLinux)
         if ($userInput.ToLower() -eq "e") 
         {
             Write-Host "Seçilen yazılımlar APT ile kuruluyor..."
-            sudo apt update
-            sudo apt install -y micro net-tools nodejs npm docker.io
+
+            # Yaygın yazılımlar dizisi
+            $aptPackages = @(
+                "micro",
+                "net-tools",
+                "nodejs",
+                "npm",
+                "docker.io"
+            )
+
+            # Kurulum
+            $packagesString = $aptPackages -join " "
+            sudo apt update && sudo apt install -y $packagesString
         }
     }
     else 
@@ -120,8 +157,28 @@ elseif ($IsMacOS)
         if ($userInput.ToLower() -eq "e") 
         {
             Write-Host "Seçilen yazılımlar Homebrew ile kuruluyor..."
+
+            # Yaygın yazılımlar dizisi
+            $brewPackages = @(
+                "git",
+                "nvm",
+                "nodejs",
+                "openjdk@21",
+                "visual-studio-code",
+                "python3",
+                "docker",
+                "virtualbox",
+                "qbittorrent",
+                "discord"
+            )
+
             brew update
-            brew install git nvm nodejs openjdk@21 visual-studio-code python3 docker virtualbox qbittorrent discord
+
+            # Kurulum döngüsü
+            foreach ($pkg in $brewPackages) {
+                Write-Host "Kuruluyor: $pkg"
+                brew install $pkg
+            }
         }
     }
     else 
