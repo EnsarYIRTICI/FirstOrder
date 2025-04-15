@@ -32,6 +32,8 @@ if ($IsWindows) {
     if (Ask-YesNo "WSL etkinleştirilsin ve kurulsun mu?") { Enable-WSL }
     if (Ask-YesNo "Hyper-V etkinleştirilsin mi?") { Enable-HyperV }
     if (Ask-YesNo "'misafir' adında bir misafir kullanıcı oluşturmak istiyor musun?") { Create-GuestUser }
+    if (Ask-YesNo "Bilgisayarın uykuya geçme süresi ayarlansın mı? (prizde: Hiçbir zaman, pilde: 30 dakika)") { Disable-SleepTimeout }
+    if (Ask-YesNo "Kapak kapatıldığında (prizdeyken) 'hiçbir şey yapma' olarak ayarlansın mı?") { Set-LidCloseDoNothing }
     if (Ask-YesNo "PowerShell başlangıcında özel ayarları (profile) yüklemek istiyor musun?") { Set-Profile }
 
     # Chocolatey

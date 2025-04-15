@@ -85,3 +85,26 @@ function Hide-News {
         Write-Host "'Haberler ve İlgi Alanları' devre dışı bırakılırken bir hata oluştu: $_"
     }
 }
+
+function Disable-SleepTimeout {
+    Write-Host "Bilgisayarın uykuya geçme süreleri ayarlanıyor..."
+    
+    # Prize takılıyken: hiçbir zaman uykuya geçmesin
+    powercfg /change standby-timeout-ac 0
+
+    # Pildeyken: 30 dakika (30 dakika = 30 dakika)
+    powercfg /change standby-timeout-dc 30
+
+    Write-Host "Uyku modu zaman aşımı başarıyla güncellendi:"
+    Write-Host "- Prize takılıyken: Hiçbir zaman"
+    Write-Host "- Pildeyken: 30 dakika"
+}
+
+function Set-LidCloseDoNothing {
+    Write-Host "Kapak kapatıldığında prizdeyken hiçbir şey yapılmaması için ayarlanıyor..."
+    
+    powercfg /setacvalueindex SCHEME_CURRENT SUB_BUTTONS LidAction 0
+    powercfg /setactive SCHEME_CURRENT
+
+    Write-Host "Ayar tamamlandı: Kapak kapatıldığında (prizdeyken) hiçbir şey yapılmayacak."
+}
