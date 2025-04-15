@@ -10,4 +10,4 @@
 #### sudo dpkg -i packages-microsoft-prod.deb
 
 #### sudo apt update && sudo apt install -y powershell
-#### pwsh
+#### sudo pwsh
