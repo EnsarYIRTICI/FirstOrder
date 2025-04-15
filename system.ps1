@@ -1,4 +1,4 @@
-. "$PSScriptRoot\service\functions.ps1"
+. "$PSScriptRoot\Service\SystemSetup.ps1"
 
 # Sürüm bilgileri
 
@@ -181,4 +181,31 @@ if ($IsWindows)
             Write-Host "'misafir' kullanıcısı zaten mevcut."
         }
     }
+
+    $response = Read-Host "PowerShell başlangıcında özel ayarları (profile) yüklemek istiyor musun? (e/h)"
+    if ($response -match '^[eE]$') 
+    {
+        if (!(Test-Path -Path $PROFILE)) 
+        {
+            New-Item -ItemType File -Path $PROFILE -Force
+        }
+
+        $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+        $profilePath = "$scriptDir\Profile\Path.ps1"
+        $lineToAdd = ". `"$profilePath`""
+
+        # Aynı satır daha önce eklenmiş mi kontrol et
+        $alreadyExists = Get-Content $PROFILE | Where-Object { $_ -eq $lineToAdd }
+
+        if (-not $alreadyExists) 
+        {
+            Add-Content -Path $PROFILE -Value $lineToAdd
+            Write-Host "Profile ayarı başarıyla eklendi."
+        } 
+        else 
+        {
+            Write-Host "Bu satır zaten $PROFILE içinde mevcut."
+        }
+    }
+
 }

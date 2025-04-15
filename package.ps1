@@ -1,4 +1,4 @@
-. "$PSScriptRoot\service\functions.ps1"
+. "$PSScriptRoot\Service\SystemSetup.ps1"
 
 # Sürüm bilgileri
 
