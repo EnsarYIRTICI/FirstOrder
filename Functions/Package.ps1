@@ -61,11 +61,12 @@ function Install-Winget {
 function Install-ChocoPackages {
     Write-Host "Chocolatey ile Yaygın yazılımlar kuruluyor..."
     $commonPackages = @(
-        "git", "wget", "nvm", "nodejs", "temurin21", "micro", "thunderbird",
+        "pwsh", "microsoft-windows-terminal", "thunderbird", "virtualbox", "winscp", "winrar",
+        "qbittorrent", "steam", "discord", "opera", "tor-browser", "cpu-z", "crystaldiskmark",
+        "lghub", "googlechrome", "googledrive", "itunes", "icloud",
         "vscode", "visualstudio2022community", "androidstudio", "docker-desktop",
-        "openssl", "openssh", "virtualbox", "winscp", "qbittorrent", "steam",
-        "discord", "opera", "tor-browser", "winrar", "cpu-z", "crystaldiskmark",
-        "lghub", "googlechrome", "googledrive", "itunes", "icloud"
+        "git", "wget", "nvm", "nodejs", "temurin21", "micro", "openssl", "openssh",
+        "flutter"
     )
     
     foreach ($pkg in $commonPackages) {
@@ -102,7 +103,8 @@ function Install-AptPackages {
     )
 
     $packagesString = $aptPackages -join " "
-    sudo apt update && sudo apt install -y $packagesString
+    sudo apt update
+    sudo apt install -y $packagesString
 }
 
 function Install-BrewPackages {

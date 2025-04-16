@@ -12,5 +12,11 @@ function Assert-AdminRights {
             Exit 1
         }
     }
+    elseif ($IsMacOS) {
+        $user = whoami
+        if ($user -ne "root") {
+            Write-Host "Bu script'in macOS'ta root olarak çalıştırılması gerekiyor (sudo kullanın)!"
+            Exit 1
+        }
+    }
 }
-
