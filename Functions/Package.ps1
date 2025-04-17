@@ -63,7 +63,7 @@ function Install-ChocoPackages {
     $commonPackages = @(
         "pwsh", "microsoft-windows-terminal", "thunderbird", "virtualbox", "winscp", "winrar",
         "qbittorrent", "steam", "discord", "opera", "tor-browser", "cpu-z", "crystaldiskmark",
-        "lghub", "googlechrome", "googledrive", "itunes", "icloud",
+        "lghub", "googlechrome", "googledrive", "itunes", "icloud", "anydesk",
         "vscode", "visualstudio2022community", "androidstudio", "docker-desktop",
         "git", "wget", "nvm", "nodejs", "temurin21", "micro", "openssl", "openssh",
         "flutter"
@@ -102,9 +102,11 @@ function Install-AptPackages {
         "docker.io"
     )
 
-    $packagesString = $aptPackages -join " "
-    sudo apt update
-    sudo apt install -y $packagesString
+    apt update
+
+    foreach ($pkg in $aptPackages) {
+        apt install -y $pkg
+    }
 }
 
 function Install-BrewPackages {
