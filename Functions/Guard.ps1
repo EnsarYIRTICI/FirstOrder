@@ -1,4 +1,10 @@
 function Assert-AdminRights {
+    if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
+        $IsWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
+        $IsLinux = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)
+        $IsMacOS = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)
+    }
+
     if ($IsWindows) {
         $IsAdmin = [Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544'
         if (-not $IsAdmin) {
@@ -19,4 +25,5 @@ function Assert-AdminRights {
             Exit 1
         }
     }
-}
+
+}   
