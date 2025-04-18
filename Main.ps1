@@ -1,9 +1,8 @@
-. "$PSScriptRoot\Functions\Package.ps1"
-. "$PSScriptRoot\Functions\Guard.ps1"
 . "$PSScriptRoot\Functions\IO.ps1"
-. "$PSScriptRoot\Functions\Windows.ps1"
-. "$PSScriptRoot\Functions\System.ps1"
-. "$PSScriptRoot\Functions\Personalize.ps1"
+. "$PSScriptRoot\Functions\Guard.ps1"
+. "$PSScriptRoot\Functions\Package.ps1"
+. "$PSScriptRoot\Functions\Windows.System.ps1"
+. "$PSScriptRoot\Functions\Windows.Personalize.ps1"
 
 $scriptDir = $PSScriptRoot
 
@@ -25,7 +24,7 @@ if ($mainChoice -eq "1") {
     # == SİSTEM AYARLARI ==
     if ($IsWindows) {
         # WINDOWS İÇİN
-        Write-Host "`nWindows Sistem Ayarları" -ForegroundColor Green
+        Write-Host "`nWindows Kişiselleştirme Ayarları" -ForegroundColor Green
         if (Ask-YesNo "Karanlık moda geçirmek istiyor musun?") { Set-DarkMode }
         if (Ask-YesNo "Arama kutusunu simge olarak göstermek ister misiniz?") { Set-SearchBoxIcon }
         if (Ask-YesNo "'Görev Görünümü' görev çubuğundan gizlensin mi?") { Hide-TaskViewButton }
@@ -41,14 +40,17 @@ if ($mainChoice -eq "1") {
             if (Ask-YesNo "'Haberler ve İlgi Alanları' görev çubuğundan gizlensin mi?") { Hide-News }
         }
 
+        if (Ask-YesNo "PowerShell başlangıcında özel ayarları (profile) yüklemek istiyor musun?") { Set-Profile }
+        if (Ask-YesNo "Bilgisayarın uykuya geçme süresi ayarlansın mı? (prizde: Hiçbir zaman, pilde: 30 dakika)") { Disable-SleepTimeout }
+        if (Ask-YesNo "Kapak kapatıldığında (prizdeyken) 'hiçbir şey yapma' olarak ayarlansın mı?") { Set-LidCloseDoNothing }
+
+        Write-Host "`nWindows Sistem Ayarları" -ForegroundColor Green
         if (Ask-YesNo "Windows Update'i devre dışı bırakmak istiyor musun?") { Disable-WindowsUpdate }
         if (Ask-YesNo "Geliştirici Modu etkinleştirilsin mi?") { Enable-DeveloperMode }
         if (Ask-YesNo "WSL etkinleştirilsin ve kurulsun mu?") { Enable-WSL }
         if (Ask-YesNo "Hyper-V etkinleştirilsin mi?") { Enable-HyperV }
         if (Ask-YesNo "'misafir' adında bir misafir kullanıcı oluşturmak istiyor musun?") { Create-GuestUser }
-        if (Ask-YesNo "Bilgisayarın uykuya geçme süresi ayarlansın mı? (prizde: Hiçbir zaman, pilde: 30 dakika)") { Disable-SleepTimeout }
-        if (Ask-YesNo "Kapak kapatıldığında (prizdeyken) 'hiçbir şey yapma' olarak ayarlansın mı?") { Set-LidCloseDoNothing }
-        if (Ask-YesNo "PowerShell başlangıcında özel ayarları (profile) yüklemek istiyor musun?") { Set-Profile }
+
     }
     elseif ($IsLinux) {
         # LINUX İÇİN

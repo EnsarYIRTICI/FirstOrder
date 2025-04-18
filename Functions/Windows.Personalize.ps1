@@ -1,22 +1,18 @@
 function Set-SearchBoxIcon {
-    if ($isWindows) {
-        try {
-            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Value 1
-            Write-Host "Arama kutusu yalnızca simge olarak ayarlandı."
-        } catch {
-            Write-Host "Arama kutusu simge olarak gösterilirken bir hata oluştu: $_"
-        }
+    try {
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Value 1
+        Write-Host "Arama kutusu yalnızca simge olarak ayarlandı."
+    } catch {
+        Write-Host "Arama kutusu simge olarak gösterilirken bir hata oluştu: $_"
     }
 }
 
 function Hide-TaskViewButton {
-    if ($isWindows) {
-        try {
-            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Value 0
-            Write-Host "Görev Görünümü simgesi başarıyla gizlendi."
-        } catch {
-            Write-Host "Görev Görünümü simgesi gizlenirken bir hata oluştu: $_"
-        }
+    try {
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Value 0
+        Write-Host "Görev Görünümü simgesi başarıyla gizlendi."
+    } catch {
+        Write-Host "Görev Görünümü simgesi gizlenirken bir hata oluştu: $_"
     }
 }
 

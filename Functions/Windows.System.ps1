@@ -1,21 +1,17 @@
-function Disable-WindowsUpdate {
-    try {
-        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Force | Out-Null
-        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force | Out-Null
-        New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoUpdate" -Value 1 -PropertyType DWORD -Force | Out-Null
-        Write-Host "Windows Update devre dışı bırakıldı."
-    } catch {
-        Write-Host "Windows Update devre dışı bırakılırken bir hata oluştu: $_"
-    }
-}
+function Detect-WindowsVersion {
+    $version = [System.Environment]::OSVersion.Version
+    $global:windowsVersion = 0
+    $global:isWin10 = $false
+    $global:isWin11 = $false
 
-function Enable-DeveloperMode {
-    try {
-        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Force | Out-Null
-        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Value 1 -Type DWord
-        Write-Host "Geliştirici Modu etkinleştirildi."
-    } catch {
-        Write-Host "Geliştirici Modu etkinleştirme başarısız oldu: $_"
+    if ($version.Major -eq 10) {
+        if ($version.Build -lt 22000) {
+            $global:windowsVersion = 10
+            $global:isWin10 = $true
+        } elseif ($version.Build -ge 22000) {
+            $global:windowsVersion = 11
+            $global:isWin11 = $true
+        }
     }
 }
 
@@ -37,6 +33,27 @@ function Enable-HyperV {
         Write-Host "Hyper-V etkinleştirildi. Değişikliklerin geçerli olması için sistemi yeniden başlatın."
     } catch {
         Write-Host "Hyper-V etkinleştirilemedi: $_"
+    }
+}
+
+function Disable-WindowsUpdate {
+    try {
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Force | Out-Null
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force | Out-Null
+        New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoUpdate" -Value 1 -PropertyType DWORD -Force | Out-Null
+        Write-Host "Windows Update devre dışı bırakıldı."
+    } catch {
+        Write-Host "Windows Update devre dışı bırakılırken bir hata oluştu: $_"
+    }
+}
+
+function Enable-DeveloperMode {
+    try {
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Force | Out-Null
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Value 1 -Type DWord
+        Write-Host "Geliştirici Modu etkinleştirildi."
+    } catch {
+        Write-Host "Geliştirici Modu etkinleştirme başarısız oldu: $_"
     }
 }
 

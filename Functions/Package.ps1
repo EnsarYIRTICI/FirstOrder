@@ -62,7 +62,7 @@ function Install-ChocoPackages {
     Write-Host "Chocolatey ile Yaygın yazılımlar kuruluyor..."
     $commonPackages = @(
         "pwsh", "microsoft-windows-terminal", "thunderbird", "virtualbox", "winscp", "winrar",
-        "qbittorrent", "steam", "discord", "opera", "tor-browser", "cpu-z", "crystaldiskmark",
+        "qbittorrent", "steam", "discord", "opera", "cpu-z", "crystaldiskmark",
         "lghub", "googlechrome", "googledrive", "itunes", "icloud", "anydesk",
         "vscode", "visualstudio2022community", "androidstudio", "docker-desktop",
         "git", "wget", "nvm", "nodejs", "temurin21", "micro", "openssl", "openssh",
@@ -78,13 +78,9 @@ function Install-WingetPackages {
     Write-Host "Winget ile Yaygın yazılımlar kuruluyor..."
     $wingetPackages = @(
         "Python.Python.3.13",
-        "WhatsApp.WhatsApp"
+        "WhatsApp.WhatsApp",
+        "Intel.Unison"
     )
-
-    # Windows 11'e özel yazılımları ekle
-    if ($isWin11) {
-        $wingetPackages += "Intel.Unison"
-    }
 
     foreach ($pkg in $wingetPackages) {
         Write-Host "Kuruluyor: $pkg"
