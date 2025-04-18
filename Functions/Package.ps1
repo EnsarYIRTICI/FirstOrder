@@ -1,129 +1,63 @@
-function Check-ChocoInstalled {
-    $global:chocoInstalled = Get-Command choco -ErrorAction SilentlyContinue
-    return $global:chocoInstalled -ne $null
-}
+. "$PSScriptRoot\Windows.Package.ps1"
+. "$PSScriptRoot\MacOS.Package.ps1"
+. "$PSScriptRoot\Linux.Package.ps1"
 
-function Check-WingetInstalled {
-    $global:wingetInstalled = Get-Command winget -ErrorAction SilentlyContinue
-    return $global:wingetInstalled -ne $null
-}
+function Install-Packages {
+     if ($IsWindows) {
+        # WINDOWS İÇİN PAKET YÖNETİMİ
+        Write-Host "`nWindows Paket Yönetimi" -ForegroundColor Green
 
-function Check-AptInstalled {
-    $global:aptInstalled = Get-Command apt -ErrorAction SilentlyContinue
-    return $aptInstalled -ne $null
-}
+        # Chocolatey
+        $chocoInstalled = Check-ChocoInstalled
+        if (-not $chocoInstalled) {
+            if (Ask-YesNo "Chocolatey bulunamadı. Kurulsun mu?") {
+                Install-Chocolatey
+                $chocoInstalled = Check-ChocoInstalled
+            }
+        }
 
-function Check-BrewInstalled {
-    $global:brewInstalled = Get-Command brew -ErrorAction SilentlyContinue
-    return $brewInstalled -ne $null
-}
+        if ($chocoInstalled -and (Ask-YesNo "Chocolatey ile yaygın yazılımlar kurulsun mu?")) {
+            Install-ChocoPackages
+        }
 
+        # Winget
+        $wingetInstalled = Check-WingetInstalled
+        if (-not $wingetInstalled) {
+            if (Ask-YesNo "Winget bulunamadı. Kurulsun mu?") {
+                Install-Winget
+                $wingetInstalled = Check-WingetInstalled
+            }
+        }
 
-function Install-Chocolatey {
-    if (-not $IsWindows) {
-        Write-Log "Chocolatey sadece Windows sistemlerde kullanılabilir."
-        return
+        if ($wingetInstalled -and (Ask-YesNo "Winget ile yaygın yazılımlar kurulsun mu?")) {
+            Install-WingetPackages
+        }
     }
-
-    Write-Log "Chocolatey kuruluyor..."
-    iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-    
-    if ($?) {
-        Write-Log "Chocolatey başarıyla kuruldu."
-    } else {
-        Write-Log "Chocolatey kurulumu başarısız oldu."
+    elseif ($IsLinux) {
+        # LINUX İÇİN PAKET YÖNETİMİ
+        Write-Host "`nLinux Paket Yönetimi" -ForegroundColor Green
+        if (Check-AptInstalled) {
+            if (Ask-YesNo "APT ile yaygın yazılımlar kurulsun mu?") {
+                Install-AptPackages
+            }
+        } else {
+            Write-Host "APT paket yöneticisi bulunamadı. Çıkılıyor..."
+        }
     }
-}
-
-function Install-Winget {
-    if (-not $IsWindows) {
-        Write-Log "Winget sadece Windows sistemlerde kullanılabilir."
-        return
-    }
-
-    try {
-        $ProgressPreference = 'SilentlyContinue'
-        Write-Log "WinGet PowerShell modülü PSGallery üzerinden kuruluyor..."
-        
-        Install-PackageProvider -Name NuGet -Force | Out-Null
-        Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
-
-        Write-Log "WinGet modülü indirildi. Bootstrap işlemi başlatılıyor..."
-        Repair-WinGetPackageManager
-
-        Write-Log "WinGet bootstrap tamamlandı. Terminali yeniden başlatmanız gerekebilir."
-    } catch {
-        Write-Log "Winget kurulumu sırasında bir hata oluştu: $_"
-    }
-}
-
-
-function Install-ChocoPackages {
-    Write-Host "Chocolatey ile Yaygın yazılımlar kuruluyor..."
-    $commonPackages = @(
-        "pwsh", "microsoft-windows-terminal", "thunderbird", "virtualbox", "winscp", "winrar",
-        "qbittorrent", "steam", "discord", "opera", "cpu-z", "crystaldiskmark",
-        "lghub", "googlechrome", "googledrive", "itunes", "icloud", "anydesk",
-        "vscode", "visualstudio2022community", "androidstudio", "docker-desktop",
-        "git", "wget", "nvm", "nodejs", "temurin21", "micro", "openssl", "openssh",
-        "flutter"
-    )
-    
-    foreach ($pkg in $commonPackages) {
-        choco install $pkg -y
+    elseif ($IsMacOS) {
+        # MACOS İÇİN PAKET YÖNETİMİ
+        Write-Host "`nMacOS Paket Yönetimi" -ForegroundColor Green
+        if (Check-BrewInstalled) {
+            if (Ask-YesNo("Homebrew ile yaygın yazılımlar kurulsun mu?")) {
+                Install-BrewPackages
+            }
+        } else {
+            Write-Host "Homebrew paket yöneticisi bulunamadı. Çıkılıyor..."
+        }
     }
 }
 
-function Install-WingetPackages {
-    Write-Host "Winget ile Yaygın yazılımlar kuruluyor..."
-    $wingetPackages = @(
-        "Python.Python.3.13",
-        "WhatsApp.WhatsApp",
-        "Intel.Unison"
-    )
 
-    foreach ($pkg in $wingetPackages) {
-        Write-Host "Kuruluyor: $pkg"
-        winget install --id $pkg --accept-package-agreements --accept-source-agreements
-    }
-}
 
-function Install-AptPackages {
-    Write-Host "Seçilen yazılımlar APT ile kuruluyor..."
-    $aptPackages = @(
-        "micro",
-        "net-tools",
-        "nodejs",
-        "npm",
-        "docker.io"
-    )
 
-    apt update
 
-    foreach ($pkg in $aptPackages) {
-        apt install -y $pkg
-    }
-}
-
-function Install-BrewPackages {
-    Write-Host "Seçilen yazılımlar Homebrew ile kuruluyor..."
-    $brewPackages = @(
-        "git",
-        "nvm",
-        "nodejs",
-        "openjdk@21",
-        "visual-studio-code",
-        "python3",
-        "docker",
-        "virtualbox",
-        "qbittorrent",
-        "discord"
-    )
-
-    brew update
-
-    foreach ($pkg in $brewPackages) {
-        Write-Host "Kuruluyor: $pkg"
-        brew install $pkg
-    }
-}
