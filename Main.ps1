@@ -4,10 +4,13 @@
 . "$PSScriptRoot\Functions\Personalize.ps1"
 . "$PSScriptRoot\Functions\Package.ps1"
 
+# == Mevcut Dizin ==
 $scriptDir = $PSScriptRoot
 
+# == Tam Yetki Kontrolü ==
 Assert-AdminRights
 
+# == İşletim Sistemi ==
 if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
     $IsWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
     $IsLinux = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)
@@ -25,11 +28,9 @@ if ($mainChoice -eq "1") {
     # == SİSTEM AYARLARI ==
     System-Settings
 }
-
 elseif ($mainChoice -eq "2") {
     # == KİŞİSELLEŞTİRME AYARLARI ==
     Personalize-Settings
-
 } 
 elseif ($mainChoice -eq "3") {
     # == PAKET YÖNETİMİ ==
