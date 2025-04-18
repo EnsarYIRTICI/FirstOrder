@@ -1,14 +1,8 @@
-. "$PSScriptRoot\Functions\IO.ps1"
-. "$PSScriptRoot\Functions\Guard.ps1"
-. "$PSScriptRoot\Functions\System.ps1"
-. "$PSScriptRoot\Functions\Personalize.ps1"
-. "$PSScriptRoot\Functions\Package.ps1"
+# == Başlangıç ==
+Write-Host "Script Başlatılıyor..." -ForegroundColor Green
 
 # == Mevcut Dizin ==
 $scriptDir = $PSScriptRoot
-
-# == Tam Yetki Kontrolü ==
-Assert-AdminRights
 
 # == İşletim Sistemi ==
 if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
@@ -17,24 +11,40 @@ if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
     $IsMacOS = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)
 }
 
-# == ANA SEÇİM MENÜSÜ ==
-Write-Host "`nNe yapmak istiyorsunuz?" -ForegroundColor Cyan
-Write-Host "1. Sistem Ayarlarını Yapılandır"
-Write-Host "2. Kişiselleştirme Ayarlarını Yapılandır"
-Write-Host "3. Paket Yönetimi ile Yazılım Kurulumu"
-$mainChoice = Read-Host "Seçiminiz (1-3)"
+# == Import Modülleri ==
+. "$PSScriptRoot\Functions\IO.ps1"
+. "$PSScriptRoot\Functions\Guard.ps1"
+. "$PSScriptRoot\Functions\System.ps1"
+. "$PSScriptRoot\Functions\Personalize.ps1"
+. "$PSScriptRoot\Functions\Package.ps1"
 
-if ($mainChoice -eq "1") {
-    # == SİSTEM AYARLARI ==
-    System-Settings
-}
-elseif ($mainChoice -eq "2") {
-    # == KİŞİSELLEŞTİRME AYARLARI ==
-    Personalize-Settings
-} 
-elseif ($mainChoice -eq "3") {
-    # == PAKET YÖNETİMİ ==
-    Install-Packages
-} else {
-    Write-Host "Geçersiz seçim yapıldı. Çıkılıyor..." -ForegroundColor Red
-}
+# == Tam Yetki Kontrolü ==
+Assert-AdminRights
+
+# == ANA SEÇİM MENÜSÜ ==
+do {
+    Write-Host "`nNe yapmak istiyorsunuz?" -ForegroundColor Cyan
+    Write-Host "1. Sistem Ayarlarını Yapılandır"
+    Write-Host "2. Kişiselleştirme Ayarlarını Yapılandır"
+    Write-Host "3. Paket Yönetimi ile Yazılım Kurulumu"
+    Write-Host "Q. Çıkış"
+    $mainChoice = Read-Host "Seçiminiz (1-3, Q)"
+
+    switch ($mainChoice.ToUpper()) {
+        "1" {
+            System-Settings
+        }
+        "2" {
+            Personalize-Settings
+        }
+        "3" {
+            Install-Packages
+        }
+        "Q" {
+            Write-Host "Çıkılıyor..." -ForegroundColor Yellow
+        }
+        default {
+            Write-Host "Geçersiz seçim yapıldı, lütfen tekrar deneyin." -ForegroundColor Red
+        }
+    }
+} while ($mainChoice.ToUpper() -ne "Q")
