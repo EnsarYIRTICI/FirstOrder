@@ -72,23 +72,3 @@ function Create-GuestUser {
     }
 }
 
-function Set-Profile {
-    try {
-        if (!(Test-Path -Path $PROFILE)) {
-            New-Item -ItemType File -Path $PROFILE -Force
-        }
-
-        $lineToAdd = ". `"$scriptDir\Profile\Path.ps1`""
-
-        $alreadyExists = Get-Content $PROFILE | Where-Object { $_ -eq $lineToAdd }
-
-        if (-not $alreadyExists) {
-            Add-Content -Path $PROFILE -Value $lineToAdd
-            Write-Host "Profile ayarı başarıyla eklendi."
-        } else {
-            Write-Host "Bu satır zaten $PROFILE içinde mevcut."
-        }
-    } catch {
-        Write-Host "Profile yükleme sırasında bir hata oluştu: $_"
-    }
-}

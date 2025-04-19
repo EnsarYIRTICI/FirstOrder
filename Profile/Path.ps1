@@ -1,4 +1,4 @@
-function pth {
+function Path {
     $paths = [Environment]::GetEnvironmentVariable("PATH", "User") -split ";"
 
     if (-not $paths) {
@@ -11,7 +11,37 @@ function pth {
     }
 }
 
-function pth-rm {
+function Path-Add {
+    param (
+        [string]$Path
+    )
+
+    if (-not $PSBoundParameters.ContainsKey('Path')) {
+        $Path = Read-Host "Lütfen eklemek istediğiniz dizini girin"
+    }
+
+    if (-not (Test-Path $Path)) {
+        Write-Output "Hata: '$Path' geçerli bir dizin değil!"
+        return
+    }
+
+    $paths = [Environment]::GetEnvironmentVariable("PATH", "User") -split ";"
+
+    if ($paths -contains $Path) {
+        Write-Output "Bu dizin zaten PATH değişkeninde mevcut: $Path"
+        return
+    }
+
+    $updatedPath = ($paths + $Path) -join ";"
+
+    [Environment]::SetEnvironmentVariable("PATH", $updatedPath, "User")
+
+    $env:PATH = $updatedPath
+
+    Write-Output "Dizin başarıyla PATH değişkenine eklendi: $Path"
+}
+
+function Path-Remove {
     param (
         [int]$Index
     )
@@ -62,32 +92,3 @@ function pth-rm {
 }
 
 
-function pth-add {
-    param (
-        [string]$Path
-    )
-
-    if (-not $PSBoundParameters.ContainsKey('Path')) {
-        $Path = Read-Host "Lütfen eklemek istediğiniz dizini girin"
-    }
-
-    if (-not (Test-Path $Path)) {
-        Write-Output "Hata: '$Path' geçerli bir dizin değil!"
-        return
-    }
-
-    $paths = [Environment]::GetEnvironmentVariable("PATH", "User") -split ";"
-
-    if ($paths -contains $Path) {
-        Write-Output "Bu dizin zaten PATH değişkeninde mevcut: $Path"
-        return
-    }
-
-    $updatedPath = ($paths + $Path) -join ";"
-
-    [Environment]::SetEnvironmentVariable("PATH", $updatedPath, "User")
-
-    $env:PATH = $updatedPath
-
-    Write-Output "Dizin başarıyla PATH değişkenine eklendi: $Path"
-}
