@@ -1,8 +1,12 @@
 . "$PSScriptRoot\Windows.System.ps1"
 . "$PSScriptRoot\Windows.Personalize.ps1"
+. "$PSScriptRoot\Git.ps1"
 
 function Personalize-Settings {
     Detect-WindowsVersion
+
+    Write-Host "`nGenel Kişiselleştirme Ayarları" -ForegroundColor Green
+    if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
 
     if($IsWindows){
         Write-Host "`nWindows Kişiselleştirme Ayarları" -ForegroundColor Green

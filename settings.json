@@ -2,6 +2,11 @@
     // This is a JSON file that contains the configuration for the system setup.
     // It includes the computer name and the list of programs to be installed on different operating systems.
     "computer_name": "MSI",
+    // Git user information for the system setup.
+    "git_user": {
+        "name": "EnsarYIRTICI",
+        "email": "ensaryrtc@hotmail.com"
+    },
     "packages": {
         // Windows Packages
         "windows": {

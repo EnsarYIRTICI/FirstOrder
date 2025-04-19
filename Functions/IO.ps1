@@ -3,7 +3,6 @@ function Ask-YesNo($question) {
     return $response -match '^[eE]$'
 }
 
-
 function Get-SettingsJSON {
     $json = Get-Content -Path ($scriptDir + "\settings.json") | ConvertFrom-Json
     return $json
