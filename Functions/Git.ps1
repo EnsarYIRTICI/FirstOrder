@@ -1,14 +1,5 @@
 . "$PSScriptRoot\IO.ps1"
 
-function Check-GitInstalled {
-    try {
-        git --version
-        Write-Host "Git is installed."
-    } catch {
-        Write-Host "Git is not installed."
-    }
-}
-
 function Set-GitGlobalConfig {
     $settings = Get-SettingsJSON
     
@@ -20,4 +11,9 @@ function Set-GitGlobalConfig {
     git config --global user.email $gitUserEmail
 
     Write-Host "Git global config updated with user: $gitUserName and email: $gitUserEmail"
+}
+
+function Check-GitInstalled {
+    $global:gitInstalled = Get-Command git -ErrorAction SilentlyContinue
+    return $global:gitInstalled -ne $null
 }

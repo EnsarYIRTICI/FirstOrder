@@ -6,7 +6,10 @@ function Personalize-Settings {
     Detect-WindowsVersion
 
     Write-Host "`nGenel Kişiselleştirme Ayarları" -ForegroundColor Green
-    if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
+
+    if(Check-GitInstalled){
+        if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
+    }
 
     if($IsWindows){
         Write-Host "`nWindows Kişiselleştirme Ayarları" -ForegroundColor Green
