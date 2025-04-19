@@ -1,6 +1,9 @@
+. "$PSScriptRoot\Windows.System.ps1"
 . "$PSScriptRoot\Windows.Personalize.ps1"
 
 function Personalize-Settings {
+    Detect-WindowsVersion
+
     if($IsWindows){
         Write-Host "`nWindows Kişiselleştirme Ayarları" -ForegroundColor Green
         if (Ask-YesNo "Karanlık moda geçirmek istiyor musun?") { Set-DarkMode }
@@ -17,6 +20,9 @@ function Personalize-Settings {
         if ($isWin10) {
             if (Ask-YesNo "'Haberler ve İlgi Alanları' görev çubuğundan gizlensin mi?") { Hide-News }
         }
+
+        if (Ask-YesNo "Dosya uzantılarını görünür yapmak ister misin?") { Show-FileExtensions }
+        if (Ask-YesNo "Gizli dosya ve klasörleri göstermek ister misin?") { Show-HiddenItems }
 
         if (Ask-YesNo "PowerShell başlangıcında özel ayarları (profile) yüklemek istiyor musun?") { Set-Profile }
         if (Ask-YesNo "Bilgisayarın uykuya geçme süresi ayarlansın mı? (prizde: Hiçbir zaman, pilde: 30 dakika)") { Disable-SleepTimeout }

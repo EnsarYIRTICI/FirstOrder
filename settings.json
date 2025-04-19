@@ -1,0 +1,74 @@
+{
+    // This is a JSON file that contains the configuration for the system setup.
+    // It includes the computer name and the list of programs to be installed on different operating systems.
+    "computer_name": "MSI",
+    "packages": {
+        // Windows Packages
+        "windows": {
+            "chocolatey": [
+                "pwsh",
+                "microsoft-windows-terminal",
+                "thunderbird",
+                "virtualbox",
+                "winscp",
+                "winrar",
+                "git",
+                "wget",
+                "nvm",
+                "nodejs",
+                "temurin21",
+                "micro",
+                "openssl",
+                "openssh",
+                "qbittorrent",
+                "steam",
+                "discord",
+                "opera",
+                "tor-browser",
+                "cpu-z",
+                "crystaldiskmark",
+                "lghub",
+                "googlechrome",
+                "googledrive",
+                "itunes",
+                "icloud",
+                "anydesk",
+                "vscode",
+                "visualstudio2022community",
+                "androidstudio",
+                "docker-desktop",
+                "flutter"
+            ],
+            "winget": [
+                "Python.Python.3.13",
+                "WhatsApp",
+                "9PP9GZM2GN26"
+            ]
+        },
+        // Linux Packages
+        "linux": {
+            "apt": [
+                "micro",
+                "net-tools",
+                "nodejs",
+                "npm",
+                "docker.io"
+            ]
+        },
+        // MacOS Packages
+        "macos": {
+            "brew": [
+                "git",
+                "nvm",
+                "nodejs",
+                "openjdk@21",
+                "visual-studio-code",
+                "python3",
+                "docker",
+                "virtualbox",
+                "qbittorrent",
+                "discord"
+            ]
+        }
+    }
+}

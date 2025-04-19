@@ -112,25 +112,51 @@ function Hide-News {
     }
 }
 
+function Show-FileExtensions {
+    try {
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Value 0
+        Write-Host "Dosya uzantıları görünür hale getirildi ve Windows Gezgini yeniden başlatıldı."
+    } catch {
+        Write-Host "Dosya uzantılarını görünür yaparken bir hata oluştu: $_"
+    }
+}
+
+function Show-HiddenItems {
+    try {
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Value 1
+        Write-Host "Gizli dosya ve klasörler görünür hale getirildi ve Windows Gezgini yeniden başlatıldı."
+    } catch {
+        Write-Host "Gizli öğeleri gösterirken bir hata oluştu: $_"
+    }
+}
+
 function Disable-SleepTimeout {
-    Write-Host "Bilgisayarın uykuya geçme süreleri ayarlanıyor..."
-    
-    # Prize takılıyken: hiçbir zaman uykuya geçmesin
-    powercfg /change standby-timeout-ac 0
+    try {
+        Write-Host "Bilgisayarın uykuya geçme süreleri ayarlanıyor..."
+        
+        # Prize takılıyken: hiçbir zaman uykuya geçmesin
+        powercfg /change standby-timeout-ac 0
 
-    # Pildeyken: 30 dakika (30 dakika = 30 dakika)
-    powercfg /change standby-timeout-dc 30
+        # Pildeyken: 30 dakika
+        powercfg /change standby-timeout-dc 30
 
-    Write-Host "Uyku modu zaman aşımı başarıyla güncellendi:"
-    Write-Host "- Prize takılıyken: Hiçbir zaman"
-    Write-Host "- Pildeyken: 30 dakika"
+        Write-Host "Uyku modu zaman aşımı başarıyla güncellendi:"
+        Write-Host "- Prize takılıyken: Hiçbir zaman"
+        Write-Host "- Pildeyken: 30 dakika"
+    } catch {
+        Write-Host "Uyku modu zaman aşımı ayarlanırken bir hata oluştu: $_"
+    }
 }
 
 function Set-LidCloseDoNothing {
-    Write-Host "Kapak kapatıldığında prizdeyken hiçbir şey yapılmaması için ayarlanıyor..."
-    
-    powercfg /setacvalueindex SCHEME_CURRENT SUB_BUTTONS LidAction 0
-    powercfg /setactive SCHEME_CURRENT
+    try {
+        Write-Host "Kapak kapatıldığında prizdeyken hiçbir şey yapılmaması için ayarlanıyor..."
+        
+        powercfg /setacvalueindex SCHEME_CURRENT SUB_BUTTONS LidAction 0
+        powercfg /setactive SCHEME_CURRENT
 
-    Write-Host "Ayar tamamlandı: Kapak kapatıldığında (prizdeyken) hiçbir şey yapılmayacak."
+        Write-Host "Ayar tamamlandı: Kapak kapatıldığında (prizdeyken) hiçbir şey yapılmayacak."
+    } catch {
+        Write-Host "Kapak kapatma ayarı uygulanırken bir hata oluştu: $_"
+    }
 }

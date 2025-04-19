@@ -1,16 +1,13 @@
 function Install-AptPackages {
-    Write-Host "Seçilen yazılımlar APT ile kuruluyor..."
-    $aptPackages = @(
-        "micro",
-        "net-tools",
-        "nodejs",
-        "npm",
-        "docker.io"
-    )
+    Write-Host "APT ile Yaygın yazılımlar kuruluyor..."
+    
+    # JSON'dan APT paketlerini al
+    $json = Get-SettingsJSON
+    $aptPackages = $json.packages.linux.apt
 
-    apt update
-
+    # Paketleri yükle
     foreach ($pkg in $aptPackages) {
+        Write-Host "Kuruluyor: $pkg"
         apt install -y $pkg
     }
 }

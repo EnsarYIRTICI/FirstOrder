@@ -15,24 +15,29 @@ function Detect-WindowsVersion {
     }
 }
 
-function Enable-WSL {
-    try {
-        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All -NoRestart -ErrorAction Stop | Out-Null
-        Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All -NoRestart -ErrorAction Stop | Out-Null
-        Write-Host "WSL etkinleştirildi. WSL çekirdeği güncelleniyor..."
-        wsl --update
-        Write-Host "WSL çekirdeği kuruldu. Sisteminizi yeniden başlatmanız gerekebilir."
-    } catch {
-        Write-Host "WSL etkinleştirme sırasında bir hata oluştu: $_"
-    }
-}
+function Rename-ComputerName {
+    param (
+        [string]$NewName
+    )
 
-function Enable-HyperV {
     try {
-        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All -NoRestart -ErrorAction Stop | Out-Null
-        Write-Host "Hyper-V etkinleştirildi. Değişikliklerin geçerli olması için sistemi yeniden başlatın."
+        # Bilgisayar adı uzunluğu kontrolü
+        if ($NewName.Length -gt 15) {
+            Write-Host "Hata: Bilgisayar adı 15 karakterden uzun olamaz." -ForegroundColor Red
+            return
+        }
+
+        # Geçerli karakter kontrolü: yalnızca harf, rakam ve tire
+        if ($NewName -notmatch '^[a-zA-Z0-9\-]+$') {
+            Write-Host "Hata: Bilgisayar adı yalnızca harf, rakam ve tire içerebilir." -ForegroundColor Red
+            return
+        }
+
+        Rename-Computer -NewName $NewName -Force
+
+        Write-Host "Bilgisayar adı başarıyla '$NewName' olarak değiştirildi." -ForegroundColor Green
     } catch {
-        Write-Host "Hyper-V etkinleştirilemedi: $_"
+        Write-Host "Hata oluştu: $_" -ForegroundColor Red
     }
 }
 
@@ -57,6 +62,7 @@ function Enable-DeveloperMode {
     }
 }
 
+
 function Create-GuestUser {
     try {
         $userExists = Get-LocalUser -Name "misafir" -ErrorAction SilentlyContinue
@@ -69,6 +75,28 @@ function Create-GuestUser {
         }
     } catch {
         Write-Host "'Misafir' kullanıcısı oluşturulurken bir hata oluştu: $_"
+    }
+}
+
+
+function Enable-WSL {
+    try {
+        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All -NoRestart -ErrorAction Stop | Out-Null
+        Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All -NoRestart -ErrorAction Stop | Out-Null
+        Write-Host "WSL etkinleştirildi. WSL çekirdeği güncelleniyor..."
+        wsl --update
+        Write-Host "WSL çekirdeği kuruldu. Sisteminizi yeniden başlatmanız gerekebilir."
+    } catch {
+        Write-Host "WSL etkinleştirme sırasında bir hata oluştu: $_"
+    }
+}
+
+function Enable-HyperV {
+    try {
+        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All -NoRestart -ErrorAction Stop | Out-Null
+        Write-Host "Hyper-V etkinleştirildi. Değişikliklerin geçerli olması için sistemi yeniden başlatın."
+    } catch {
+        Write-Host "Hyper-V etkinleştirilemedi: $_"
     }
 }
 

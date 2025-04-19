@@ -1,26 +1,25 @@
+. "$PSScriptRoot\IO.ps1"
+
 function Install-ChocoPackages {
     Write-Host "Chocolatey ile Yaygın yazılımlar kuruluyor..."
-    $commonPackages = @(
-        "pwsh", "microsoft-windows-terminal", "thunderbird", "virtualbox", "winscp", "winrar",
-        "qbittorrent", "steam", "discord", "opera", "tor-browser", "cpu-z", "crystaldiskmark",
-        "lghub", "googlechrome", "googledrive", "itunes", "icloud", "anydesk",
-        "vscode", "visualstudio2022community", "androidstudio", "docker-desktop",
-        "git", "wget", "nvm", "nodejs", "temurin21", "micro", "openssl", "openssh",
-        "flutter"
-    )
     
-    foreach ($pkg in $commonPackages) {
+    $json = Get-SettingsJSON 
+    $chocoPackages = $json.packages.windows.chocolatey
+
+    Write-Host "Kurulacak paketler: $chocoPackages"
+    Write-Host "Kurulacak paketler: $chocoPackages"
+
+    foreach ($pkg in $chocoPackages) {
+        Write-Host "Kuruluyor: $pkg"
         choco install $pkg -y
     }
 }
 
 function Install-WingetPackages {
     Write-Host "Winget ile Yaygın yazılımlar kuruluyor..."
-    $wingetPackages = @(
-        "Python.Python.3.13",
-        "WhatsApp",
-        "Intel® Unison™"
-    )
+    
+    $json = Get-SettingsJSON
+    $wingetPackages = $json.packages.windows.winget
 
     foreach ($pkg in $wingetPackages) {
         Write-Host "Kuruluyor: $pkg"
@@ -30,39 +29,39 @@ function Install-WingetPackages {
 
 function Install-Chocolatey {
     if (-not $IsWindows) {
-        Write-Log "Chocolatey sadece Windows sistemlerde kullanılabilir."
+        Write-Host "Chocolatey sadece Windows sistemlerde kullanılabilir."
         return
     }
 
-    Write-Log "Chocolatey kuruluyor..."
+    Write-Host "Chocolatey kuruluyor..."
     iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
     
     if ($?) {
-        Write-Log "Chocolatey başarıyla kuruldu."
+        Write-Host "Chocolatey başarıyla kuruldu."
     } else {
-        Write-Log "Chocolatey kurulumu başarısız oldu."
+        Write-Host "Chocolatey kurulumu başarısız oldu."
     }
 }
 
 function Install-Winget {
     if (-not $IsWindows) {
-        Write-Log "Winget sadece Windows sistemlerde kullanılabilir."
+        Write-Host "Winget sadece Windows sistemlerde kullanılabilir."
         return
     }
 
     try {
         $ProgressPreference = 'SilentlyContinue'
-        Write-Log "WinGet PowerShell modülü PSGallery üzerinden kuruluyor..."
+        Write-Host "WinGet PowerShell modülü PSGallery üzerinden kuruluyor..."
         
         Install-PackageProvider -Name NuGet -Force | Out-Null
         Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
 
-        Write-Log "WinGet modülü indirildi. Bootstrap işlemi başlatılıyor..."
+        Write-Host "WinGet modülü indirildi. Bootstrap işlemi başlatılıyor..."
         Repair-WinGetPackageManager
 
-        Write-Log "WinGet bootstrap tamamlandı. Terminali yeniden başlatmanız gerekebilir."
+        Write-Host "WinGet bootstrap tamamlandı. Terminali yeniden başlatmanız gerekebilir."
     } catch {
-        Write-Log "Winget kurulumu sırasında bir hata oluştu: $_"
+        Write-Host "Winget kurulumu sırasında bir hata oluştu: $_"
     }
 }
 

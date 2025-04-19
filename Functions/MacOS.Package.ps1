@@ -1,20 +1,11 @@
 function Install-BrewPackages {
-    Write-Host "Seçilen yazılımlar Homebrew ile kuruluyor..."
-    $brewPackages = @(
-        "git",
-        "nvm",
-        "nodejs",
-        "openjdk@21",
-        "visual-studio-code",
-        "python3",
-        "docker",
-        "virtualbox",
-        "qbittorrent",
-        "discord"
-    )
+    Write-Host "Homebrew ile Yaygın yazılımlar kuruluyor..."
+    
+    # JSON'dan Homebrew paketlerini al
+    $json = Get-SettingsJSON
+    $brewPackages = $json.packages.macos.brew
 
-    brew update
-
+    # Paketleri yükle
     foreach ($pkg in $brewPackages) {
         Write-Host "Kuruluyor: $pkg"
         brew install $pkg
