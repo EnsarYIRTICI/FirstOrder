@@ -57,6 +57,10 @@ function Install-Packages {
             Write-Host "Homebrew paket yöneticisi bulunamadı. Çıkılıyor..."
         }
     }
+    else {
+        Write-Host "Desteklenmeyen işletim sistemi." -ForegroundColor Red
+
+    }
 }
 
 

@@ -19,5 +19,9 @@ function Assert-AdminRights {
             Exit 1
         }
     }
+    else {
+        Write-Host "Desteklenmeyen işletim sistemi." -ForegroundColor Red
+
+    }
 
 }   

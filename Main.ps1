@@ -17,6 +17,7 @@ if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
 . "$PSScriptRoot\Functions\System.ps1"
 . "$PSScriptRoot\Functions\Personalize.ps1"
 . "$PSScriptRoot\Functions\Package.ps1"
+. "$PSScriptRoot\Functions\FileExplorer.ps1"
 
 # == Tam Yetki Kontrolü ==
 Assert-AdminRights
@@ -26,7 +27,8 @@ do {
     Write-Host "`nNe yapmak istiyorsunuz?" -ForegroundColor Cyan
     Write-Host "1. Sistem Ayarlarını Yapılandır"
     Write-Host "2. Kişiselleştirme Ayarlarını Yapılandır"
-    Write-Host "3. Paket Yönetimi ile Yazılım Kurulumu"
+    Write-Host "3. Dosya Gezgini Ayarlarını Yapılandır"
+    Write-Host "4. Paket Yönetimi ile Yazılım Kurulumu"
     Write-Host "Q. Çıkış"
     $mainChoice = Read-Host "Seçiminiz (1-3, Q)"
 
@@ -38,6 +40,9 @@ do {
             Personalize-Settings
         }
         "3" {
+            FileExplorer-Settings
+        }
+        "4" {
             Install-Packages
         }
         "Q" {

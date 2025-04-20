@@ -28,12 +28,6 @@ function Personalize-Settings {
             if (Ask-YesNo "'Haberler ve İlgi Alanları' görev çubuğundan gizlensin mi?") { Hide-News }
         }
 
-        if (Ask-YesNo "Dosya Gezgini'nde son kullanılan dosyaları gizlemek ister misin?") { Disable-RecentFiles }
-        if (Ask-YesNo "Dosya Gezgini'nde sık kullanılan klasörleri gizlemek ister misin?") { Disable-FrequentFolders }
-
-        if (Ask-YesNo "Dosya uzantılarını görünür yapmak ister misin?") { Show-FileExtensions }
-        if (Ask-YesNo "Gizli dosya ve klasörleri göstermek ister misin?") { Show-HiddenItems }
-
         if (Ask-YesNo "PowerShell başlangıcında özel ayarları (profile) yüklemek istiyor musun?") { Set-Profile }
         if (Ask-YesNo "Bilgisayarın uykuya geçme süresi ayarlansın mı? (prizde: Hiçbir zaman, pilde: 30 dakika)") { Disable-SleepTimeout }
         if (Ask-YesNo "Kapak kapatıldığında (prizdeyken) 'hiçbir şey yapma' olarak ayarlansın mı?") { Set-LidCloseDoNothing }
@@ -44,6 +38,10 @@ function Personalize-Settings {
     }
     elseif($IsMacOS){
         Write-Host "`nMacOS Kişiselleştirme Ayarları" -ForegroundColor Green
+
+    }
+    else {
+        Write-Host "Desteklenmeyen işletim sistemi." -ForegroundColor Red
 
     }
 }

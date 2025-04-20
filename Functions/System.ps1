@@ -27,4 +27,8 @@ function System-Settings {
         Write-Host "`nMacOS Sistem Ayarları" -ForegroundColor Green
 
     }
+    else {
+        Write-Host "Desteklenmeyen işletim sistemi." -ForegroundColor Red
+
+    }
 }
