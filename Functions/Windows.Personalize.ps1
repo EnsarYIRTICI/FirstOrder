@@ -160,3 +160,24 @@ function Set-LidCloseDoNothing {
         Write-Host "Kapak kapatma ayarı uygulanırken bir hata oluştu: $_"
     }
 }
+
+
+function Disable-RecentFiles {
+    try {
+        # Son kullanılan dosyaları gizler
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "ShowRecent" -Value 0
+        Write-Host "Son kullanılan dosyalar başarıyla gizlendi."
+    } catch {
+        Write-Host "Hata: Son kullanılan dosyalar gizlenemedi. $_" -ForegroundColor Red
+    }
+}
+
+function Disable-FrequentFolders {
+    try {
+        # Sık kullanılan klasörleri gizler
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "ShowFrequent" -Value 0
+        Write-Host "Sık kullanılan klasörler başarıyla gizlendi."
+    } catch {
+        Write-Host "Hata: Sık kullanılan klasörler gizlenemedi. $_" -ForegroundColor Red
+    }
+}
