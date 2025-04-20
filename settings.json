@@ -1,14 +1,15 @@
 {
-    // This is a JSON file that contains the configuration for the system setup.
-    // It includes the computer name and the list of programs to be installed on different operating systems.
+    // Bu, sistem kurulumu için yapılandırmayı içeren bir JSON dosyasıdır.
+    // Bilgisayar adını ve farklı işletim sistemlerine yüklenecek programların listesini içerir.
     "computer_name": "MSI",
-    // Git user information for the system setup.
+    
+    // Sistem kurulumu için Git kullanıcı bilgileri.
     "git_user": {
         "name": "EnsarYIRTICI",
         "email": "ensaryrtc@hotmail.com"
     },
     "packages": {
-        // Windows Packages
+        // Windows Paketleri
         "windows": {
             "chocolatey": [
                 "pwsh",
@@ -24,7 +25,6 @@
                 "temurin21",
                 "micro",
                 "openssl",
-                "openssh",
                 "qbittorrent",
                 "steam",
                 "discord",
@@ -50,7 +50,7 @@
                 "9PP9GZM2GN26" // Intel Unison
             ]
         },
-        // Linux Packages
+        // Linux Paketleri
         "linux": {
             "apt": [
                 "micro",
@@ -60,7 +60,7 @@
                 "docker.io"
             ]
         },
-        // MacOS Packages
+        // macOS Paketleri
         "macos": {
             "brew": [
                 "git",

@@ -14,6 +14,7 @@ function System-Settings {
         if (Ask-YesNo "'misafir' adında bir misafir kullanıcı oluşturmak istiyor musun?") { Create-GuestUser }
         if (Ask-YesNo "WSL etkinleştirilsin ve kurulsun mu?") { Enable-WSL }
         if (Ask-YesNo "Hyper-V etkinleştirilsin mi?") { Enable-HyperV }
+        if (Ask-YesNo "OpenSSH Server kurulup etkinleştirilsin mi?") { Enable-OpenSSHServer }
 
     }
     elseif ($IsLinux) {
