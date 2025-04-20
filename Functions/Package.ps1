@@ -4,6 +4,8 @@
 
 function Install-Packages {
      if ($IsWindows) {
+        Detect-WindowsVersion
+
         # WINDOWS İÇİN PAKET YÖNETİMİ
         Write-Host "`nWindows Paket Yönetimi" -ForegroundColor Green
 

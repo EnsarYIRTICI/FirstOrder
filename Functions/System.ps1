@@ -3,6 +3,8 @@
 
 function System-Settings {
     if ($IsWindows) {
+        Detect-WindowsVersion
+
         Write-Host "`nWindows Sistem Ayarları" -ForegroundColor Green
 
         $json = Get-SettingsJSON

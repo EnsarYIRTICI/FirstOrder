@@ -5,6 +5,8 @@ function Install-BrewPackages {
     $json = Get-SettingsJSON
     $brewPackages = $json.packages.macos.brew
 
+    Write-Host "Kurulacak paketler: $brewPackages"
+
     # Paketleri yükle
     foreach ($pkg in $brewPackages) {
         Write-Host "Kuruluyor: $pkg"

@@ -5,6 +5,8 @@ function Install-AptPackages {
     $json = Get-SettingsJSON
     $aptPackages = $json.packages.linux.apt
 
+    Write-Host "Kurulacak paketler: $aptPackages"
+
     # Paketleri yükle
     foreach ($pkg in $aptPackages) {
         Write-Host "Kuruluyor: $pkg"

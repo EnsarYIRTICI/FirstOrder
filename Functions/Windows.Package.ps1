@@ -2,13 +2,23 @@
 
 function Install-ChocoPackages {
     Write-Host "Chocolatey ile Yaygın yazılımlar kuruluyor..."
-    
-    $json = Get-SettingsJSON 
+
+    # JSON dosyasından paket bilgilerini al
+    $json = Get-SettingsJSON
     $chocoPackages = $json.packages.windows.chocolatey
 
-    Write-Host "Kurulacak paketler: $chocoPackages"
+    # Windows sürümünü kontrol et
+    if ($isWin10) {
+        # Windows 10 için ek Chocolatey paketleri
+        $chocoPackages += $json.packages.windows.chocolatey_10
+    } elseif ($isWin11) {
+        # Windows 11 için ek Chocolatey paketleri
+        $chocoPackages += $json.packages.windows.chocolatey_11
+    }
+
     Write-Host "Kurulacak paketler: $chocoPackages"
 
+    # Paketleri sırayla kur
     foreach ($pkg in $chocoPackages) {
         Write-Host "Kuruluyor: $pkg"
         choco install $pkg -y
@@ -20,6 +30,17 @@ function Install-WingetPackages {
     
     $json = Get-SettingsJSON
     $wingetPackages = $json.packages.windows.winget
+
+    # Windows sürümünü kontrol et
+    if ($isWin10) {
+        # Windows 10 için ek paketleri al
+        $wingetPackages += $json.packages.windows.winget_10
+    } elseif ($isWin11) {
+        # Windows 11 için ek paketleri al
+        $wingetPackages += $json.packages.windows.winget_11
+    }
+
+    Write-Host "Kurulacak paketler: $wingetPackages"
 
     foreach ($pkg in $wingetPackages) {
         Write-Host "Kuruluyor: $pkg"

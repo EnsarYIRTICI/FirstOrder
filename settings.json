@@ -13,10 +13,7 @@
         "windows": {
             "chocolatey": [
                 "pwsh",
-                "microsoft-windows-terminal",
                 "thunderbird",
-                "virtualbox",
-                "winscp",
                 "winrar",
                 "git",
                 "wget",
@@ -25,6 +22,8 @@
                 "temurin21",
                 "micro",
                 "openssl",
+                "winscp",
+                "virtualbox",
                 "qbittorrent",
                 "steam",
                 "discord",
@@ -35,8 +34,6 @@
                 "lghub",
                 "googlechrome",
                 "googledrive",
-                "itunes",
-                "icloud",
                 "anydesk",
                 "vscode",
                 "visualstudio2022community",
@@ -44,9 +41,18 @@
                 "docker-desktop",
                 "flutter"
             ],
+            "chocolatey_10":[],
+            "chocolatey_11":[],
             "winget": [
                 "Python.Python.3.13",
                 "WhatsApp",
+                "Apple.iCloud",
+                "Apple.iTunes"
+            ],
+            "winget_10":[
+                "Microsoft.WindowsTerminal"
+            ],
+            "winget_11":[
                 "9PP9GZM2GN26" // Intel Unison
             ]
         },
@@ -60,7 +66,7 @@
                 "docker.io"
             ]
         },
-        // macOS Paketleri
+        // MacOS Paketleri
         "macos": {
             "brew": [
                 "git",
