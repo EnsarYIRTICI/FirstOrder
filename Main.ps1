@@ -4,23 +4,21 @@ Write-Host "Script Başlatılıyor..." -ForegroundColor Green
 # == Mevcut Dizin ==
 $scriptDir = $PSScriptRoot
 
+# == Temel Import Modülleri ==
+. "$PSScriptRoot\Functions\Guard.ps1"
+
 # == İşletim Sistemi ==
-if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
-    $IsWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
-    $IsLinux = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)
-    $IsMacOS = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)
-}
+Detect-OS
+
+# == Tam Yetki Kontrolü ==
+Assert-AdminRights
 
 # == Import Modülleri ==
 . "$PSScriptRoot\Functions\IO.ps1"
-. "$PSScriptRoot\Functions\Guard.ps1"
 . "$PSScriptRoot\Functions\System.ps1"
 . "$PSScriptRoot\Functions\Personalize.ps1"
 . "$PSScriptRoot\Functions\Package.ps1"
 . "$PSScriptRoot\Functions\FileExplorer.ps1"
-
-# == Tam Yetki Kontrolü ==
-Assert-AdminRights
 
 # == ANA SEÇİM MENÜSÜ ==
 do {
@@ -30,7 +28,7 @@ do {
     Write-Host "3. Dosya Gezgini Ayarlarını Yapılandır"
     Write-Host "4. Paket Yönetimi ile Yazılım Kurulumu"
     Write-Host "Q. Çıkış"
-    $mainChoice = Read-Host "Seçiminiz (1-3, Q)"
+    $mainChoice = Read-Host "Seçiminiz (1-4, Q)"
 
     switch ($mainChoice.ToUpper()) {
         "1" {

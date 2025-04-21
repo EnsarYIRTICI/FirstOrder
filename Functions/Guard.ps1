@@ -1,3 +1,19 @@
+function Detect-OS {
+    if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
+        try {
+            $global:IsWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)            
+            $global:IsLinux = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)
+            $global:IsMacOS = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)
+
+        } catch {
+            if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
+                Write-Host "OS Kontrol Hatası:"
+                Exit 1
+            }
+        }
+    }
+}
+
 function Assert-AdminRights {
     if ($IsWindows) {
         $IsAdmin = [Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544'
@@ -21,7 +37,6 @@ function Assert-AdminRights {
     }
     else {
         Write-Host "Desteklenmeyen işletim sistemi." -ForegroundColor Red
-
+        Exit 1
     }
-
 }   

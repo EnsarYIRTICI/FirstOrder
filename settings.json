@@ -41,17 +41,19 @@
                 "docker-desktop",
                 "flutter"
             ],
-            "chocolatey_10":[],
-            "chocolatey_11":[],
             "winget": [
                 "Python.Python.3.13",
                 "WhatsApp",
                 "Apple.iCloud",
                 "Apple.iTunes"
             ],
+            // Windows 10 için chocolatey ve winget paketleri
+            "chocolatey_10":[],
             "winget_10":[
                 "Microsoft.WindowsTerminal"
             ],
+            // Windows 11 için chocolatey ve winget paketleri
+            "chocolatey_11":[],
             "winget_11":[
                 "9PP9GZM2GN26" // Intel Unison
             ]
