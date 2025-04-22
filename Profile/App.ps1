@@ -3,30 +3,32 @@ function FirstOrder {
         [string]$Code
     )
 
-    Ensure-TerminalReady
+    if($IsWindows){
+        Ensure-TerminalReady
 
-    $appPath = "C:\Users\ensar\repo\powershell\FirstOrder"
-    $scriptPath = "C:\Users\ensar\repo\powershell\FirstOrder\Main.ps1"
+        $appPath = "C:\Users\ensar\repo\powershell\FirstOrder"
+        $scriptPath = "C:\Users\ensar\repo\powershell\FirstOrder\Main.ps1"
 
-    if($Code -eq "vs") {
-        code $appPath
-        return
-    }
+        if($Code -eq "vs") {
+            code $appPath
+            return
+        }
 
-    if($Code -eq "t") {
-        cd $appPath
-        return
-    } 
+        if($Code -eq "t") {
+            cd $appPath
+            return
+        } 
 
-    if (-not (Test-Path $scriptPath)) {
-        Write-Error "Main.ps1 bulunamadı: $scriptPath"
-        return
-    }
+        if (-not (Test-Path $scriptPath)) {
+            Write-Error "Main.ps1 bulunamadı: $scriptPath"
+            return
+        }
 
-    try {
-        Start-Process wt.exe -Verb RunAs -ArgumentList "pwsh `"$scriptPath`""
-    } catch {
-        Write-Error "Windows Terminal başlatılamadı: $_"
+        try {
+            Start-Process wt.exe -Verb RunAs -ArgumentList "pwsh `"$scriptPath`""
+        } catch {
+            Write-Error "Windows Terminal başlatılamadı: $_"
+        }
     }
 }
 
