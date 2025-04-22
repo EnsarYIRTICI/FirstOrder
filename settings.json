@@ -39,7 +39,8 @@
                 "visualstudio2022community",
                 "androidstudio",
                 "docker-desktop",
-                "flutter"
+                "flutter",
+                "awscli"
             ],
             "winget": [
                 "Python.Python.3.13",
