@@ -21,10 +21,13 @@ function System-Settings {
     }
     elseif ($IsLinux) {
         Write-Host "`nLinux Sistem Ayarları" -ForegroundColor Green
+        Write-Host "`nLinux Sistem Ayarları Bulunamadı" -ForegroundColor Red
+
 
     }
     elseif ($IsMacOS) {
         Write-Host "`nMacOS Sistem Ayarları" -ForegroundColor Green
+        Write-Host "`nMacOS Sistem Ayarları Bulunamadı" -ForegroundColor Red
 
     }
     else {

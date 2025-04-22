@@ -17,17 +17,13 @@ function FileExplorer-Settings {
     elseif ($IsLinux) {
         # Linux için dosya gezgini ayarları
         Write-Host "`nLinux Dosya Gezgini Ayarları" -ForegroundColor Green
-
-        # Linux için gerekli ayarlar burada yapılabilir.
-        # Örnek: Gizli dosyaları gösterme, dosya uzantılarını göster
+        Write-Host "`nLinux Dosya Gezgini Ayarları Bulunamadı" -ForegroundColor Red
 
     }
     elseif ($IsMacOS) {
         # MacOS için dosya gezgini ayarları
         Write-Host "`nMacOS Dosya Gezgini Ayarları" -ForegroundColor Green
-
-        # MacOS için gerekli ayarlar burada yapılabilir.
-        # Örnek: Gizli dosyaları gösterme, dosya uzantılarını göster
+        Write-Host "`nMacOS Dosya Gezgini Ayarları Bulunamadı" -ForegroundColor Red
 
     } 
     else {
