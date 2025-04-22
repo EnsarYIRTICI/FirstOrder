@@ -27,10 +27,12 @@ function Personalize-Settings {
     }
     elseif($IsLinux){
         Write-Host "`nLinux Kişiselleştirme Ayarları" -ForegroundColor Green
+        Write-Host "`nLinux Kişiselleştirme Ayarları Bulunamadı" -ForegroundColor Red
 
     }
     elseif($IsMacOS){
         Write-Host "`nMacOS Kişiselleştirme Ayarları" -ForegroundColor Green
+        Write-Host "`nMacOS Kişiselleştirme Ayarları Bulunamadı" -ForegroundColor Red
 
     }
     else {
