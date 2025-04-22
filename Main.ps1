@@ -19,16 +19,20 @@ Assert-AdminRights
 . "$PSScriptRoot\Functions\Personalize.ps1"
 . "$PSScriptRoot\Functions\Package.ps1"
 . "$PSScriptRoot\Functions\FileExplorer.ps1"
+. "$PSScriptRoot\Functions\PowerShell.ps1"
+. "$PSScriptRoot\Functions\Git.ps1"
 
 # == ANA SEÇİM MENÜSÜ ==
 do {
     Write-Host "`nNe yapmak istiyorsunuz?" -ForegroundColor Cyan
-    Write-Host "1. Sistem Ayarlarını Yapılandır"
-    Write-Host "2. Kişiselleştirme Ayarlarını Yapılandır"
-    Write-Host "3. Dosya Gezgini Ayarlarını Yapılandır"
-    Write-Host "4. Paket Yönetimi ile Yazılım Kurulumu"
+    Write-Host "1. Sistem"
+    Write-Host "2. Kişiselleştirme"
+    Write-Host "3. Dosya Gezgini"
+    Write-Host "4. Paket Yönetimi"
+    Write-Host "5. PowerShell"
+    Write-Host "6. Git"
     Write-Host "Q. Çıkış"
-    $mainChoice = Read-Host "Seçiminiz (1-4, Q)"
+    $mainChoice = Read-Host "Seçiminiz (1-6, Q)"
 
     switch ($mainChoice.ToUpper()) {
         "1" {
@@ -42,6 +46,12 @@ do {
         }
         "4" {
             Install-Packages
+        }        
+        "5" {
+            PowerShell-Settings
+        }        
+        "6" {
+            Git-Settings
         }
         "Q" {
             Write-Host "Çıkılıyor..." -ForegroundColor Yellow

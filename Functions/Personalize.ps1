@@ -5,12 +5,6 @@
 function Personalize-Settings {
     Detect-WindowsVersion
 
-    Write-Host "`nGenel Kişiselleştirme Ayarları" -ForegroundColor Green
-
-    if(Check-GitInstalled){
-        if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
-    }
-
     if($IsWindows){
         Write-Host "`nWindows Kişiselleştirme Ayarları" -ForegroundColor Green
         if (Ask-YesNo "Karanlık moda geçirmek istiyor musun?") { Set-DarkMode }
@@ -28,7 +22,6 @@ function Personalize-Settings {
             if (Ask-YesNo "'Haberler ve İlgi Alanları' görev çubuğundan gizlensin mi?") { Hide-News }
         }
 
-        if (Ask-YesNo "PowerShell başlangıcında özel ayarları (profile) yüklemek istiyor musun?") { Set-Profile }
         if (Ask-YesNo "Bilgisayarın uykuya geçme süresi ayarlansın mı? (prizde: Hiçbir zaman, pilde: 30 dakika)") { Disable-SleepTimeout }
         if (Ask-YesNo "Kapak kapatıldığında (prizdeyken) 'hiçbir şey yapma' olarak ayarlansın mı?") { Set-LidCloseDoNothing }
     }

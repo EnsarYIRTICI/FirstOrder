@@ -32,6 +32,7 @@
                 "cpu-z",
                 "crystaldiskmark",
                 "lghub",
+                "itunes",
                 "googlechrome",
                 "googledrive",
                 "anydesk",
@@ -40,13 +41,11 @@
                 "androidstudio",
                 "docker-desktop",
                 "flutter",
-                "awscli"
+                "awscli"          
             ],
             "winget": [
                 "Python.Python.3.13",
-                "WhatsApp",
-                "Apple.iCloud",
-                "Apple.iTunes"
+                "WhatsApp"
             ],
             // Windows 10 için chocolatey ve winget paketleri
             "chocolatey_10":[],
