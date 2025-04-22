@@ -24,14 +24,14 @@ function Assert-AdminRights {
     }
     elseif ($IsLinux) {
         if ($env:SUDO_USER -eq $null) {
-            Write-Host "Bu script'in Linux'ta root olarak çalıştırılması gerekiyor (sudo kullanın)!" -ForegroundColor Red
+            Write-Host "Bu script'in Linux'ta root olarak çalıştırılması gerekiyor (sudo pwsh ./Main.ps1)!" -ForegroundColor Red
             Exit 1
         }
     }
     elseif ($IsMacOS) {
         $user = whoami
         if ($user -ne "root") {
-            Write-Host "Bu script'in macOS'ta root olarak çalıştırılması gerekiyor (sudo kullanın)!" -ForegroundColor Red
+            Write-Host "Bu script'in macOS'ta root olarak çalıştırılması gerekiyor (sudo pwsh ./Main.ps1)!" -ForegroundColor Red
             Exit 1
         }
     }
