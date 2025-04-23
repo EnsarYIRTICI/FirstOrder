@@ -1,6 +1,6 @@
 function Git-FastPush {
     param(
-        [string]$Message = "update"
+        [string]$Message = "improvement"
     )
 
     git add .
