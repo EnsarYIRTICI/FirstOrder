@@ -13,7 +13,13 @@ function System-Settings {
         if (Ask-YesNo "Bilgisayar adını '$newName' olarak değiştirmek istiyor musun?") { Rename-ComputerName -NewName $newName }
         if (Ask-YesNo "Windows Update'i devre dışı bırakmak istiyor musun?") { Disable-WindowsUpdate }
         if (Ask-YesNo "Geliştirici Modu etkinleştirilsin mi?") { Enable-DeveloperMode }
-        if (Ask-YesNo "'misafir' adında bir misafir kullanıcı oluşturmak istiyor musun?") { Create-GuestUser }
+
+        $username = $json.local_user.username
+
+        if (Ask-YesNo "'$username' adında bir yerel kullanıcı oluşturmak istiyor musun?") { 
+            Create-LocalUser -Username $username -Fullname $json.local_user.fullname -Password $json.local_user.password -Description $json.local_user.description
+        }
+
         if (Ask-YesNo "WSL etkinleştirilsin ve kurulsun mu?") { Enable-WSL }
         if (Ask-YesNo "Hyper-V etkinleştirilsin mi?") { Enable-HyperV }
         if (Ask-YesNo "OpenSSH Server kurulup etkinleştirilsin mi?") { Enable-OpenSSHServer }

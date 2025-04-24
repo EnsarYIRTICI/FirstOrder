@@ -2,11 +2,16 @@
     // Bu, sistem kurulumu için yapılandırmayı içeren bir JSON dosyasıdır.
     // Bilgisayar adını ve farklı işletim sistemlerine yüklenecek programların listesini içerir.
     "computer_name": "MSI",
-    
     // Sistem kurulumu için Git kullanıcı bilgileri.
     "git_user": {
         "name": "EnsarYIRTICI",
         "email": "ensaryrtc@hotmail.com"
+    },
+    // Local kullanıcı bilgileri.
+    "local_user":{
+        "fullname": "Misafir",
+        "username": "misafir",
+        "password": "1453"
     },
     "packages": {
         // Windows Paketleri

@@ -15,6 +15,7 @@ function Detect-WindowsVersion {
     }
 }
 
+
 function Rename-ComputerName {
     param (
         [string]$NewName
@@ -41,6 +42,7 @@ function Rename-ComputerName {
     }
 }
 
+
 function Disable-WindowsUpdate {
     try {
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Force | Out-Null
@@ -52,6 +54,31 @@ function Disable-WindowsUpdate {
     }
 }
 
+
+function Create-LocalUser {
+
+    param (
+        [string]$Fullname = "Misafir",
+        [string]$Username = "misafir",
+        [string]$Password = "1453",
+        [string]$Description = "Misafir Kullanıcı"
+    )
+
+    try {
+        $userExists = Get-LocalUser -Name $Username -ErrorAction SilentlyContinue
+        if ($null -eq $userExists) {
+            New-LocalUser -Name $Username -Password (ConvertTo-SecureString $Password -AsPlainText -Force) -FullName $Fullname -Description $Description | Out-Null
+            Add-LocalGroupMember -Group "Users" -Member $Username | Out-Null
+            Write-Host "'$Username' kullanıcısı başarıyla oluşturuldu."
+        } else {
+            Write-Host "'$Username' kullanıcısı zaten mevcut."
+        }
+    } catch {
+        Write-Host "'$Username' kullanıcısı oluşturulurken bir hata oluştu: $_"
+    }
+}
+
+
 function Enable-DeveloperMode {
     try {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Force | Out-Null
@@ -62,21 +89,6 @@ function Enable-DeveloperMode {
     }
 }
 
-
-function Create-GuestUser {
-    try {
-        $userExists = Get-LocalUser -Name "misafir" -ErrorAction SilentlyContinue
-        if ($null -eq $userExists) {
-            New-LocalUser -Name "misafir" -Password (ConvertTo-SecureString "1453" -AsPlainText -Force) -FullName "Misafir" -Description "Misafir kullanıcı hesabı" | Out-Null
-            Add-LocalGroupMember -Group "Users" -Member "misafir" | Out-Null
-            Write-Host "'misafir' kullanıcısı başarıyla oluşturuldu."
-        } else {
-            Write-Host "'misafir' kullanıcısı zaten mevcut."
-        }
-    } catch {
-        Write-Host "'Misafir' kullanıcısı oluşturulurken bir hata oluştu: $_"
-    }
-}
 
 
 function Enable-WSL {
