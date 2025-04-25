@@ -20,9 +20,11 @@ function System-Settings {
             Create-LocalUser -Username $username -Fullname $json.local_user.fullname -Password $json.local_user.password -Description $json.local_user.description
         }
 
-        if (Ask-YesNo "WSL etkinleştirilsin ve kurulsun mu?") { Enable-WSL }
+        if (Ask-YesNo "WSL etkinleştirilsin mi?") { Enable-WSL }
+        if (Ask-YesNo ".wslconfig ayarlansın mı?") { Create-WslConfig }
+
         if (Ask-YesNo "Hyper-V etkinleştirilsin mi?") { Enable-HyperV }
-        if (Ask-YesNo "OpenSSH Server kurulup etkinleştirilsin mi?") { Enable-OpenSSHServer }
+        if (Ask-YesNo "OpenSSH etkinleştirilsin mi?") { Enable-OpenSSHServer }
 
     }
     elseif ($IsLinux) {

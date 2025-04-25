@@ -1,3 +1,5 @@
+. "$PSScriptRoot\IO.ps1"
+
 function Detect-WindowsVersion {
     $version = [System.Environment]::OSVersion.Version
     $global:windowsVersion = 0
@@ -56,7 +58,6 @@ function Disable-WindowsUpdate {
 
 
 function Create-LocalUser {
-
     param (
         [string]$Fullname = "Misafir",
         [string]$Username = "misafir",
@@ -89,12 +90,11 @@ function Enable-DeveloperMode {
     }
 }
 
-
-
 function Enable-WSL {
     try {
         Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All -NoRestart -ErrorAction Stop | Out-Null
         Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All -NoRestart -ErrorAction Stop | Out-Null
+
         Write-Host "WSL etkinleştirildi. WSL çekirdeği güncelleniyor..."
         wsl --update
         Write-Host "WSL çekirdeği kuruldu. Sisteminizi yeniden başlatmanız gerekebilir."
@@ -102,6 +102,49 @@ function Enable-WSL {
         Write-Host "WSL etkinleştirme sırasında bir hata oluştu: $_"
     }
 }
+
+
+function Create-WslConfig {
+    try {
+        $wslconfigPath = "$env:USERPROFILE\.wslconfig"
+
+        $json = Get-SettingsJSON
+        $wslConfig = $json.wsl_config
+
+        $lines = @()
+
+        # wsl2 bölümü
+        if ($wslConfig.PSObject.Properties.Name -contains "wsl2") {
+            $lines += "[wsl2]"
+            foreach ($prop in $wslConfig.wsl2.PSObject.Properties) {
+                $lines += "$($prop.Name)=$($prop.Value)"
+            }
+            $lines += ""
+        }
+
+        # network bölümü
+        if ($wslConfig.PSObject.Properties.Name -contains "network") {
+            $lines += "[network]"
+            foreach ($prop in $wslConfig.network.PSObject.Properties) {
+                $val = $prop.Value
+                # true/false'ları lowercase yazalım
+                if ($val -is [bool]) {
+                    $val = $val.ToString().ToLower()
+                }
+                $lines += "$($prop.Name)=$val"
+            }
+        }
+
+        $lines -join "`r`n" | Set-Content -Path $wslconfigPath -Encoding UTF8
+
+        Write-Host ".wslconfig başarıyla oluşturuldu." -ForegroundColor Cyan
+    } catch {
+        Write-Host "Hata: $_" -ForegroundColor Red
+    }
+}
+
+
+
 
 function Enable-HyperV {
     try {

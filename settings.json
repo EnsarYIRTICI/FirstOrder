@@ -13,6 +13,18 @@
         "username": "misafir",
         "password": "1453"
     },
+    // Wsl yapılandırması.
+    "wsl_config": {
+        "wsl2": {
+            // "networkingMode": "bridged",
+            // "vmSwitch": "external-switch",
+            "memory": "16GB",
+            "processors": 8
+        },
+        "network": {
+            "generateResolvConf": true
+        }
+    },
     "packages": {
         // Windows Paketleri
         "windows": {
