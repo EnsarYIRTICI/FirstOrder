@@ -45,7 +45,7 @@ function Rename-ComputerName {
 }
 
 
-function Disable-WindowsUpdate {
+function Disable-WindowsAutoUpdate {
     try {
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Force | Out-Null
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force | Out-Null
@@ -92,6 +92,7 @@ function Enable-DeveloperMode {
 
 function Enable-WSL {
     try {
+        Write-Host "WSL etkinleştiriliyor..."
         Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All -NoRestart -ErrorAction Stop | Out-Null
         Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All -NoRestart -ErrorAction Stop | Out-Null
 
@@ -102,7 +103,6 @@ function Enable-WSL {
         Write-Host "WSL etkinleştirme sırasında bir hata oluştu: $_"
     }
 }
-
 
 function Create-WslConfig {
     try {
@@ -143,9 +143,6 @@ function Create-WslConfig {
     }
 }
 
-
-
-
 function Enable-HyperV {
     try {
         Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All -NoRestart -ErrorAction Stop | Out-Null
@@ -167,5 +164,38 @@ function Enable-OpenSSHServer {
         Write-Host "OpenSSH Server başarıyla etkinleştirildi ve başlatıldı." -ForegroundColor Green
     } catch {
         Write-Host "OpenSSH Server etkinleştirilirken bir hata oluştu: $_" -ForegroundColor Red
+    }
+}
+
+function Is-DeveloperModeEnabled {
+    try {
+        $value = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
+        return $value.AllowDevelopmentWithoutDevLicense -eq 1
+    } catch {
+        return $false
+    }
+}
+
+function Is-WSLEnabled {
+    $feature = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    return $feature.State -eq "Enabled"
+}
+
+function Is-HyperVEnabled {
+    $feature = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
+    return $feature.State -eq "Enabled"
+}
+
+function Is-OpenSSHEnabled {
+    $feature = Get-WindowsCapability -Online | Where-Object { $_.Name -like "OpenSSH.Server*" }
+    return $feature.State -eq "Installed"
+}
+
+function Is-WindowsAutoUpdateDisabled {
+    try {
+        $value = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoUpdate" -ErrorAction Stop
+        return $value.NoAutoUpdate -eq 1
+    } catch {
+        return $false
     }
 }

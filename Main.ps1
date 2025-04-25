@@ -14,13 +14,12 @@ Detect-OS
 Assert-AdminRights
 
 # == Import Modülleri ==
-. "$PSScriptRoot\Functions\IO.ps1"
-. "$PSScriptRoot\Functions\System.ps1"
-. "$PSScriptRoot\Functions\Personalize.ps1"
-. "$PSScriptRoot\Functions\Package.ps1"
-. "$PSScriptRoot\Functions\FileExplorer.ps1"
-. "$PSScriptRoot\Functions\PowerShell.ps1"
-. "$PSScriptRoot\Functions\Git.ps1"
+. "$PSScriptRoot\Functions\Menu.System.ps1"
+. "$PSScriptRoot\Functions\Menu.Personalize.ps1"
+. "$PSScriptRoot\Functions\Menu.Package.ps1"
+. "$PSScriptRoot\Functions\Menu.FileExplorer.ps1"
+. "$PSScriptRoot\Functions\Menu.PowerShell.ps1"
+. "$PSScriptRoot\Functions\Menu.Git.ps1"
 
 # == ANA SEÇİM MENÜSÜ ==
 do {
