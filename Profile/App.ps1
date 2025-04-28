@@ -1,23 +1,14 @@
-function FirstOrder {
-    param(
-        [string]$Code
-    )
+$Applications = @{
+    "FirstOrder" = "C:\Users\ensar\repo\powershell\FirstOrder"
+}
 
+
+function FirstOrder {
     if($IsWindows){
         Ensure-TerminalReady
 
         $appPath = "C:\Users\ensar\repo\powershell\FirstOrder"
         $scriptPath = "C:\Users\ensar\repo\powershell\FirstOrder\Main.ps1"
-
-        if($Code -eq "vs") {
-            code $appPath
-            return
-        }
-
-        if($Code -eq "t") {
-            cd $appPath
-            return
-        } 
 
         if (-not (Test-Path $scriptPath)) {
             Write-Error "Main.ps1 bulunamadı: $scriptPath"
@@ -29,6 +20,32 @@ function FirstOrder {
         } catch {
             Write-Error "Windows Terminal başlatılamadı: $_"
         }
+    }
+}
+
+function xvs {
+    param(
+        [string]$Name = "FirstOrder"
+    )
+
+    if ($Applications.ContainsKey($Name)) {
+        code $Applications[$Name]
+    }
+    else {
+        Write-Host "Uygulama bulunamadı: $Name" -ForegroundColor Red
+    }
+}
+
+function xt {
+    param(
+        [string]$Name = "FirstOrder"
+    )
+
+    if ($Applications.ContainsKey($Name)) {
+        cd $Applications[$Name]
+    }
+    else {
+        Write-Host "Uygulama bulunamadı: $Name" -ForegroundColor Red
     }
 }
 
