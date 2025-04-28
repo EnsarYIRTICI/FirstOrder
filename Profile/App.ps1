@@ -2,24 +2,31 @@ $Applications = @{
     "FirstOrder" = "C:\Users\ensar\repo\powershell\FirstOrder"
 }
 
+function xsh {
+    param(
+        [string]$Name = "FirstOrder"
+    )
 
-function FirstOrder {
-    if($IsWindows){
+    if ($IsWindows) {
         Ensure-TerminalReady
 
-        $appPath = "C:\Users\ensar\repo\powershell\FirstOrder"
-        $scriptPath = "C:\Users\ensar\repo\powershell\FirstOrder\Main.ps1"
+        if ($Applications.ContainsKey($Name)) {
+            $appPath = $Applications[$Name]
+            $scriptPath = Join-Path $appPath "Main.ps1"
 
-        if (-not (Test-Path $scriptPath)) {
-            Write-Error "Main.ps1 bulunamadı: $scriptPath"
-            return
-        }
+            if (-not (Test-Path $scriptPath)) {
+                Write-Error "Main.ps1 bulunamadı: $scriptPath"
+                return
+            }
 
-        try {
             Start-Process wt.exe -Verb RunAs -ArgumentList "pwsh `"$scriptPath`""
-        } catch {
-            Write-Error "Windows Terminal başlatılamadı: $_"
+
+        } else {
+            Write-Host "Uygulama bulunamadı: $Name" -ForegroundColor Red
         }
+    }
+    else {
+        Write-Host "Bu fonksiyon sadece Windows üzerinde çalışır." -ForegroundColor Red
     }
 }
 
@@ -27,6 +34,8 @@ function xvs {
     param(
         [string]$Name = "FirstOrder"
     )
+
+    Ensure-VscodeReady
 
     if ($Applications.ContainsKey($Name)) {
         code $Applications[$Name]
@@ -60,6 +69,15 @@ function Ensure-TerminalReady {
 
     if (-not $wtPath) {
         Write-Error "wt (Windows Terminal) yüklü değil veya sistem PATH'inde değil."
+        return
+    }
+}
+
+function Ensure-VscodeReady {
+    $vscodePath = Get-Command code -ErrorAction SilentlyContinue
+
+    if (-not $vscodePath) {
+        Write-Error "VSCode yüklü değil veya sistem PATH'inde değil."
         return
     }
 }
