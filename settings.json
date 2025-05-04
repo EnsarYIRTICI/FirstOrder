@@ -37,6 +37,7 @@
                 "nvm",
                 "nodejs",
                 "temurin21",
+                "go",
                 "micro",
                 "openssl",
                 "winscp",
@@ -59,7 +60,8 @@
                 "androidstudio",
                 "docker-desktop",
                 "flutter",
-                "awscli"          
+                "awscli",
+                "jmeter"
             ],
             "winget": [
                 "Python.Python.3.13",
@@ -73,7 +75,8 @@
             // Windows 11 için chocolatey ve winget paketleri
             "chocolatey_11":[],
             "winget_11":[
-                "9PP9GZM2GN26" // Intel Unison
+                "9PP9GZM2GN26", // Intel Unison
+                "9WZDNCRFJ3P2" // Movies & TV
             ]
         },
         // Linux Paketleri
