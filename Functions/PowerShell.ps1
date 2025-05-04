@@ -36,19 +36,19 @@ function Set-Profile {
             })
         $lineToAdd += ') | ForEach-Object { . $_ }'
 
-        # Profil dosyasına eklemeler
-        $alreadyExists = Get-Content $PROFILE | Where-Object { $_ -eq $lineToAdd }
+        # Profil içeriğini oku
+        $profileContent = Get-Content -Path $PROFILE
 
-        if (-not $alreadyExists) {
-            try {
-                Add-Content -Path $PROFILE -Value $lineToAdd
-                Write-Host "Script dosyaları profiline eklendi."
-            } catch {
-                Write-Host "Profil dosyasına ekleme sırasında bir hata oluştu: $_"
-            }
-        } else {
-            Write-Host "Script dosyaları zaten profil dosyasına eklenmiş."
-        }
+        # Eski $profileScripts tanımını kaldır
+        $cleanedContent = $profileContent | Where-Object {$_ -notmatch '^\$profileScripts\s*=' }
+
+        # Yeni içerik oluştur
+        $newContent = $cleanedContent + "`n" + $lineToAdd
+
+        # Dosyayı yeniden yaz
+        Set-Content -Path $PROFILE -Value $newContent
+
+        Write-Host "Script dosyaları profil dosyasına yeniden eklendi."
     } catch {
         Write-Host "Profile yükleme sırasında bir hata oluştu: $_"
     }
