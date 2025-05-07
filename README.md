@@ -14,6 +14,6 @@
 
 #### sudo apt update && sudo apt install -y powershell
 #### cd FirstOrder
-#### sudo pwsh .\Main.ps1
+#### sudo pwsh ./Main.ps1
 
 
