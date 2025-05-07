@@ -1,5 +1,6 @@
 $Applications = @{
     "FirstOrder" = "C:\Users\ensar\repo\powershell\FirstOrder"
+    "SshConfig" = "C:\Users\ensar\.ssh"
 }
 
 function xsh {

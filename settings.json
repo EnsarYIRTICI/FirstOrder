@@ -83,25 +83,22 @@
         "linux": {
             "apt": [
                 "micro",
+                "git",
+                "gh",
+                "nginx",
                 "net-tools",
+                "nvm",
                 "nodejs",
                 "npm",
-                "docker.io"
+                "docker.io",
+                "docker-compose",
+                "openjdk-17-jdk"
             ]
         },
         // MacOS Paketleri
         "macos": {
             "brew": [
-                "git",
-                "nvm",
-                "nodejs",
-                "openjdk@21",
-                "visual-studio-code",
-                "python3",
-                "docker",
-                "virtualbox",
-                "qbittorrent",
-                "discord"
+                "git"
             ]
         }
     }

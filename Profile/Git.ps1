@@ -1,6 +1,13 @@
+function Git-FirstPush {
+    git add .
+    git commit -m "first"
+    git push origin master
+}
+
+
 function Git-FastPush {
     param(
-        [string]$Message = "improvement"
+        [string]$Message = "fast"
     )
 
     git add .
