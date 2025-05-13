@@ -1,105 +1,100 @@
 {
-    // Bu, sistem kurulumu için yapılandırmayı içeren bir JSON dosyasıdır.
-    // Bilgisayar adını ve farklı işletim sistemlerine yüklenecek programların listesini içerir.
-    "computer_name": "MSI",
-    // Sistem kurulumu için Git kullanıcı bilgileri.
-    "git_user": {
-        "name": "EnsarYIRTICI",
-        "email": "ensaryrtc@hotmail.com"
+  // Bu, sistem kurulumu için yapılandırmayı içeren bir JSON dosyasıdır.
+  // Bilgisayar adını ve farklı işletim sistemlerine yüklenecek programların listesini içerir.
+  "computer_name": "MSI",
+  // Sistem kurulumu için Git kullanıcı bilgileri.
+  "git_user": {
+    "name": "EnsarYIRTICI",
+    "email": "ensaryrtc@hotmail.com"
+  },
+  // Local kullanıcı bilgileri.
+  "local_user": {
+    "fullname": "Misafir",
+    "username": "misafir",
+    "password": "1453"
+  },
+  // Wsl yapılandırması.
+  "wsl_config": {
+    "wsl2": {
+      // "networkingMode": "bridged",
+      // "vmSwitch": "external-switch",
+      "memory": "16GB",
+      "processors": 8
     },
-    // Local kullanıcı bilgileri.
-    "local_user":{
-        "fullname": "Misafir",
-        "username": "misafir",
-        "password": "1453"
-    },
-    // Wsl yapılandırması.
-    "wsl_config": {
-        "wsl2": {
-            // "networkingMode": "bridged",
-            // "vmSwitch": "external-switch",
-            "memory": "16GB",
-            "processors": 8
-        },
-        "network": {
-            "generateResolvConf": true
-        }
-    },
-    "packages": {
-        // Windows Paketleri
-        "windows": {
-            "chocolatey": [
-                "pwsh",
-                "thunderbird",
-                "winrar",
-                "git",
-                "wget",
-                "nvm",
-                "nodejs",
-                "temurin21",
-                "go",
-                "micro",
-                "openssl",
-                "winscp",
-                "virtualbox",
-                "qbittorrent",
-                "steam",
-                "discord",
-                "opera",
-                "tor-browser",
-                "cpu-z",
-                "crystaldiskmark",
-                "lghub",
-                "itunes",
-                "googlechrome",
-                "googledrive",
-                "anydesk",
-                "vscode",
-                "visualstudio2022community",
-                "sql-server-management-studio",
-                "androidstudio",
-                "docker-desktop",
-                "flutter",
-                "awscli",
-                "jmeter"
-            ],
-            "winget": [
-                "Python.Python.3.13",
-                "WhatsApp"
-            ],
-            // Windows 10 için chocolatey ve winget paketleri
-            "chocolatey_10":[],
-            "winget_10":[
-                "Microsoft.WindowsTerminal"
-            ],
-            // Windows 11 için chocolatey ve winget paketleri
-            "chocolatey_11":[],
-            "winget_11":[
-                "9PP9GZM2GN26", // Intel Unison
-                "9WZDNCRFJ3P2" // Movies & TV
-            ]
-        },
-        // Linux Paketleri
-        "linux": {
-            "apt": [
-                "micro",
-                "git",
-                "gh",
-                "nginx",
-                "net-tools",
-                "nvm",
-                "nodejs",
-                "npm",
-                "docker.io",
-                "docker-compose",
-                "openjdk-17-jdk"
-            ]
-        },
-        // MacOS Paketleri
-        "macos": {
-            "brew": [
-                "git"
-            ]
-        }
+    "network": {
+      "generateResolvConf": true
     }
+  },
+  "packages": {
+    // Windows Paketleri
+    "windows": {
+      "chocolatey": [
+        "pwsh",
+        "thunderbird",
+        "winrar",
+        "git",
+        "wget",
+        "nvm",
+        "nodejs",
+        "temurin21",
+        "go",
+        "micro",
+        "openssl",
+        "winscp",
+        "virtualbox",
+        "qbittorrent",
+        "steam",
+        "discord",
+        "opera",
+        "tor-browser",
+        "cpu-z",
+        "crystaldiskmark",
+        "lghub",
+        "itunes",
+        "googlechrome",
+        "googledrive",
+        "anydesk",
+        "vscode",
+        "visualstudio2022community",
+        "sql-server-management-studio",
+        "androidstudio",
+        "docker-desktop",
+        "flutter",
+        "awscli",
+        "jmeter",
+        "ventoy"
+      ],
+      "winget": ["Python.Python.3.13", "WhatsApp"],
+      // Windows 10 için chocolatey ve winget paketleri
+      "chocolatey_10": [],
+      "winget_10": ["Microsoft.WindowsTerminal"],
+      // Windows 11 için chocolatey ve winget paketleri
+      "chocolatey_11": [],
+      "winget_11": [
+        "9PP9GZM2GN26", // Intel Unison
+        "9WZDNCRFJ3P2" // Movies & TV
+      ]
+    },
+    // Linux Paketleri
+    "linux": {
+      "apt": [
+        "micro",
+        "git",
+        "gh",
+        "nginx",
+        "net-tools",
+        "nvm",
+        "nodejs",
+        "npm",
+        "docker.io",
+        "docker-compose",
+        "openjdk-21-jdk",
+        "mysql-client-core-8.0"
+      ]
+    },
+    // MacOS Paketleri
+    "macos": {
+      "brew": ["git"]
+    }
+  }
 }

@@ -1,7 +1,7 @@
 ## Windows 10/11
 
 #### Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-#### cd FirstOrder
+#### cd .\FirstOrder*
 #### Get-ChildItem -Recurse -Path .\ -Filter *.ps1 | Unblock-File
 #### .\Main.ps1
 
@@ -13,7 +13,7 @@
 #### sudo dpkg -i packages-microsoft-prod.deb
 
 #### sudo apt update && sudo apt install -y powershell
-#### cd FirstOrder
+#### cd ./FirstOrder*
 #### sudo pwsh ./Main.ps1
 
 
