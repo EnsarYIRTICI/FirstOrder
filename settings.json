@@ -62,9 +62,11 @@
         "flutter",
         "awscli",
         "jmeter",
-        "ventoy"
+        "ventoy",
+        "mysql-cli",
+        "mysql.workbench"
       ],
-      "winget": ["Python.Python.3.13", "WhatsApp"],
+      "winget": ["Python.Python.3.13", "WhatsApp", "Telegram.TelegramDesktop"],
       // Windows 10 için chocolatey ve winget paketleri
       "chocolatey_10": [],
       "winget_10": ["Microsoft.WindowsTerminal"],
