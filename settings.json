@@ -43,7 +43,9 @@
         "winscp",
         "virtualbox",
         "qbittorrent",
+        "deluge",
         "steam",
+        "epicgameslauncher",
         "discord",
         "opera",
         "tor-browser",
@@ -64,7 +66,8 @@
         "jmeter",
         "ventoy",
         "mysql-cli",
-        "mysql.workbench"
+        "mysql.workbench",
+        "obs-studio"
       ],
       "winget": ["Python.Python.3.13", "WhatsApp", "Telegram.TelegramDesktop"],
       // Windows 10 için chocolatey ve winget paketleri

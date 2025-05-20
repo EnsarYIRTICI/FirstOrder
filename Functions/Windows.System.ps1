@@ -167,6 +167,16 @@ function Enable-OpenSSHServer {
     }
 }
 
+function Enable-AdministratorAccount {
+    try {
+        Write-Host "Yerleşik Administrator hesabı etkinleştiriliyor..." -ForegroundColor Yellow
+        Enable-LocalUser -Name "Administrator"
+        Write-Host "Administrator hesabı başarıyla etkinleştirildi." -ForegroundColor Green
+    } catch {
+        Write-Host "Administrator hesabı etkinleştirilirken bir hata oluştu: $_" -ForegroundColor Red
+    }
+}
+
 function Is-DeveloperModeEnabled {
     try {
         $value = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
@@ -176,26 +186,3 @@ function Is-DeveloperModeEnabled {
     }
 }
 
-function Is-WSLEnabled {
-    $feature = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-    return $feature.State -eq "Enabled"
-}
-
-function Is-HyperVEnabled {
-    $feature = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
-    return $feature.State -eq "Enabled"
-}
-
-function Is-OpenSSHEnabled {
-    $feature = Get-WindowsCapability -Online | Where-Object { $_.Name -like "OpenSSH.Server*" }
-    return $feature.State -eq "Installed"
-}
-
-function Is-WindowsAutoUpdateDisabled {
-    try {
-        $value = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoUpdate" -ErrorAction Stop
-        return $value.NoAutoUpdate -eq 1
-    } catch {
-        return $false
-    }
-}

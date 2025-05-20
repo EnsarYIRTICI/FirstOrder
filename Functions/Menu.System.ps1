@@ -15,6 +15,8 @@ function System-Settings {
         if (Ask-YesNo "Windows Auto Update'i devre dışı bırakmak istiyor musun?") { Disable-WindowsAutoUpdate }
         if (Ask-YesNo "Geliştirici Modu etkinleştirilsin mi?") { Enable-DeveloperMode }
 
+        if (Ask-YesNo "Administrator hesabını etkinleştirmek istiyor musun?") { Enable-AdministratorAccount }
+
         $username = $json.local_user.username
 
         if (Ask-YesNo "'$username' adında bir yerel kullanıcı oluşturmak istiyor musun?") { 
