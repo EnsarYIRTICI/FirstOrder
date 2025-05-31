@@ -11,6 +11,7 @@ function Install-Packages {
 
         # Chocolatey
         $chocoInstalled = Check-ChocoInstalled
+        
         if (-not $chocoInstalled) {
             if (Ask-YesNo "Chocolatey bulunamadı. Kurulsun mu?") {
                 Install-Chocolatey

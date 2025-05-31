@@ -1,4 +1,6 @@
 . "$PSScriptRoot\IO.ps1"
+. "$PSScriptRoot\Windows.Package.ps1"
+
 
 function Set-GitGlobalConfig {
     $settings = Get-SettingsJSON
@@ -11,6 +13,17 @@ function Set-GitGlobalConfig {
     git config --global user.email $gitUserEmail
 
     Write-Host "Git global config updated with user: $gitUserName and email: $gitUserEmail"
+}
+
+function Install-GitWithChoco {
+    if (Check-ChocoInstalled) {
+        Write-Host "Chocolatey bulundu. Git yükleniyor..."
+        choco install git --ignore-checksums -y
+    }
+    else {
+        Write-Host "Chocolatey bulunamadı, lütfen manuel kurulum yapınız."
+        return
+    }
 }
 
 function Check-GitInstalled {
