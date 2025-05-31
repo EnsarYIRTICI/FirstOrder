@@ -31,6 +31,8 @@
       // Windows için yaygın paketler
       "common": {
         "chocolatey": [
+          "googlechrome",
+          "googledrive",
           "pwsh",
           "git",
           "wget",
@@ -49,8 +51,6 @@
           "firefox",
           "cpu-z",
           "crystaldiskmark",
-          "googlechrome",
-          "googledrive",
           "anydesk",
           "lghub",
           "itunes"

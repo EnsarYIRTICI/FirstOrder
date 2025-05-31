@@ -15,7 +15,7 @@ function Install-ChocoPackages {
 
     foreach ($pkg in $chocoPackages) {
         Write-Host "Kuruluyor: $pkg"
-        choco install $pkg -y
+        choco install $pkg --ignore-checksums -y
     }
 }
 
