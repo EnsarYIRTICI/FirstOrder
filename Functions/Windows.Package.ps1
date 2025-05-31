@@ -1,24 +1,18 @@
 . "$PSScriptRoot\IO.ps1"
 
 function Install-ChocoPackages {
-    Write-Host "Chocolatey ile Yaygın yazılımlar kuruluyor..."
+    param(
+        [ValidateSet("common", "advanced")]
+        [string]$Type = "common"
+    )
 
-    # JSON dosyasından paket bilgilerini al
+    Write-Host "Chocolatey ile $Type yazılımlar kuruluyor..."
+
     $json = Get-SettingsJSON
-    $chocoPackages = $json.packages.windows.chocolatey
-
-    # Windows sürümünü kontrol et
-    if ($isWin10) {
-        # Windows 10 için ek Chocolatey paketleri
-        $chocoPackages += $json.packages.windows.chocolatey_10
-    } elseif ($isWin11) {
-        # Windows 11 için ek Chocolatey paketleri
-        $chocoPackages += $json.packages.windows.chocolatey_11
-    }
+    $chocoPackages = $json.packages.windows.$Type.chocolatey
 
     Write-Host "Kurulacak paketler: $chocoPackages"
 
-    # Paketleri sırayla kur
     foreach ($pkg in $chocoPackages) {
         Write-Host "Kuruluyor: $pkg"
         choco install $pkg -y
@@ -26,19 +20,15 @@ function Install-ChocoPackages {
 }
 
 function Install-WingetPackages {
-    Write-Host "Winget ile Yaygın yazılımlar kuruluyor..."
+    param(
+        [ValidateSet("common", "advanced")]
+        [string]$Type = "common"
+    )
+
+    Write-Host "Winget ile $Type yazılımlar kuruluyor..."
     
     $json = Get-SettingsJSON
-    $wingetPackages = $json.packages.windows.winget
-
-    # Windows sürümünü kontrol et
-    if ($isWin10) {
-        # Windows 10 için ek paketleri al
-        $wingetPackages += $json.packages.windows.winget_10
-    } elseif ($isWin11) {
-        # Windows 11 için ek paketleri al
-        $wingetPackages += $json.packages.windows.winget_11
-    }
+    $wingetPackages = $json.packages.windows.$Type.winget
 
     Write-Host "Kurulacak paketler: $wingetPackages"
 

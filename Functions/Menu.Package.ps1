@@ -19,7 +19,11 @@ function Install-Packages {
         }
 
         if ($chocoInstalled -and (Ask-YesNo "Chocolatey ile yaygın yazılımlar kurulsun mu?")) {
-            Install-ChocoPackages
+            Install-ChocoPackages -Type "common"
+        }
+
+        if ($chocoInstalled -and (Ask-YesNo "Chocolatey ile profesyonel yazılımlar kurulsun mu?")) {
+            Install-ChocoPackages -Type "advanced"
         }
 
         # Winget
@@ -32,8 +36,13 @@ function Install-Packages {
         }
 
         if ($wingetInstalled -and (Ask-YesNo "Winget ile yaygın yazılımlar kurulsun mu?")) {
-            Install-WingetPackages
+            Install-WingetPackages - Type "common"
         }
+
+        if ($wingetInstalled -and (Ask-YesNo "Winget ile profesyonel yazılımlar kurulsun mu?")) {
+            Install-WingetPackages - Type "advanced"
+        }
+        
     }
     elseif ($IsLinux) {
         # LINUX İÇİN PAKET YÖNETİMİ

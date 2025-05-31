@@ -28,57 +28,65 @@
   "packages": {
     // Windows Paketleri
     "windows": {
-      "chocolatey": [
-        "pwsh",
-        "thunderbird",
-        "winrar",
-        "git",
-        "wget",
-        "nvm",
-        "nodejs",
-        "temurin21",
-        "go",
-        "micro",
-        "openssl",
-        "winscp",
-        "virtualbox",
-        "qbittorrent",
-        "deluge",
-        "steam",
-        "epicgameslauncher",
-        "discord",
-        "opera",
-        "tor-browser",
-        "cpu-z",
-        "crystaldiskmark",
-        "lghub",
-        "itunes",
-        "googlechrome",
-        "googledrive",
-        "anydesk",
-        "vscode",
-        "visualstudio2022community",
-        "sql-server-management-studio",
-        "androidstudio",
-        "docker-desktop",
-        "flutter",
-        "awscli",
-        "jmeter",
-        "ventoy",
-        "mysql-cli",
-        "mysql.workbench",
-        "obs-studio"
-      ],
-      "winget": ["Python.Python.3.13", "WhatsApp", "Telegram.TelegramDesktop"],
-      // Windows 10 için chocolatey ve winget paketleri
-      "chocolatey_10": [],
-      "winget_10": ["Microsoft.WindowsTerminal"],
-      // Windows 11 için chocolatey ve winget paketleri
-      "chocolatey_11": [],
-      "winget_11": [
-        "9PP9GZM2GN26", // Intel Unison
-        "9WZDNCRFJ3P2" // Movies & TV
-      ]
+      // Windows için yaygın paketler
+      "common": {
+        "chocolatey": [
+          "pwsh",
+          "git",
+          "wget",
+          "thunderbird",
+          "winrar",
+          "obs-studio",
+          "slack",
+          "qbittorrent",
+          "deluge",
+          "steam",
+          "epicgameslauncher",
+          "discord",
+          "opera",
+          "tor-browser",
+          "firefox",
+          "cpu-z",
+          "crystaldiskmark",
+          "googlechrome",
+          "googledrive",
+          "anydesk",
+          "lghub",
+          "itunes"
+        ],
+        "winget": [
+          "WhatsApp",
+          "Telegram.TelegramDesktop",
+          "Microsoft.WindowsTerminal",
+          "9PP9GZM2GN26", // Intel Unison
+          "9WZDNCRFJ3P2" // Movies & TV
+        ]
+      },
+      // Windows için gelişmiş paketler
+      "advanced": {
+        "chocolatey": [
+          "nvm",
+          "nodejs",
+          "temurin21",
+          "go",
+          "micro",
+          "openssl",
+          "winscp",
+          "virtualbox",
+          "vscode",
+          "visualstudio2022community",
+          "sql-server-management-studio",
+          "androidstudio",
+          "docker-desktop",
+          "flutter",
+          "awscli",
+          "jmeter",
+          "mysql-cli",
+          "mysql.workbench",
+          "ventoy"
+        ],
+        "winget": ["Python.Python.3.13"]
+      }
     },
     // Linux Paketleri
     "linux": {
