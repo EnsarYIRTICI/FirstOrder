@@ -5,14 +5,14 @@ $Applications = @{
 
 function xsh {
     param(
-        [string]$Name = "FirstOrder"
+        [string]$N = "FirstOrder"
     )
 
     if ($IsWindows) {
         Ensure-TerminalReady
 
-        if ($Applications.ContainsKey($Name)) {
-            $appPath = $Applications[$Name]
+        if ($Applications.ContainsKey($N)) {
+            $appPath = $Applications[$N]
             $scriptPath = Join-Path $appPath "Main.ps1"
 
             if (-not (Test-Path $scriptPath)) {
@@ -23,7 +23,7 @@ function xsh {
             Start-Process wt.exe -Verb RunAs -ArgumentList "pwsh `"$scriptPath`""
 
         } else {
-            Write-Host "Uygulama bulunamadı: $Name" -ForegroundColor Red
+            Write-Host "Uygulama bulunamadı: $N" -ForegroundColor Red
         }
     }
     else {
@@ -33,29 +33,29 @@ function xsh {
 
 function xvs {
     param(
-        [string]$Name = "FirstOrder"
+        [string]$N = "FirstOrder"
     )
 
     Ensure-VscodeReady
 
-    if ($Applications.ContainsKey($Name)) {
-        code $Applications[$Name]
+    if ($Applications.ContainsKey($N)) {
+        code $Applications[$N]
     }
     else {
-        Write-Host "Uygulama bulunamadı: $Name" -ForegroundColor Red
+        Write-Host "Uygulama bulunamadı: $N" -ForegroundColor Red
     }
 }
 
 function xt {
     param(
-        [string]$Name = "FirstOrder"
+        [string]$N = "FirstOrder"
     )
 
-    if ($Applications.ContainsKey($Name)) {
-        cd $Applications[$Name]
+    if ($Applications.ContainsKey($N)) {
+        cd $Applications[$N]
     }
     else {
-        Write-Host "Uygulama bulunamadı: $Name" -ForegroundColor Red
+        Write-Host "Uygulama bulunamadı: $N" -ForegroundColor Red
     }
 }
 
