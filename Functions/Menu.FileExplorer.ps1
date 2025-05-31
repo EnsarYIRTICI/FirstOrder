@@ -12,7 +12,6 @@ function FileExplorer-Settings {
         if (Ask-YesNo "Gizli dosya ve klasörleri göstermek ister misin?") { Show-HiddenItems }
         if (Ask-YesNo "Dosya Gezgini'nde son kullanılan dosyaları gizlemek ister misin?") { Disable-RecentFiles }
         if (Ask-YesNo "Dosya Gezgini'nde sık kullanılan klasörleri gizlemek ister misin?") { Disable-FrequentFolders }
-        if (Ask-YesNo "Dosyaları tek tıkla açmak ister misin?") { Set-SingleClickOpen }
         if (Ask-YesNo "Dosya Gezginini yeniden başlatmak ister misin?") { Restart-Explorer }
 
     }
