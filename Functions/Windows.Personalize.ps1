@@ -27,12 +27,35 @@ function Set-DarkMode {
 }
 
 function Add-DesktopIcons {
-    try {
-        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" -Name "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" -Value 0
-        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" -Name "{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}" -Value 0
+    $paths = @(
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu"
+    )
+
+    $icons = @(
+        "{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
+        "{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}"
+    )
+
+    $success = $false
+
+    foreach ($path in $paths) {
+        foreach ($icon in $icons) {
+            try {
+                if (Test-Path $path) {
+                    Set-ItemProperty -Path $path -Name $icon -Value 0 -ErrorAction Stop
+                    $success = $true
+                }
+            } catch {
+                Write-Host "[$path] için ikon eklenirken hata: $_"
+            }
+        }
+    }
+
+    if ($success) {
         Write-Host "'Bu Bilgisayar' ve 'Denetim Masası' simgeleri başarıyla masaüstüne eklendi."
-    } catch {
-        Write-Host "Simgeler eklenirken bir hata oluştu: $_"
+    } else {
+        Write-Host "İlgili registry anahtarları bulunamadı. Sürüm farklı olabilir."
     }
 }
 
