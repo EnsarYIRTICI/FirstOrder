@@ -32,7 +32,6 @@
       "common": {
         "chocolatey": [
           "googlechrome",
-          "googledrive",
           "pwsh",
           "git",
           "wget",
@@ -60,7 +59,8 @@
           "Telegram.TelegramDesktop",
           "Microsoft.WindowsTerminal",
           "9PP9GZM2GN26", // Intel Unison
-          "9WZDNCRFJ3P2" // Movies & TV
+          "9WZDNCRFJ3P2", // Movies & TV
+          "9NVMNJCR03XV" // MSI Center
         ]
       },
       // Windows için gelişmiş paketler
