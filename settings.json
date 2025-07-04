@@ -84,7 +84,8 @@
           "jmeter",
           "mysql-cli",
           "mysql.workbench",
-          "ventoy"
+          "ventoy",
+          "nmap"
         ],
         "winget": ["Python.Python.3.13"]
       }

@@ -20,6 +20,7 @@ Assert-AdminRights
 . "$PSScriptRoot\Functions\Menu.FileExplorer.ps1"
 . "$PSScriptRoot\Functions\Menu.PowerShell.ps1"
 . "$PSScriptRoot\Functions\Menu.Git.ps1"
+. "$PSScriptRoot\Functions\Menu.Network.ps1"
 
 # == ANA SEÇİM MENÜSÜ ==
 do {
@@ -27,11 +28,12 @@ do {
     Write-Host "1. Sistem"
     Write-Host "2. Kişiselleştirme"
     Write-Host "3. Dosya Gezgini"
-    Write-Host "4. Paket Yönetimi"
-    Write-Host "5. PowerShell"
-    Write-Host "6. Git"
+    Write-Host "4. Ağ"
+    Write-Host "5. Paket Yönetimi"
+    Write-Host "6. PowerShell"
+    Write-Host "7. Git"
     Write-Host "Q. Çıkış"
-    $mainChoice = Read-Host "Seçiminiz (1-6, Q)"
+    $mainChoice = Read-Host "Seçiminiz (1-7, Q)"
 
     switch ($mainChoice.ToUpper()) {
         "1" {
@@ -44,12 +46,15 @@ do {
             FileExplorer-Settings
         }
         "4" {
-            Install-Packages
+            Network-Settings
         }        
         "5" {
-            PowerShell-Settings
+            Install-Packages
         }        
         "6" {
+            PowerShell-Settings
+        }
+        "7" {
             Git-Settings
         }
         "Q" {
