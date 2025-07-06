@@ -5,6 +5,10 @@ function Jwt {
 
     $bytes = New-Object byte[] $Len
     [System.Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes($bytes)
-    $secret = [Convert]::ToBase64String($bytes)
-    Write-Host "JWT Secret Key: $secret" -ForegroundColor Green
+    $base64 = [Convert]::ToBase64String($bytes)
+
+    # Base64URL formatına dönüştür (JWT'ler için uygundur)
+    $base64Url = $base64 -replace '\+', '-' -replace '/', '_' -replace '=', ''
+
+    Write-Host "JWT Secret Key: $base64Url" -ForegroundColor Green
 }
