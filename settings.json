@@ -17,7 +17,7 @@
   "wsl_config": {
     "wsl2": {
       // "networkingMode": "bridged",
-      // "vmSwitch": "external-switch",
+      // "vmSwitch": "eth-ext-switch",
       "memory": "16GB",
       "processors": 8
     },
