@@ -1,19 +1,3 @@
-function Set-DNS {
-    param (
-        [string]$NextHop = "192.168.1.1",
-        [string]$InterfaceAlias = "vEthernet (external-switch)"
-    )
-
-    try {
-        Write-Host "[+] DNS sunucusu ayarlanıyor: $NextHop" -ForegroundColor Cyan
-        Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses @($NextHop)
-        Write-Host "✅ DNS ayarı tamamlandı." -ForegroundColor Green
-    }
-    catch {
-        Write-Host "❌ DNS ayarlanırken hata oluştu: $_" -ForegroundColor Red
-    }
-}
-
 function Remove-FullTunnel {
     param (
         [string]$NextHop = "10.8.0.1"
@@ -28,5 +12,21 @@ function Remove-FullTunnel {
     }
     catch {
         Write-Host "`n❌ Bir şeyler ters gitti: $_" -ForegroundColor Red
+    }
+}
+
+function Set-DNS {
+    param (
+        [string]$NextHop = "192.168.1.1, 10.8.0.1",
+        [string]$InterfaceAlias = "vEthernet (wifi-ext-switch)"
+    )
+
+    try {
+        Write-Host "[+] DNS sunucusu ayarlanıyor: $NextHop" -ForegroundColor Cyan
+        Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses @($NextHop)
+        Write-Host "✅ DNS ayarı tamamlandı." -ForegroundColor Green
+    }
+    catch {
+        Write-Host "❌ DNS ayarlanırken hata oluştu: $_" -ForegroundColor Red
     }
 }
