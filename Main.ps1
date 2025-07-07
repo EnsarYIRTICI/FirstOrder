@@ -5,7 +5,7 @@ Write-Host "Script Başlatılıyor..." -ForegroundColor Green
 $scriptDir = $PSScriptRoot
 
 # == Temel Import Modülleri ==
-. "$PSScriptRoot\Functions\Guard.ps1"
+. "$scriptDir\Functions\Guard.ps1"
 
 # == İşletim Sistemi ==
 Detect-OS
@@ -14,12 +14,12 @@ Detect-OS
 Assert-AdminRights
 
 # == Import Modülleri ==
-. "$PSScriptDir\Functions\Menu.System.ps1"
-. "$PSScriptDir\Functions\Menu.Personalize.ps1"
-. "$PSScriptDir\Functions\Menu.Package.ps1"
-. "$PSScriptDir\Functions\Menu.FileExplorer.ps1"
-. "$PSScriptDir\Functions\Menu.PowerShell.ps1"
-. "$PSScriptDir\Functions\Menu.Git.ps1"
+. "$scriptDir\Functions\Menu.System.ps1"
+. "$scriptDir\Functions\Menu.Personalize.ps1"
+. "$scriptDir\Functions\Menu.Package.ps1"
+. "$scriptDir\Functions\Menu.FileExplorer.ps1"
+. "$scriptDir\Functions\Menu.PowerShell.ps1"
+. "$scriptDir\Functions\Menu.Git.ps1"
 
 # == Menü Tanımı ==
 $menuItems = @(
