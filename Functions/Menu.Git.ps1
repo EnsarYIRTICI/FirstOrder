@@ -15,12 +15,14 @@ function Git-Settings {
             if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
         }
 
-    } else if ($IsLinux) {
+    } 
+    elseif ($IsLinux) {
         Write-Host "`nLinux Git Ayarları" -ForegroundColor Green
         Write-Host "`nLinux Git Ayarları Bulunamadı" -ForegroundColor Red
 
  
-    } else if ($IsMacOS) {
+    } 
+    elseif ($IsMacOS) {
         Write-Host "`nMacOS Git Ayarları" -ForegroundColor Green
         Write-Host "`nMacOS Git Ayarları Bulunamadı" -ForegroundColor Red
 
