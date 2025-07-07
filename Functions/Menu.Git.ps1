@@ -2,14 +2,31 @@
 
 function Git-Settings {
 
-    $gitInstalled = Check-ChocoInstalled
+    if ($IsWindows){
+        Write-Host "`nWindows Git Ayarları" -ForegroundColor Green
 
-    if (-not $gitInstalled) {
-        if (Ask-YesNo "Git yüklü değil. Chocolatey ile yüklemek ister misiniz?") { Install-GitWithChoco }
-    }
+        $gitInstalled = Check-ChocoInstalled
 
-    if ($gitInstalled) {
-        if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
+        if (-not $gitInstalled) {
+            if (Ask-YesNo "Git yüklü değil. Chocolatey ile yüklemek ister misiniz?") { Install-GitWithChoco }
+        }
+
+        if ($gitInstalled) {
+            if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
+        }
+
+    } else if ($IsLinux) {
+        Write-Host "`nLinux Git Ayarları" -ForegroundColor Green
+        Write-Host "`nLinux Git Ayarları Bulunamadı" -ForegroundColor Red
+
+ 
+    } else if ($IsMacOS) {
+        Write-Host "`nMacOS Git Ayarları" -ForegroundColor Green
+        Write-Host "`nMacOS Git Ayarları Bulunamadı" -ForegroundColor Red
+
+    } else {
+        Write-Host "Desteklenmeyen işletim sistemi." -ForegroundColor Red
+        
     }
 
 }
