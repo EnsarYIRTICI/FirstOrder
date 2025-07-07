@@ -20,48 +20,39 @@ Assert-AdminRights
 . "$PSScriptRoot\Functions\Menu.FileExplorer.ps1"
 . "$PSScriptRoot\Functions\Menu.PowerShell.ps1"
 . "$PSScriptRoot\Functions\Menu.Git.ps1"
-. "$PSScriptRoot\Functions\Menu.Network.ps1"
 
-# == ANA SEÇİM MENÜSÜ ==
+# == Menü Tanımı ==
+$menuItems = @(
+    @{ Label = "Sistem"; Action = { System-Settings } },
+    @{ Label = "Kişiselleştirme"; Action = { Personalize-Settings } },
+    @{ Label = "Dosya Gezgini"; Action = { FileExplorer-Settings } },
+    @{ Label = "Paket Yönetimi"; Action = { Install-Packages } },
+    @{ Label = "PowerShell"; Action = { PowerShell-Settings } },
+    @{ Label = "Git"; Action = { Git-Settings } }
+)
+
+# == Ana Menü Döngüsü ==
 do {
     Write-Host "`nNe yapmak istiyorsunuz?" -ForegroundColor Cyan
-    Write-Host "1. Sistem"
-    Write-Host "2. Kişiselleştirme"
-    Write-Host "3. Dosya Gezgini"
-    Write-Host "4. Ağ"
-    Write-Host "5. Paket Yönetimi"
-    Write-Host "6. PowerShell"
-    Write-Host "7. Git"
+
+    for ($i = 0; $i -lt $menuItems.Count; $i++) {
+        Write-Host "$($i + 1). $($menuItems[$i].Label)"
+    }
     Write-Host "Q. Çıkış"
-    $mainChoice = Read-Host "Seçiminiz (1-7, Q)"
+
+    $mainChoice = Read-Host "Seçiminiz (1-$($menuItems.Count), Q)"
 
     switch ($mainChoice.ToUpper()) {
-        "1" {
-            System-Settings
-        }
-        "2" {
-            Personalize-Settings
-        }
-        "3" {
-            FileExplorer-Settings
-        }
-        "4" {
-            Network-Settings
-        }        
-        "5" {
-            Install-Packages
-        }        
-        "6" {
-            PowerShell-Settings
-        }
-        "7" {
-            Git-Settings
-        }
         "Q" {
             Write-Host "Çıkılıyor..." -ForegroundColor Yellow
         }
         default {
-            Write-Host "Geçersiz seçim yapıldı, lütfen tekrar deneyin." -ForegroundColor Red
+            if ($mainChoice -as [int] -and $mainChoice -ge 1 -and $mainChoice -le $menuItems.Count) {
+                $action = $menuItems[$mainChoice - 1].Action
+                & $action.Invoke()
+            } else {
+                Write-Host "Geçersiz seçim yapıldı, lütfen tekrar deneyin." -ForegroundColor Red
+            }
         }
     }
 } while ($mainChoice.ToUpper() -ne "Q")
