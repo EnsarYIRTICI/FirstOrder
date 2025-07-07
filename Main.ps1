@@ -14,12 +14,12 @@ Detect-OS
 Assert-AdminRights
 
 # == Import Modülleri ==
-. "$PSScriptRoot\Functions\Menu.System.ps1"
-. "$PSScriptRoot\Functions\Menu.Personalize.ps1"
-. "$PSScriptRoot\Functions\Menu.Package.ps1"
-. "$PSScriptRoot\Functions\Menu.FileExplorer.ps1"
-. "$PSScriptRoot\Functions\Menu.PowerShell.ps1"
-. "$PSScriptRoot\Functions\Menu.Git.ps1"
+. "$PSScriptDir\Functions\Menu.System.ps1"
+. "$PSScriptDir\Functions\Menu.Personalize.ps1"
+. "$PSScriptDir\Functions\Menu.Package.ps1"
+. "$PSScriptDir\Functions\Menu.FileExplorer.ps1"
+. "$PSScriptDir\Functions\Menu.PowerShell.ps1"
+. "$PSScriptDir\Functions\Menu.Git.ps1"
 
 # == Menü Tanımı ==
 $menuItems = @(
@@ -49,7 +49,7 @@ do {
         default {
             if ($mainChoice -as [int] -and $mainChoice -ge 1 -and $mainChoice -le $menuItems.Count) {
                 $action = $menuItems[$mainChoice - 1].Action
-                & $action.Invoke()
+                & $action
             } else {
                 Write-Host "Geçersiz seçim yapıldı, lütfen tekrar deneyin." -ForegroundColor Red
             }
