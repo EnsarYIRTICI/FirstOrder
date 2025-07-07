@@ -29,11 +29,7 @@ function Switch-VMSwitch-ByConnection {
     )
 
     # Admin kontrolü
-    $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-    if (-not $isAdmin) {
-        Write-Host "❌ Bu işlemi gerçekleştirmek için PowerShell'i yönetici olarak çalıştırmalısın." -ForegroundColor Red
-        return
-    }
+    Assert-AdminRights
 
     # vEthernet adapter IP kontrolü
     $wifiEx = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue
