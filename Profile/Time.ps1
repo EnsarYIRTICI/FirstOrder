@@ -1,6 +1,6 @@
 function Sync-SystemTime {
     # Admin kontrolü
-    Assert-AdminRights
+    if ( -not (Assert-AdminRights-Windows) ) { return }
 
     Start-Service w32time
     w32tm /resync

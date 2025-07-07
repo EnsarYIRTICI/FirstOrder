@@ -29,10 +29,7 @@ function Switch-VMSwitch-ByConnection {
     )
 
     # Admin kontrolü
-    if ( -not (Assert-AdminRights-Windows) ) {
-        Write-Host "Bu script'in yönetici olarak çalıştırılması gerekiyor!" -ForegroundColor Red
-        return
-    }
+    if ( -not (Assert-AdminRights-Windows) ) { return }
 
     # vEthernet adapter IP kontrolü
     $wifiEx = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue
@@ -85,11 +82,7 @@ function Remove-FullTunnel {
     )
 
     try {
-
-        if ( -not (Assert-AdminRights-Windows) ) {
-            Write-Host "Bu script'in yönetici olarak çalıştırılması gerekiyor!" -ForegroundColor Red
-            return
-        }
+        if ( -not (Assert-AdminRights-Windows) ) { return }
 
         Write-Host "`n[+] Full-Tunnel rotaları temizleniyor..." -ForegroundColor Yellow
         Remove-NetRoute -DestinationPrefix "128.0.0.0/1" -NextHop $NextHop -Confirm:$false -ErrorAction SilentlyContinue
@@ -109,10 +102,7 @@ function Set-DNS {
     )
 
     try {
-        if ( -not (Assert-AdminRights-Windows) ) {
-            Write-Host "Bu script'in yönetici olarak çalıştırılması gerekiyor!" -ForegroundColor Red
-            return
-        }
+        if ( -not (Assert-AdminRights-Windows) ) { return }
         
         Write-Host "[+] DNS sunucusu ayarlanıyor: $NextHop" -ForegroundColor Cyan
         Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses @($NextHop)
