@@ -29,14 +29,41 @@ function Switch-VMSwitch-ByConnection {
     )
 
     # Admin kontrolü
-    if ( -not (Assert-AdminRights-Windows) ) { return }
+    if ( -not (Assert-AdminRights-Windows) ) {
+        Write-Host "❌ Bu işlemi gerçekleştirmek için yönetici haklarına sahip olmalısınız." -ForegroundColor Red
+        return
+    }
 
-    # vEthernet adapter IP kontrolü
+    function Is-VMSwitchAdapterConnected($netConfig) {
+        return $netConfig -and
+            $netConfig.IPv4Address -and
+            $netConfig.IPv4Address.IPAddress -match '\d+\.\d+\.\d+\.\d+' -and
+            $netConfig.NetAdapter.MediaConnectionState -eq 'Connected'
+    }
+
+    # Adapter bilgilerini al
     $wifiEx = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue
     $ethEx  = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($EthSwitch)" -ErrorAction SilentlyContinue
 
-    $wifiConnected = $wifiEx.IPv4Address -ne $null
-    $ethConnected  = $ethEx.IPv4Address -ne $null
+    # Durumları yazdır
+    Write-Host "`n📡 Adapter Durumları:"
+    Write-Host "  - vEthernet ($WifiSwitch): " -NoNewline
+    if ($wifiEx) {
+        Write-Host "$($wifiEx.IPv4Address.IPAddress) (MediaStatus: $($wifiEx.NetAdapter.MediaConnectionState))"
+    } else {
+        Write-Host "Bulunamadı."
+    }
+
+    Write-Host "  - vEthernet ($EthSwitch): " -NoNewline
+    if ($ethEx) {
+        Write-Host "$($ethEx.IPv4Address.IPAddress) (MediaStatus: $($ethEx.NetAdapter.MediaConnectionState))"
+    } else {
+        Write-Host "Bulunamadı."
+    }
+
+    # Hangi adapter bağlı?
+    $wifiConnected = Is-VMSwitchAdapterConnected $wifiEx
+    $ethConnected  = Is-VMSwitchAdapterConnected $ethEx
 
     if ($wifiConnected) {
         Write-Host "`n💡 vEthernet ($WifiSwitch) bağlı. $EthSwitch'e bağlı olan VM'ler $WifiSwitch'e geçirilecek.`n"
@@ -53,7 +80,7 @@ function Switch-VMSwitch-ByConnection {
         Up-Eth-Ex-Metric
 
     } else {
-        Write-Host "❌ Ne vEthernet ($WifiSwitch) ne de ($EthSwitch) IP almış. Çıkılıyor." -ForegroundColor Red
+        Write-Host "`n❌ Ne vEthernet ($WifiSwitch) ne de ($EthSwitch) bağlı veya IP almış. Çıkılıyor." -ForegroundColor Red
         return
     }
 
@@ -75,6 +102,9 @@ function Switch-VMSwitch-ByConnection {
 
     Write-Host "`n✅ VM adapter'ları ve metrikler güncellendi."
 }
+
+
+
 
 function Remove-FullTunnel {
     param (
