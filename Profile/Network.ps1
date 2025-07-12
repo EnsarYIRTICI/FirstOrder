@@ -104,41 +104,38 @@ function Switch-VMSwitch-ByConnection {
 }
 
 
-
-
-function Remove-FullTunnel {
+function Toggle-SplitTunnel {
     param (
-        [string]$NextHop = "10.8.0.1"
+        [string]$InterfaceAlias = "OpenVPN Data Channel Offload",
+        [string]$VpnGateway = "10.8.0.1"
     )
 
-    try {
-        if ( -not (Assert-AdminRights-Windows) ) { return }
+    if ( -not (Assert-AdminRights-Windows) ) { return }
 
-        Write-Host "`n[+] Full-Tunnel rotaları temizleniyor..." -ForegroundColor Yellow
-        Remove-NetRoute -DestinationPrefix "128.0.0.0/1" -NextHop $NextHop -Confirm:$false -ErrorAction SilentlyContinue
-        Remove-NetRoute -DestinationPrefix "0.0.0.0/1" -NextHop $NextHop -Confirm:$false -ErrorAction SilentlyContinue
-
-        Write-Host "`n✅ Full-Tunnel yapılandırması kaldırıldı." -ForegroundColor Green
+    # InterfaceIndex'i InterfaceAlias'a göre al (ilk eşleşeni)
+    $iface = Get-NetIPInterface -InterfaceAlias $InterfaceAlias -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $iface) {
+        Write-Error "❌ Adaptör bulunamadı: '$InterfaceAlias'"
+        return
     }
-    catch {
-        Write-Host "`n❌ Bir şeyler ters gitti: $_" -ForegroundColor Red
+
+    $index = $iface.InterfaceIndex
+
+    # Route kontrol
+    $routeA = Get-NetRoute -DestinationPrefix "0.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue
+    $routeB = Get-NetRoute -DestinationPrefix "128.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue
+
+    if ($routeA -and $routeB) {
+        Write-Host "🔌 Split tunnel AÇILIYOR... (default rotalar kaldırılıyor)"
+        Remove-NetRoute -InterfaceIndex $index -DestinationPrefix "0.0.0.0/1" -Confirm:$false
+        Remove-NetRoute -InterfaceIndex $index -DestinationPrefix "128.0.0.0/1" -Confirm:$false
+        Write-Host "✅ Split tunnel AKTİF"
+    }
+    else {
+        Write-Host "🔒 Split tunnel KAPANIYOR... (default rotalar ekleniyor)"
+        New-NetRoute -DestinationPrefix "0.0.0.0/1" -InterfaceIndex $index -NextHop $VpnGateway -Confirm:$false | Out-Null
+        New-NetRoute -DestinationPrefix "128.0.0.0/1" -InterfaceIndex $index -NextHop $VpnGateway -Confirm:$false | Out-Null
+        Write-Host "✅ Tüm trafik VPN'e yönlendirildi (split tunnel PASİF)"
     }
 }
 
-function Set-DNS {
-    param (
-        [string]$NextHop = "192.168.1.1, 10.8.0.1",
-        [string]$InterfaceAlias = "vEthernet (wifi-ext-switch)"
-    )
-
-    try {
-        if ( -not (Assert-AdminRights-Windows) ) { return }
-        
-        Write-Host "[+] DNS sunucusu ayarlanıyor: $NextHop" -ForegroundColor Cyan
-        Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses @($NextHop)
-        Write-Host "✅ DNS ayarı tamamlandı." -ForegroundColor Green
-    }
-    catch {
-        Write-Host "❌ DNS ayarlanırken hata oluştu: $_" -ForegroundColor Red
-    }
-}

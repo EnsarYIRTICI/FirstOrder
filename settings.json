@@ -85,7 +85,8 @@
           "mysql-cli",
           "mysql.workbench",
           "ventoy",
-          "nmap"
+          "nmap",
+          "mobaxterm"
         ],
         "winget": ["Python.Python.3.13"]
       }
