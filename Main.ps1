@@ -20,6 +20,7 @@ Assert-AdminRights
 . "$scriptDir\Functions\Menu.FileExplorer.ps1"
 . "$scriptDir\Functions\Menu.PowerShell.ps1"
 . "$scriptDir\Functions\Menu.Git.ps1"
+. "$scriptDir\Functions\Menu.Vscode.ps1"
 
 # == Menü Tanımı ==
 $menuItems = @(
@@ -29,6 +30,7 @@ $menuItems = @(
     @{ Label = "Paket Yönetimi"; Action = { Install-Packages } },
     @{ Label = "PowerShell"; Action = { PowerShell-Settings } },
     @{ Label = "Git"; Action = { Git-Settings } }
+    @{ Label = "Vscode"; Action = { Vscode-Settings } }
 )
 
 # == Ana Menü Döngüsü ==
