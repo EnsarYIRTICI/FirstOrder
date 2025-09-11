@@ -1,39 +1,60 @@
-function Up-Metric  {
+# Ağ arayüzü için metric değerini 1 olarak ayarlayan yardımcı fonksiyon
+function Up-Metric {
     param(
-        [string]$N = "Wi-Fi"
+        [string]$N = "Wi-Fi"   # Varsayılan olarak Wi-Fi arayüzü
     )
 
-    netsh interface ipv4 set interface "$N" metric=1
+    # Önce adaptör var mı kontrol et
+    $adapter = Get-NetAdapter -Name $N -ErrorAction SilentlyContinue
+
+    if ($adapter) {
+        # Arayüz bulunduysa metric değerini 1 yap
+        netsh interface ipv4 set interface "$N" metric=1
+        Write-Host "✅ '$N' arayüzü bulundu, metric 1 olarak ayarlandı."
+    }
+    else {
+        # Arayüz yoksa sadece bilgi mesajı ver
+        Write-Host "⚠️ '$N' arayüzü bulunamadı, metric değiştirilemedi." -ForegroundColor Yellow
+    }
 }
 
+
+# Wi-Fi arayüzünün metric değerini günceller
 function Up-Wifi-Metric {
     Up-Metric -N "Wi-Fi"
 }
 
+# Hyper-V sanal switch (Wi-Fi) metric değerini günceller
 function Up-Wifi-Ex-Metric {
     Up-Metric -N "vEthernet (wifi-ext-switch)"
 }
 
+# Ethernet arayüzünün metric değerini günceller
 function Up-Ethernet-Metric {
     Up-Metric -N "Ethernet"
 }
 
+# Hyper-V sanal switch (Ethernet) metric değerini günceller
 function Up-Eth-Ex-Metric {
     Up-Metric -N "vEthernet (eth-ext-switch)"
 }
 
+# VM'lerin bağlı olduğu sanal switch'i, aktif olan fiziksel bağlantıya göre otomatik değiştirir.
+# Öncelik sırası: Wi-Fi > Ethernet > Default Switch (fallback)
 function Switch-VMSwitch-ByConnection {
     param (
-        [string]$WifiSwitch = "wifi-ext-switch",
-        [string]$EthSwitch  = "eth-ext-switch"
+        [string]$WifiSwitch    = "wifi-ext-switch", # Wi-Fi sanal switch adı
+        [string]$EthSwitch     = "eth-ext-switch",  # Ethernet sanal switch adı
+        [string]$DefaultSwitch = "Default Switch"   # Fallback switch adı
     )
 
-    # Admin kontrolü
+    # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
     if ( -not (Assert-AdminRights-Windows) ) {
         Write-Host "❌ Bu işlemi gerçekleştirmek için yönetici haklarına sahip olmalısınız." -ForegroundColor Red
         return
     }
 
+    # Yardımcı fonksiyon: adaptör bağlı mı ve geçerli bir IPv4 adresi almış mı kontrol eder
     function Is-VMSwitchAdapterConnected($netConfig) {
         return $netConfig -and
             $netConfig.IPv4Address -and
@@ -41,11 +62,25 @@ function Switch-VMSwitch-ByConnection {
             $netConfig.NetAdapter.MediaConnectionState -eq 'Connected'
     }
 
-    # Adapter bilgilerini al
-    $wifiEx = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue
-    $ethEx  = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($EthSwitch)" -ErrorAction SilentlyContinue
+    # --- Adaptör var mı kontrol et (hata mesajını engellemek için) ---
+    $wifiAdapter = Get-NetAdapter -Name "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue
+    $ethAdapter  = Get-NetAdapter -Name "vEthernet ($EthSwitch)"  -ErrorAction SilentlyContinue
 
-    # Durumları yazdır
+    # Eğer adaptör varsa IP konfigürasyonunu al, yoksa null ata
+    if ($wifiAdapter) {
+        $wifiEx = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue 2>$null
+    } else {
+        $wifiEx = $null
+    }
+
+    if ($ethAdapter) {
+        $ethEx  = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($EthSwitch)"  -ErrorAction SilentlyContinue 2>$null
+    } else {
+        $ethEx = $null
+    }
+    # ---------------------------------------------------------------
+
+    # Mevcut durumları ekrana yazdır
     Write-Host "`n📡 Adapter Durumları:"
     Write-Host "  - vEthernet ($WifiSwitch): " -NoNewline
     if ($wifiEx) {
@@ -61,40 +96,46 @@ function Switch-VMSwitch-ByConnection {
         Write-Host "Bulunamadı."
     }
 
-    # Hangi adapter bağlı?
+    # Bağlı olan adaptörü belirle
     $wifiConnected = Is-VMSwitchAdapterConnected $wifiEx
     $ethConnected  = Is-VMSwitchAdapterConnected $ethEx
 
     if ($wifiConnected) {
+        # Wi-Fi adaptörü bağlı -> Ethernet tarafındaki VM'ler Wi-Fi switch'e aktarılacak
         Write-Host "`n💡 vEthernet ($WifiSwitch) bağlı. $EthSwitch'e bağlı olan VM'ler $WifiSwitch'e geçirilecek.`n"
-        $targetSwitch = $WifiSwitch
-        $sourceSwitch = $EthSwitch
+        $targetSwitch   = $WifiSwitch
+        $sourceSwitches = @($EthSwitch)
 
+        # Metric güncelle
         Up-Wifi-Ex-Metric
-
-    } elseif ($ethConnected) {
+    }
+    elseif ($ethConnected) {
+        # Ethernet adaptörü bağlı -> Wi-Fi tarafındaki VM'ler Ethernet switch'e aktarılacak
         Write-Host "`n💡 vEthernet ($EthSwitch) bağlı. $WifiSwitch'e bağlı olan VM'ler $EthSwitch'e geçirilecek.`n"
-        $targetSwitch = $EthSwitch
-        $sourceSwitch = $WifiSwitch
+        $targetSwitch   = $EthSwitch
+        $sourceSwitches = @($WifiSwitch)
 
+        # Metric güncelle
         Up-Eth-Ex-Metric
-
-    } else {
-        Write-Host "`n❌ Ne vEthernet ($WifiSwitch) ne de ($EthSwitch) bağlı veya IP almış. Çıkılıyor." -ForegroundColor Red
-        return
+    }
+    else {
+        # Hiçbiri bağlı değil -> VM'ler Default Switch'e geçirilecek (fallback senaryo)
+        Write-Host "`n⚠️ Wi-Fi veya Ethernet bağlı değil. VM'ler $DefaultSwitch'e geçirilecek." -ForegroundColor Yellow
+        $targetSwitch   = $DefaultSwitch
+        $sourceSwitches = @($WifiSwitch, $EthSwitch)
     }
 
-    # VM’leri kontrol et ve switch değiştir
+    # VM'ler üzerinde dolaşarak network adaptörlerini kontrol et
     $vms = Get-VM
-
     foreach ($vm in $vms) {
         $adapters = Get-VMNetworkAdapter -VMName $vm.Name
-
         foreach ($adapter in $adapters) {
-            if ($adapter.SwitchName -eq $sourceSwitch) {
-                Write-Host "🔄 VM '$($vm.Name)' $sourceSwitch'ten $targetSwitch'e geçiriliyor..."
+            # Eğer VM yanlış switch'e bağlıysa hedef switch'e geçir
+            if ( ($sourceSwitches -contains $adapter.SwitchName) -and ($adapter.SwitchName -ne $targetSwitch) ) {
+                Write-Host "🔄 VM '$($vm.Name)' $($adapter.SwitchName)'ten $targetSwitch'e geçiriliyor..."
                 Connect-VMNetworkAdapter -VMName $vm.Name -SwitchName $targetSwitch
             } else {
+                # Zaten doğru switch'te ise atla
                 Write-Host "✔️  VM '$($vm.Name)' zaten doğru switch'e bağlı ($($adapter.SwitchName)). Atlanıyor."
             }
         }
@@ -103,16 +144,17 @@ function Switch-VMSwitch-ByConnection {
     Write-Host "`n✅ VM adapter'ları ve metrikler güncellendi."
 }
 
-
+# VPN bağlantısında split tunneling açıp kapatan fonksiyon
 function Toggle-SplitTunnel {
     param (
-        [string]$InterfaceAlias = "OpenVPN Data Channel Offload",
-        [string]$VpnGateway = "10.8.0.1"
+        [string]$InterfaceAlias = "OpenVPN Data Channel Offload", # VPN adaptör adı
+        [string]$VpnGateway = "10.8.0.1"                          # VPN Gateway IP adresi
     )
 
+    # Yönetici hakları kontrolü
     if ( -not (Assert-AdminRights-Windows) ) { return }
 
-    # InterfaceIndex'i InterfaceAlias'a göre al (ilk eşleşeni)
+    # Adaptör bilgilerini al
     $iface = Get-NetIPInterface -InterfaceAlias $InterfaceAlias -ErrorAction SilentlyContinue | Select-Object -First 1
     if (-not $iface) {
         Write-Error "❌ Adaptör bulunamadı: '$InterfaceAlias'"
@@ -121,10 +163,11 @@ function Toggle-SplitTunnel {
 
     $index = $iface.InterfaceIndex
 
-    # Route kontrol
+    # Default route kontrolü
     $routeA = Get-NetRoute -DestinationPrefix "0.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue
     $routeB = Get-NetRoute -DestinationPrefix "128.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue
 
+    # Eğer split tunnel aktifse kapat, değilse aç
     if ($routeA -and $routeB) {
         Write-Host "🔌 Split tunnel AÇILIYOR... (default rotalar kaldırılıyor)"
         Remove-NetRoute -InterfaceIndex $index -DestinationPrefix "0.0.0.0/1" -Confirm:$false
@@ -138,4 +181,3 @@ function Toggle-SplitTunnel {
         Write-Host "✅ Tüm trafik VPN'e yönlendirildi (split tunnel PASİF)"
     }
 }
-
