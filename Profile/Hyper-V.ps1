@@ -45,7 +45,6 @@ function Switch-VMSwitch-ByConnection {
         return
     }
 
-    # Yardımcı fonksiyon: adaptör bağlı mı ve geçerli bir IPv4 adresi almış mı kontrol eder
     function Is-VMSwitchAdapterConnected($netConfig) {
         return $netConfig -and
             $netConfig.IPv4Address -and
@@ -53,11 +52,9 @@ function Switch-VMSwitch-ByConnection {
             $netConfig.NetAdapter.MediaConnectionState -eq 'Connected'
     }
 
-    # --- Adaptör var mı kontrol et (hata mesajını engellemek için) ---
     $wifiAdapter = Get-NetAdapter -Name "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue
     $ethAdapter  = Get-NetAdapter -Name "vEthernet ($EthSwitch)"  -ErrorAction SilentlyContinue
 
-    # Eğer adaptör varsa IP konfigürasyonunu al, yoksa null ata
     if ($wifiAdapter) {
         $wifiEx = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue 2>$null
     } else {
@@ -69,64 +66,46 @@ function Switch-VMSwitch-ByConnection {
     } else {
         $ethEx = $null
     }
-    # ---------------------------------------------------------------
 
-    # Mevcut durumları ekrana yazdır
     Write-Host "`n📡 Adapter Durumları:"
     Write-Host "  - vEthernet ($WifiSwitch): " -NoNewline
-    if ($wifiEx) {
-        Write-Host "$($wifiEx.IPv4Address.IPAddress) (MediaStatus: $($wifiEx.NetAdapter.MediaConnectionState))"
-    } else {
-        Write-Host "Bulunamadı."
-    }
+    if ($wifiEx) { Write-Host "$($wifiEx.IPv4Address.IPAddress) (MediaStatus: $($wifiEx.NetAdapter.MediaConnectionState))" } else { Write-Host "Bulunamadı." }
 
     Write-Host "  - vEthernet ($EthSwitch): " -NoNewline
-    if ($ethEx) {
-        Write-Host "$($ethEx.IPv4Address.IPAddress) (MediaStatus: $($ethEx.NetAdapter.MediaConnectionState))"
-    } else {
-        Write-Host "Bulunamadı."
-    }
+    if ($ethEx) { Write-Host "$($ethEx.IPv4Address.IPAddress) (MediaStatus: $($ethEx.NetAdapter.MediaConnectionState))" } else { Write-Host "Bulunamadı." }
 
-    # Bağlı olan adaptörü belirle
     $wifiConnected = Is-VMSwitchAdapterConnected $wifiEx
     $ethConnected  = Is-VMSwitchAdapterConnected $ethEx
 
     if ($wifiConnected) {
-        # Wi-Fi adaptörü bağlı -> Ethernet tarafındaki VM'ler Wi-Fi switch'e aktarılacak
-        Write-Host "`n💡 vEthernet ($WifiSwitch) bağlı. $EthSwitch'e bağlı olan VM'ler $WifiSwitch'e geçirilecek.`n"
+        # Wi-Fi bağlı -> Ethernet VE Default Switch'teki VM'ler Wi-Fi switch'e
+        Write-Host "`n💡 vEthernet ($WifiSwitch) bağlı. $EthSwitch ve $DefaultSwitch'e bağlı olan VM'ler $WifiSwitch'e geçirilecek.`n"
         $targetSwitch   = $WifiSwitch
-        $sourceSwitches = @($EthSwitch)
-
-        # Metric güncelle
+        $sourceSwitches = @($EthSwitch, $DefaultSwitch)   # ✅ CHANGED
         Up-Wifi-Ex-Metric
     }
     elseif ($ethConnected) {
-        # Ethernet adaptörü bağlı -> Wi-Fi tarafındaki VM'ler Ethernet switch'e aktarılacak
-        Write-Host "`n💡 vEthernet ($EthSwitch) bağlı. $WifiSwitch'e bağlı olan VM'ler $EthSwitch'e geçirilecek.`n"
+        # Ethernet bağlı -> Wi-Fi VE Default Switch'teki VM'ler Ethernet switch'e
+        Write-Host "`n💡 vEthernet ($EthSwitch) bağlı. $WifiSwitch ve $DefaultSwitch'e bağlı olan VM'ler $EthSwitch'e geçirilecek.`n"
         $targetSwitch   = $EthSwitch
-        $sourceSwitches = @($WifiSwitch)
-
-        # Metric güncelle
+        $sourceSwitches = @($WifiSwitch, $DefaultSwitch)  # ✅ CHANGED
         Up-Eth-Ex-Metric
     }
     else {
-        # Hiçbiri bağlı değil -> VM'ler Default Switch'e geçirilecek (fallback senaryo)
+        # Hiçbiri bağlı değil -> her şey Default Switch'e
         Write-Host "`n⚠️ Wi-Fi veya Ethernet bağlı değil. VM'ler $DefaultSwitch'e geçirilecek." -ForegroundColor Yellow
         $targetSwitch   = $DefaultSwitch
         $sourceSwitches = @($WifiSwitch, $EthSwitch)
     }
 
-    # VM'ler üzerinde dolaşarak network adaptörlerini kontrol et
     $vms = Get-VM
     foreach ($vm in $vms) {
         $adapters = Get-VMNetworkAdapter -VMName $vm.Name
         foreach ($adapter in $adapters) {
-            # Eğer VM yanlış switch'e bağlıysa hedef switch'e geçir
             if ( ($sourceSwitches -contains $adapter.SwitchName) -and ($adapter.SwitchName -ne $targetSwitch) ) {
                 Write-Host "🔄 VM '$($vm.Name)' $($adapter.SwitchName)'ten $targetSwitch'e geçiriliyor..."
                 Connect-VMNetworkAdapter -VMName $vm.Name -SwitchName $targetSwitch
             } else {
-                # Zaten doğru switch'te ise atla
                 Write-Host "✔️  VM '$($vm.Name)' zaten doğru switch'e bağlı ($($adapter.SwitchName)). Atlanıyor."
             }
         }
