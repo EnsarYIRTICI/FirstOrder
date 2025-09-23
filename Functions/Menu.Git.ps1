@@ -5,7 +5,7 @@ function Git-Settings {
     if ($IsWindows){
         Write-Host "`nWindows Git Ayarları" -ForegroundColor Green
 
-        $gitInstalled = Check-ChocoInstalled
+        $gitInstalled = Check-GitInstalled
 
         if (-not $gitInstalled) {
             if (Ask-YesNo "Git yüklü değil. Chocolatey ile yüklemek ister misiniz?") { Install-GitWithChoco }

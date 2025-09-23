@@ -1,7 +1,12 @@
+# Kullanıcı dizinini dinamik al
+$UserHome = $HOME  # PowerShell 7'de Windows/Linux/macOS hepsinde çalışır
+
+# Uygulama yollarını dinamik tanımla
 $Applications = @{
-    "FirstOrder" = "C:\Users\ensar\repo\powershell\FirstOrder"
-    "SshConfig" = "C:\Users\ensar\.ssh"
+    "FirstOrder" = Join-Path $UserHome 'repo\powershell\FirstOrder'
+    "SshConfig"  = Join-Path $UserHome '.ssh'
 }
+
 
 function xsh {
     param(
