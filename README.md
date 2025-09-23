@@ -17,6 +17,7 @@ Get-ChildItem -Recurse -Path .\ -Filter *.ps1 | Unblock-File
 
 # Ana scripti çalıştırın
 .\Main.ps1
+```
 
 ## Linux/Debian
 
@@ -34,4 +35,4 @@ sudo apt update && sudo apt install -y powershell
 # Projeye girip scripti çalıştırma
 cd ./FirstOrder*
 sudo pwsh ./Main.ps1
-
+```
