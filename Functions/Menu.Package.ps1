@@ -37,11 +37,11 @@ function Install-Packages {
         }
 
         if ($wingetInstalled -and (Ask-YesNo "Winget ile yaygın yazılımlar kurulsun mu?")) {
-            Install-WingetPackages - Type "common"
+            Install-WingetPackages -Type "common"
         }
 
         if ($wingetInstalled -and (Ask-YesNo "Winget ile profesyonel yazılımlar kurulsun mu?")) {
-            Install-WingetPackages - Type "advanced"
+            Install-WingetPackages -Type "advanced"
         }
         
     }

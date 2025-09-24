@@ -2,12 +2,10 @@
 
 ```powershell
 # PowerShell'i Yönetici olarak açın
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+Start powershell -Verb runAs
 
-# Opsiyonel: Chocolatey yüklemek için (paket yönetimi kolaylığı sağlar)
-Set-ExecutionPolicy Bypass -Scope Process -Force; `
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; `
-iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+# Geçerli kullanıcı için PowerShell komutlarının çalıştırılmasına izin verir (uzaktan imzalı olanlar)
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
 # Projeye girin
 cd .\FirstOrder*
@@ -17,6 +15,20 @@ Get-ChildItem -Recurse -Path .\ -Filter *.ps1 | Unblock-File
 
 # Ana scripti çalıştırın
 .\Main.ps1
+```
+
+### Opsiyonel
+```powershell
+# PowerShell'i Yönetici olarak açın
+Start powershell -Verb runAs
+
+# Opsiyonel: Chocolatey yüklemek için (paket yönetimi kolaylığı sağlar)
+Set-ExecutionPolicy Bypass -Scope Process -Force; `
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; `
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# chocolatey ile pwsh ve git kurulumu
+choco install pwsh git -y
 ```
 
 ## Linux/Debian
