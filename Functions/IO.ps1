@@ -26,3 +26,18 @@ function Get-SettingsJSON {
     $json = $jsonText | ConvertFrom-Json
     return $json
 }
+
+function Check-SettingsJSON {
+    $settingsPath = Join-Path $scriptDir "settings.json"
+    $examplePath  = Join-Path $scriptDir "settings.example.json"
+
+    if (-Not (Test-Path $settingsPath)) {
+        if (Test-Path $examplePath) {
+            Copy-Item $examplePath $settingsPath -Force
+        }
+        else {
+            Write-Host "Hata: settings.json ve settings.example.json dosyaları bulunamadı." -ForegroundColor Red
+            exit 1
+        }
+    }
+}

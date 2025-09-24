@@ -6,6 +6,10 @@ $scriptDir = $PSScriptRoot
 
 # == Temel Import Modülleri ==
 . "$scriptDir\Functions\Guard.ps1"
+. "$scriptDir\Functions\IO.ps1"
+
+# == settings.json Kontrolü ==
+Check-SettingsJSON
 
 # == İşletim Sistemi ==
 Detect-OS
