@@ -22,12 +22,16 @@ Get-ChildItem -Recurse -Path .\ -Filter *.ps1 | Unblock-File
 # PowerShell'i Yönetici olarak açın
 Start powershell -Verb runAs
 
+# Opsiyonel: Winget yüklemek için (Microsoft Store paket yöneticisi)
+Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile winget.msixbundle
+Add-AppxPackage .\winget.msixbundle
+
 # Opsiyonel: Chocolatey yüklemek için (paket yönetimi kolaylığı sağlar)
 Set-ExecutionPolicy Bypass -Scope Process -Force; `
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; `
 iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-# chocolatey ile pwsh ve git kurulumu
+# Chocolatey ile pwsh ve git kurulumu
 choco install pwsh git -y
 ```
 
