@@ -17,7 +17,7 @@ Get-ChildItem -Recurse -Path .\ -Filter *.ps1 | Unblock-File
 .\Main.ps1
 ```
 
-### Windows 10/11 (Opsiyonel)
+#### Opsiyonel
 ```powershell
 # PowerShell'i Yönetici olarak açın
 Start powershell -Verb runAs
