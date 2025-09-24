@@ -16,10 +16,8 @@
   // Wsl yapılandırması.
   "wsl_config": {
     "wsl2": {
-      // "networkingMode": "bridged",
-      // "vmSwitch": "eth-ext-switch",
-      "memory": "16GB",
-      "processors": 8
+      "memory": "2GB",
+      "processors": 4
     },
     "network": {
       "generateResolvConf": true
