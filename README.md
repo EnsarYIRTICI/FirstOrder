@@ -34,7 +34,7 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocola
 # Chocolatey ile pwsh ve git kurulumu
 choco install pwsh git -y
 
-# Depoyu çek
+# Depoyu klonla
 git clone https://github.com/EnsarYIRTICI/FirstOrder.git
 ```
 
