@@ -55,10 +55,10 @@ function Show-Menu {
                         Write-Host "Bir hata oluştu: $_" -ForegroundColor Red
                     }
 
-                    # if ($PauseAfterAction -and ($choice.ToUpper() -ne $ExitKey.ToUpper())) {
-                    #     Write-Host "`nDevam etmek için bir tuşa basın..." -ForegroundColor DarkGray
-                    #     [void][System.Console]::ReadKey($true)
-                    # }
+                    if ($PauseAfterAction -and ($choice.ToUpper() -ne $ExitKey.ToUpper())) {
+                        Write-Host "`nDevam etmek için bir tuşa basın..." -ForegroundColor DarkGray
+                        [void][System.Console]::ReadKey($true)
+                    }
                 } else {
                     Write-Host "Geçersiz seçim yapıldı, lütfen tekrar deneyin." -ForegroundColor Red
                 }

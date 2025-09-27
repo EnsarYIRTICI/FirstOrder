@@ -31,7 +31,7 @@ function Android-Menu{
 
     # Alt menüyü göster
     if (Get-Command Show-Menu -ErrorAction SilentlyContinue) {
-        Show-Menu -MenuItems $androidMenuItems -Title "Android Menüsü" -ClearOnEachLoop -PauseAfterAction
+        Show-Menu -MenuItems $androidMenuItems -Title "Android Menüsü" # -ClearOnEachLoop # -PauseAfterAction
     } else {
         Write-Host "Show-MainMenu bulunamadı. Lütfen ortak menü bileşenini yükleyin." -ForegroundColor Red
     }

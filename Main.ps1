@@ -43,4 +43,4 @@ $menuItems = @(
     @{ Label = "Android"; Action = { Android-Menu } }
 )
 
-Show-Menu -MenuItems $menuItems -Title "Ana Menü" -ClearOnEachLoop -PauseAfterAction
+Show-Menu -MenuItems $menuItems -Title "Ana Menü" # -ClearOnEachLoop # -PauseAfterAction
