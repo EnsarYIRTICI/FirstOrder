@@ -1,8 +1,8 @@
-. "$PSScriptRoot\Windows.Package.ps1"
-. "$PSScriptRoot\MacOS.Package.ps1"
-. "$PSScriptRoot\Linux.Package.ps1"
+. "$scriptDir\Functions\Windows\Package.ps1"
+. "$scriptDir\Functions\MacOS\Package.ps1"
+. "$scriptDir\Functions\Linux\Package.ps1"
 
-function Install-Packages {
+function Package-Menu {
      if ($IsWindows) {
         Detect-WindowsVersion
 

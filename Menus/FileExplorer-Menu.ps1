@@ -1,6 +1,6 @@
-. "$PSScriptRoot\Windows.FileExplorer.ps1"
+. "$scriptDir\Functions\Windows\FileExplorer.ps1"
 
-function FileExplorer-Settings {
+function FileExplorer-Menu {
     if ($IsWindows){
 
         Detect-WindowsVersion

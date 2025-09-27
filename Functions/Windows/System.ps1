@@ -1,4 +1,4 @@
-. "$PSScriptRoot\IO.ps1"
+. "$scriptDir\Functions\Core\IO.ps1"
 
 function Detect-WindowsVersion {
     $version = [System.Environment]::OSVersion.Version

@@ -1,6 +1,5 @@
-. "$PSScriptRoot\IO.ps1"
-. "$PSScriptRoot\Windows.Package.ps1"
-
+. "$scriptDir\Functions\Core\IO.ps1"
+. "$scriptDir\Functions\Windows\Package.ps1"
 
 function Set-GitGlobalConfig {
     $settings = Get-SettingsJSON

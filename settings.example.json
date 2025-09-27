@@ -47,7 +47,6 @@
           "firefox",
           "cpu-z",
           "crystaldiskmark",
-          "anydesk",
           "lghub",
           "itunes"
         ],
@@ -65,6 +64,7 @@
         "chocolatey": [
           "nvm",
           "nodejs",
+          "temurin17",
           "temurin21",
           "go",
           "micro",

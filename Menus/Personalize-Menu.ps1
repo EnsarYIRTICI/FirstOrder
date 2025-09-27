@@ -1,8 +1,9 @@
-. "$PSScriptRoot\Windows.System.ps1"
-. "$PSScriptRoot\Windows.Personalize.ps1"
-. "$PSScriptRoot\Git.ps1"
+. "$scriptDir\Functions\Windows\System.ps1"
+. "$scriptDir\Functions\Windows\Personalize.ps1"
+. "$scriptDir\Functions\Core\Git.ps1"
+. "$scriptDir\Functions\Core\IO.ps1"
 
-function Personalize-Settings {
+function Personalize-Menu {
     Detect-WindowsVersion
 
     if($IsWindows){

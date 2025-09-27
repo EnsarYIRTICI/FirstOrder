@@ -1,7 +1,7 @@
-. "$PSScriptRoot\IO.ps1"
-. "$PSScriptRoot\Windows.System.ps1"
+. "$scriptDir\Functions\Core\IO.ps1"
+. "$scriptDir\Functions\Windows\System.ps1"
 
-function System-Settings {
+function System-Menu {
     if ($IsWindows) {
         Detect-WindowsVersion
 

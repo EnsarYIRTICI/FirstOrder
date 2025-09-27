@@ -1,20 +1,19 @@
-. "$PSScriptRoot\Git.ps1"
+. "$scriptDir\Functions\Core\Git.ps1"
 
-function Vscode-Settings {
+function Git-Menu {
 
     if ($IsWindows){
         Write-Host "`nWindows Git Ayarları" -ForegroundColor Green
 
-        $vscodeInstalled = Check-ChocoInstalled
+        $gitInstalled = Check-GitInstalled
 
-        if (-not $vscodeInstalled) {
-            if (Ask-YesNo "Visual Studio Code yüklü değil. Chocolatey ile yüklemek ister misiniz?") { Install-VscodeWithChoco }
+        if (-not $gitInstalled) {
+            if (Ask-YesNo "Git yüklü değil. Chocolatey ile yüklemek ister misiniz?") { Install-GitWithChoco }
         }
 
-        if ($vscodeInstalled) {
-            if (Ask-YesNo "'Vscode İle Aç' Eklensin mi ?") { Add-VscodeOpenWith }
+        if ($gitInstalled) {
+            if (Ask-YesNo "Git kullanıcı adı ve e-posta ayarlarını yapalım mı?") { Set-GitGlobalConfig }
         }
-
 
     } 
     elseif ($IsLinux) {
