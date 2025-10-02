@@ -76,6 +76,7 @@
           "sql-server-management-studio",
           "androidstudio",
           "docker-desktop",
+          "gcloudsdk",
           "awscli",
           "jmeter",
           "mysql-cli",
