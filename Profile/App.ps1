@@ -64,6 +64,19 @@ function xt {
     }
 }
 
+function xtn {
+    if ($IsWindows) {
+        Ensure-TerminalReady
+
+        wt -w 0 nt -d .
+        
+    }
+    else {
+        Write-Host "Bu fonksiyon sadece Windows üzerinde çalışır." -ForegroundColor Red
+    }
+}
+
+
 function Ensure-TerminalReady {
     $pwshPath = Get-Command pwsh -ErrorAction SilentlyContinue
     $wtPath = Get-Command wt -ErrorAction SilentlyContinue
