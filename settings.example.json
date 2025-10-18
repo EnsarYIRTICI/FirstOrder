@@ -90,24 +90,45 @@
     },
     // Linux Paketleri
     "linux": {
-      "apt": [
-        "micro",
-        "git",
-        "gh",
-        "nginx",
-        "net-tools",
-        "nvm",
-        "nodejs",
-        "npm",
-        "docker.io",
-        "docker-compose",
-        "openjdk-21-jdk",
-        "mysql-client-core-8.0"
-      ]
+      // Linux için yaygın paketler
+      "common": {
+        "apt": [
+          "git",
+          "gh",
+          "micro",
+          "net-tools"
+        ]
+      },
+      // Linux için gelişmiş paketler
+      "advanced": {
+        "apt": [
+          "nginx",
+          "nvm",
+          "nodejs",
+          "npm",
+          "docker.io",
+          "docker-compose",
+          "openjdk-21-jdk",
+          "mysql-client-core-8.0"
+        ]
+      }
     },
     // MacOS Paketleri
     "macos": {
-      "brew": ["git"]
+      // MacOS için yaygın paketler
+      "common": {
+        "brew": ["git", "powershell", "google-chrome", "whatsapp"]
+      },
+      // MacOS için gelişmiş paketler
+      "advanced": {
+        "brew": [
+          "visual-studio-code",
+          "flutter",
+          "android-studio",
+          "visual-studio",
+          "google-cloud-sdk"
+        ]
+      }
     }
   }
 }

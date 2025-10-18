@@ -1,9 +1,14 @@
 function Install-BrewPackages {
-    Write-Host "Homebrew ile Yaygın yazılımlar kuruluyor..."
-    
+    param(
+        [ValidateSet("common", "advanced")]
+        [string]$Type = "common"
+    )
+
+    Write-Host "Homebrew ile $Type yazılımlar kuruluyor..."
+
     # JSON'dan Homebrew paketlerini al
     $json = Get-SettingsJSON
-    $brewPackages = $json.packages.macos.brew
+    $brewPackages = $json.packages.macos.$Type.brew
 
     Write-Host "Kurulacak paketler: $brewPackages"
 

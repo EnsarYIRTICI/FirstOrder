@@ -38,6 +38,50 @@ choco install pwsh git -y
 git clone https://github.com/EnsarYIRTICI/FirstOrder.git
 ```
 
+## MacOS
+
+### 1. Homebrew Kurulumu
+Homebrew, MacOS için popüler bir paket yöneticisidir. Eğer yüklü değilse, önce Homebrew'i kurmalısınız:
+
+```bash
+# Terminal'i açın ve aşağıdaki komutu çalıştırın
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Kurulum tamamlandıktan sonra, Homebrew'in PATH'e eklendiğinden emin olun
+# M1/M2/M3 Mac için (Apple Silicon):
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Intel Mac için:
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/usr/local/bin/brew shellenv)"
+```
+
+### 2. PowerShell Kurulumu ve Script Çalıştırma
+
+```bash
+# Homebrew ile PowerShell kurulumu
+brew install --cask powershell
+
+# Git kurulumu (eğer yüklü değilse)
+brew install git
+
+# Depoyu klonla
+git clone https://github.com/EnsarYIRTICI/FirstOrder.git
+
+# Projeye girin
+cd FirstOrder
+
+# PowerShell'i başlatın ve scripti çalıştırın
+pwsh ./Main.ps1
+```
+
+### Alternatif: Manuel PowerShell Kurulumu
+Eğer Homebrew kullanmak istemiyorsanız, PowerShell'i doğrudan Microsoft'tan indirebilirsiniz:
+1. [PowerShell GitHub Releases](https://github.com/PowerShell/PowerShell/releases) sayfasına gidin
+2. En son sürümden `.pkg` dosyasını indirin (örn: `powershell-7.x.x-osx-x64.pkg`)
+3. İndirilen dosyayı çift tıklayarak kurulumu tamamlayın
+
 ## Linux/Debian
 
 ```bash
