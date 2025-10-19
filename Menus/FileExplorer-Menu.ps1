@@ -1,4 +1,5 @@
 . "$scriptDir\Functions\Windows\FileExplorer.ps1"
+. "$scriptDir\Functions\MacOS\FileExplorer.ps1"
 
 function FileExplorer-Menu {
     if ($IsWindows){
@@ -23,8 +24,21 @@ function FileExplorer-Menu {
     }
     elseif ($IsMacOS) {
         # MacOS için dosya gezgini ayarları
-        Write-Host "`nMacOS Dosya Gezgini Ayarları" -ForegroundColor Green
-        Write-Host "`nMacOS Dosya Gezgini Ayarları Bulunamadı" -ForegroundColor Red
+        Write-Host "`nMacOS Finder Ayarları" -ForegroundColor Green
+
+        Write-Host "`nGizli dosyalar için seçenekler:" -ForegroundColor Cyan
+        Write-Host "1. Gizli dosyaları göster" -ForegroundColor White
+        Write-Host "2. Gizli dosyaları gizle" -ForegroundColor White
+        Write-Host "3. Geçiş yap (göster/gizle)" -ForegroundColor White
+
+        $choice = Read-Host "`nSeçiminiz (1-3, Enter = atla)"
+
+        switch ($choice) {
+            "1" { Show-HiddenFiles }
+            "2" { Hide-HiddenFiles }
+            "3" { Toggle-HiddenFiles }
+            default { Write-Host "Atlandı." -ForegroundColor Yellow }
+        }
 
     } 
     else {
