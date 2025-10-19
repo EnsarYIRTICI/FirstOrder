@@ -1,5 +1,5 @@
 . "$scriptDir\Functions\Windows\FileExplorer.ps1"
-. "$scriptDir\Functions\MacOS\FileExplorer.ps1"
+. "$scriptDir\Functions\MacOS\Finder.ps1"
 
 function FileExplorer-Menu {
     if ($IsWindows){
