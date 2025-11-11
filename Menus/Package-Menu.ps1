@@ -50,7 +50,11 @@ function Package-Menu {
         Write-Host "`nLinux Paket Yönetimi" -ForegroundColor Green
         if (Check-AptInstalled) {
             if (Ask-YesNo "APT ile yaygın yazılımlar kurulsun mu?") {
-                Install-AptPackages
+                Install-AptPackages -Type "common"
+            }
+
+            if (Ask-YesNo "APT ile profesyonel yazılımlar kurulsun mu?") {
+                Install-AptPackages -Type "advanced"
             }
         } else {
             Write-Host "APT paket yöneticisi bulunamadı. Çıkılıyor..."
@@ -60,8 +64,12 @@ function Package-Menu {
         # MACOS İÇİN PAKET YÖNETİMİ
         Write-Host "`nMacOS Paket Yönetimi" -ForegroundColor Green
         if (Check-BrewInstalled) {
-            if (Ask-YesNo("Homebrew ile yaygın yazılımlar kurulsun mu?")) {
-                Install-BrewPackages
+            if (Ask-YesNo "Homebrew ile yaygın yazılımlar kurulsun mu?") {
+                Install-BrewPackages -Type "common"
+            }
+
+            if (Ask-YesNo "Homebrew ile profesyonel yazılımlar kurulsun mu?") {
+                Install-BrewPackages -Type "advanced"
             }
         } else {
             Write-Host "Homebrew paket yöneticisi bulunamadı. Çıkılıyor..."

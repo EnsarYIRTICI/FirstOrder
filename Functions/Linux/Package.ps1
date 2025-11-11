@@ -1,9 +1,14 @@
 function Install-AptPackages {
-    Write-Host "APT ile Yaygın yazılımlar kuruluyor..."
-    
+    param(
+        [ValidateSet("common", "advanced")]
+        [string]$Type = "common"
+    )
+
+    Write-Host "APT ile $Type yazılımlar kuruluyor..."
+
     # JSON'dan APT paketlerini al
     $json = Get-SettingsJSON
-    $aptPackages = $json.packages.linux.apt
+    $aptPackages = $json.packages.linux.$Type.apt
 
     Write-Host "Kurulacak paketler: $aptPackages"
 
