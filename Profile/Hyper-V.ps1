@@ -1,4 +1,32 @@
 
+function xNest {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+         [Alias("n")]
+        [string]$Name,
+
+        # -Disable dersen kapatır
+        [switch]$Disable
+    )
+
+    # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
+    if ( -not (Assert-AdminRights-Windows) ) {
+        Write-Host "❌ Bu işlemi gerçekleştirmek için yönetici haklarına sahip olmalısınız." -ForegroundColor Red
+        return
+    }
+
+
+    if ($Disable) {
+        Set-VMProcessor -VMName $Name -ExposeVirtualizationExtensions $false
+        Write-Host "Nested virtualization disabled for VM '$Name'."
+    }
+    else {
+        Set-VMProcessor -VMName $Name -ExposeVirtualizationExtensions $true
+        Write-Host "Nested virtualization enabled for VM '$Name'."
+    }
+}
+
 function Restart-RunningVMs {
     # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
     if ( -not (Assert-AdminRights-Windows) ) {
