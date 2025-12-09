@@ -1,42 +1,55 @@
-# VPN bağlantısında split tunneling açıp kapatan fonksiyon
-function Toggle-SplitTunnel {
-    param (
-        [string]$InterfaceAlias = "OpenVPN Data Channel Offload", # VPN adaptör adı
-        [string]$VpnGateway = "10.8.0.1"                          # VPN Gateway IP adresi
+function Enable-SplitTunnel {
+    param(
+        [string]$InterfaceAlias = "OpenVPN Data Channel Offload",
+        [switch]$HandleIPv6 = $true
     )
 
-    # Yönetici hakları kontrolü
     if ( -not (Assert-AdminRights-Windows) ) { return }
 
-    # Adaptör bilgilerini al
     $iface = Get-NetIPInterface -InterfaceAlias $InterfaceAlias -ErrorAction SilentlyContinue | Select-Object -First 1
-    if (-not $iface) {
-        Write-Error "❌ Adaptör bulunamadı: '$InterfaceAlias'"
-        return
-    }
+    if (-not $iface) { Write-Error "❌ Adaptör bulunamadı: '$InterfaceAlias'"; return }
 
     $index = $iface.InterfaceIndex
 
-    # Default route kontrolü
-    $routeA = Get-NetRoute -DestinationPrefix "0.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue
-    $routeB = Get-NetRoute -DestinationPrefix "128.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue
+    # IPv4 full izlerini temizle
+    "0.0.0.0/1","128.0.0.0/1","0.0.0.0/0" | ForEach-Object {
+        Get-NetRoute -InterfaceIndex $index -DestinationPrefix $_ -ErrorAction SilentlyContinue |
+            Remove-NetRoute -Confirm:$false
+    }
 
-    # Eğer split tunnel aktifse kapat, değilse aç
-    if ($routeA -and $routeB) {
-        Write-Host "🔌 Split tunnel AÇILIYOR... (default rotalar kaldırılıyor)"
-        Remove-NetRoute -InterfaceIndex $index -DestinationPrefix "0.0.0.0/1" -Confirm:$false
-        Remove-NetRoute -InterfaceIndex $index -DestinationPrefix "128.0.0.0/1" -Confirm:$false
-        Write-Host "✅ Split tunnel AKTİF"
+    # IPv6 default temizle
+    if ($HandleIPv6) {
+        Get-NetRoute -InterfaceIndex $index -DestinationPrefix "::/0" -ErrorAction SilentlyContinue |
+            Remove-NetRoute -Confirm:$false
     }
-    else {
-        Write-Host "🔒 Split tunnel KAPANIYOR... (default rotalar ekleniyor)"
-        New-NetRoute -DestinationPrefix "0.0.0.0/1" -InterfaceIndex $index -NextHop $VpnGateway -Confirm:$false | Out-Null
-        New-NetRoute -DestinationPrefix "128.0.0.0/1" -InterfaceIndex $index -NextHop $VpnGateway -Confirm:$false | Out-Null
-        Write-Host "✅ Tüm trafik VPN'e yönlendirildi (split tunnel PASİF)"
-    }
+
+    Write-Host "✅ Split tunnel zorla aktif edildi."
 }
 
-function Use-VpnDNS {
+function Disable-SplitTunnel {
+    param(
+        [string]$InterfaceAlias = "OpenVPN Data Channel Offload",
+        [string]$VpnGateway = "10.8.0.1"
+    )
+
+    if ( -not (Assert-AdminRights-Windows) ) { return }
+
+    $iface = Get-NetIPInterface -InterfaceAlias $InterfaceAlias -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $iface) { Write-Error "❌ Adaptör bulunamadı: '$InterfaceAlias'"; return }
+
+    $index = $iface.InterfaceIndex
+
+    if (-not (Get-NetRoute -DestinationPrefix "0.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue)) {
+        New-NetRoute -DestinationPrefix "0.0.0.0/1" -InterfaceIndex $index -NextHop $VpnGateway -Confirm:$false | Out-Null
+    }
+    if (-not (Get-NetRoute -DestinationPrefix "128.0.0.0/1" -InterfaceIndex $index -ErrorAction SilentlyContinue)) {
+        New-NetRoute -DestinationPrefix "128.0.0.0/1" -InterfaceIndex $index -NextHop $VpnGateway -Confirm:$false | Out-Null
+    }
+
+    Write-Host "✅ Full tunnel (def1) aktif edildi."
+}
+
+function Enable-VpnDNS {
     param(
         [string]$InterfaceAlias = "OpenVPN Data Channel Offload",
         [string[]]$DnsServers = @("10.8.0.1"),
@@ -52,21 +65,46 @@ function Use-VpnDNS {
     Set-NetIPInterface -InterfaceAlias $InterfaceAlias -InterfaceMetric $Metric -ErrorAction SilentlyContinue
 
     Clear-DnsClientCache
-    Write-Host "✅ VPN DNS ayarlandı: $($DnsServers -join ', ') | Metric: $Metric"
+    Write-Host "✅ VPN DNS ENABLED: $($DnsServers -join ', ') | Metric: $Metric"
 }
 
-function Enable-SplitDNS {
+function Disable-VpnDNS {
     param(
-        [string[]]$InternalDomains = @("pi","msi"),
+        [string]$InterfaceAlias = "OpenVPN Data Channel Offload",
+        [switch]$ResetMetricToAuto = $true,
+        [int]$Metric = 50  # Auto istemezsen fallback sabit metric
+    )
+
+    if ( -not (Assert-AdminRights-Windows) ) { return }
+
+    # DNS'i sıfırla (DHCP/varsayılan davranışa döner)
+    Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ResetServerAddresses
+
+    # Metric'i otomatiğe döndür ya da güvenli bir değere çek
+    if ($ResetMetricToAuto) {
+        Set-NetIPInterface -InterfaceAlias $InterfaceAlias -AutomaticMetric Enabled -ErrorAction SilentlyContinue
+    }
+    else {
+        Set-NetIPInterface -InterfaceAlias $InterfaceAlias -InterfaceMetric $Metric -ErrorAction SilentlyContinue
+    }
+
+    Clear-DnsClientCache
+    Write-Host "✅ VPN DNS DISABLED: DNS resetlendi" +
+               ($(if($ResetMetricToAuto){" | Metric: Auto"} else {" | Metric: $Metric"}))
+}
+
+function Enable-VpnDnsForTlds {
+    param(
+        [string[]]$Tlds = @("pi","msi"),
         [string[]]$VpnDns = @("10.8.0.1")
     )
 
     if ( -not (Assert-AdminRights-Windows) ) { return }
 
-    foreach ($d in $InternalDomains) {
-        $ns = ".$d"
+    foreach ($t in $Tlds) {
+        $ns = ".$t"
 
-        # Aynı namespace için eski kural varsa temizle
+        # Eski kural varsa temizle
         Get-DnsClientNrptRule -ErrorAction SilentlyContinue |
             Where-Object { $_.Namespace -eq $ns } |
             Remove-DnsClientNrptRule -Force -ErrorAction SilentlyContinue
@@ -74,27 +112,27 @@ function Enable-SplitDNS {
         # Yeni kuralı ekle
         Add-DnsClientNrptRule -Namespace $ns -NameServers $VpnDns
 
-        Write-Host "✅ Split DNS aktif: *$ns -> $($VpnDns -join ', ')"
+        Write-Host "✅ VPN DNS kuralı: *$ns -> $($VpnDns -join ', ')"
     }
 
     Clear-DnsClientCache
 }
 
-function Disable-SplitDNS {
+function Disable-VpnDnsForTlds {
     param(
-        [string[]]$InternalDomains = @("pi","msi")
+        [string[]]$Tlds = @("pi","msi")
     )
 
     if ( -not (Assert-AdminRights-Windows) ) { return }
 
-    foreach ($d in $InternalDomains) {
-        $ns = ".$d"
+    foreach ($t in $Tlds) {
+        $ns = ".$t"
 
         Get-DnsClientNrptRule -ErrorAction SilentlyContinue |
             Where-Object { $_.Namespace -eq $ns } |
             Remove-DnsClientNrptRule -Force -ErrorAction SilentlyContinue
 
-        Write-Host "✅ Split DNS kaldırıldı: *$ns"
+        Write-Host "✅ Kural kaldırıldı: *$ns"
     }
 
     Clear-DnsClientCache
