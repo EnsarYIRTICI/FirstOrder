@@ -67,6 +67,9 @@
           "temurin17",
           "temurin21",
           "go",
+          "vim",
+          "nano",
+          "pacman",
           "micro",
           "openssl",
           "winscp",
@@ -92,12 +95,7 @@
     "linux": {
       // Linux için yaygın paketler
       "common": {
-        "apt": [
-          "git",
-          "gh",
-          "micro",
-          "net-tools"
-        ]
+        "apt": ["git", "gh", "micro", "net-tools"]
       },
       // Linux için gelişmiş paketler
       "advanced": {
