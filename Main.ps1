@@ -25,11 +25,13 @@ Assert-AdminRights
 . "$scriptDir\Menus\Personalize-Menu.ps1"
 . "$scriptDir\Menus\FileExplorer-Menu.ps1"
 . "$scriptDir\Menus\Package-Menu.ps1"
-. "$scriptDir\Menus\PowerShell-Menu.ps1"
 . "$scriptDir\Menus\Git-Menu.ps1"
 . "$scriptDir\Menus\Vscode-Menu.ps1"
 . "$scriptDir\Menus\Android-Menu.ps1"
-
+. "$scriptDir\Menus\PowerShell-Menu.ps1"
+. "$scriptDir\Menus\WSL-Menu.ps1"
+. "$scriptDir\Menus\HyperV-Menu.ps1"
+. "$scriptDir\Menus\LabNAT20-Menu.ps1"
 
 # == Menü Tanımı ==
 $menuItems = @(
@@ -37,10 +39,13 @@ $menuItems = @(
     @{ Label = "Kişiselleştirme"; Action = { Personalize-Menu } },
     @{ Label = "Dosya Gezgini"; Action = { FileExplorer-Menu } },
     @{ Label = "Paket Yönetimi"; Action = { Package-Menu } },
-    @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
     @{ Label = "Git"; Action = { Git-Menu } }
     @{ Label = "Vscode"; Action = { Vscode-Menu } }
     @{ Label = "Android"; Action = { Android-Menu } }
+    @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
+    @{ Label = "WSL"; Action = { WSL-Menu } },
+    @{ Label = "Hyper-V"; Action = { HyperV-Menu } }
+    @{ Label = "LabNAT20"; Action = { LabNAT20-Menu } }
 )
 
 Show-Menu -MenuItems $menuItems -Title "Ana Menü" # -ClearOnEachLoop # -PauseAfterAction

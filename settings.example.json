@@ -23,6 +23,10 @@
       "generateResolvConf": true
     }
   },
+  "hyperv": {
+    "vm_path": "D:\\HyperV\\VMs",
+    "vhd_path": "D:\\HyperV\\VHDs"
+  },
   "packages": {
     // Windows Paketleri
     "windows": {
@@ -62,26 +66,26 @@
       // Windows için gelişmiş paketler
       "advanced": {
         "chocolatey": [
+          "vim",
+          "nano",
+          "micro",
           "nvm",
           "nodejs",
           "temurin17",
           "temurin21",
           "go",
-          "vim",
-          "nano",
-          "pacman",
-          "micro",
           "openssl",
           "winscp",
           "virtualbox",
+          "qemu",
           "vscode",
           "visualstudio2022community",
           "sql-server-management-studio",
           "androidstudio",
           "docker-desktop",
+          "jmeter",
           "gcloudsdk",
           "awscli",
-          "jmeter",
           "mysql-cli",
           "mysql.workbench",
           "ventoy",

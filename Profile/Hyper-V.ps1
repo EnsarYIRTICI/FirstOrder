@@ -1,32 +1,3 @@
-
-function xNest {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-         [Alias("n")]
-        [string]$Name,
-
-        # -Disable dersen kapatır
-        [switch]$Disable
-    )
-
-    # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
-    if ( -not (Assert-AdminRights-Windows) ) {
-        Write-Host "❌ Bu işlemi gerçekleştirmek için yönetici haklarına sahip olmalısınız." -ForegroundColor Red
-        return
-    }
-
-
-    if ($Disable) {
-        Set-VMProcessor -VMName $Name -ExposeVirtualizationExtensions $false
-        Write-Host "Nested virtualization disabled for VM '$Name'."
-    }
-    else {
-        Set-VMProcessor -VMName $Name -ExposeVirtualizationExtensions $true
-        Write-Host "Nested virtualization enabled for VM '$Name'."
-    }
-}
-
 function Restart-RunningVMs {
     # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
     if ( -not (Assert-AdminRights-Windows) ) {
@@ -58,13 +29,16 @@ function Get-RunningVMIPs {
         Format-Table -AutoSize
 }
 
-# VM'lerin bağlı olduğu sanal switch'i, aktif olan fiziksel bağlantıya göre otomatik değiştirir.
-# Öncelik sırası: Wi-Fi > Ethernet > Default Switch (fallback)
-function Switch-VMSwitch-ByConnection {
-    param (
-        [string]$WifiSwitch    = "wifi-ext-switch", # Wi-Fi sanal switch adı
-        [string]$EthSwitch     = "eth-ext-switch",  # Ethernet sanal switch adı
-        [string]$DefaultSwitch = "Default Switch"   # Fallback switch adı
+
+function xNest {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+         [Alias("n")]
+        [string]$Name,
+
+        # -Disable dersen kapatır
+        [switch]$Disable
     )
 
     # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
@@ -73,71 +47,130 @@ function Switch-VMSwitch-ByConnection {
         return
     }
 
-    function Is-VMSwitchAdapterConnected($netConfig) {
-        return $netConfig -and
-            $netConfig.IPv4Address -and
-            $netConfig.IPv4Address.IPAddress -match '\d+\.\d+\.\d+\.\d+' -and
-            $netConfig.NetAdapter.MediaConnectionState -eq 'Connected'
-    }
 
-    $wifiAdapter = Get-NetAdapter -Name "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue
-    $ethAdapter  = Get-NetAdapter -Name "vEthernet ($EthSwitch)"  -ErrorAction SilentlyContinue
-
-    if ($wifiAdapter) {
-        $wifiEx = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($WifiSwitch)" -ErrorAction SilentlyContinue 2>$null
-    } else {
-        $wifiEx = $null
-    }
-
-    if ($ethAdapter) {
-        $ethEx  = Get-NetIPConfiguration -InterfaceAlias "vEthernet ($EthSwitch)"  -ErrorAction SilentlyContinue 2>$null
-    } else {
-        $ethEx = $null
-    }
-
-    Write-Host "`n📡 Adapter Durumları:"
-    Write-Host "  - vEthernet ($WifiSwitch): " -NoNewline
-    if ($wifiEx) { Write-Host "$($wifiEx.IPv4Address.IPAddress) (MediaStatus: $($wifiEx.NetAdapter.MediaConnectionState))" } else { Write-Host "Bulunamadı." }
-
-    Write-Host "  - vEthernet ($EthSwitch): " -NoNewline
-    if ($ethEx) { Write-Host "$($ethEx.IPv4Address.IPAddress) (MediaStatus: $($ethEx.NetAdapter.MediaConnectionState))" } else { Write-Host "Bulunamadı." }
-
-    $wifiConnected = Is-VMSwitchAdapterConnected $wifiEx
-    $ethConnected  = Is-VMSwitchAdapterConnected $ethEx
-
-    if ($wifiConnected) {
-        # Wi-Fi bağlı -> Ethernet VE Default Switch'teki VM'ler Wi-Fi switch'e
-        Write-Host "`n💡 vEthernet ($WifiSwitch) bağlı. $EthSwitch ve $DefaultSwitch'e bağlı olan VM'ler $WifiSwitch'e geçirilecek.`n"
-        $targetSwitch   = $WifiSwitch
-        $sourceSwitches = @($EthSwitch, $DefaultSwitch)   # ✅ CHANGED
-        Up-Wifi-Ex-Metric
-    }
-    elseif ($ethConnected) {
-        # Ethernet bağlı -> Wi-Fi VE Default Switch'teki VM'ler Ethernet switch'e
-        Write-Host "`n💡 vEthernet ($EthSwitch) bağlı. $WifiSwitch ve $DefaultSwitch'e bağlı olan VM'ler $EthSwitch'e geçirilecek.`n"
-        $targetSwitch   = $EthSwitch
-        $sourceSwitches = @($WifiSwitch, $DefaultSwitch)  # ✅ CHANGED
-        Up-Eth-Ex-Metric
+    if ($Disable) {
+        Set-VMProcessor -VMName $Name -ExposeVirtualizationExtensions $false
+        Write-Host "Nested virtualization disabled for VM '$Name'."
     }
     else {
-        # Hiçbiri bağlı değil -> her şey Default Switch'e
-        Write-Host "`n⚠️ Wi-Fi veya Ethernet bağlı değil. VM'ler $DefaultSwitch'e geçirilecek." -ForegroundColor Yellow
-        $targetSwitch   = $DefaultSwitch
-        $sourceSwitches = @($WifiSwitch, $EthSwitch)
+        Set-VMProcessor -VMName $Name -ExposeVirtualizationExtensions $true
+        Write-Host "Nested virtualization enabled for VM '$Name'."
+    }
+}
+
+
+function Switch-VMsToVMSwitch {
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$OldSwitch,
+
+        [Parameter(Mandatory=$true)]
+        [string]$NewSwitch,
+
+        # İstersen sadece belli VM'lerde çalıştır
+        [string[]]$VMName
+    )
+
+    # Admin kontrolü (Hyper-V komutları için genelde gerekli)
+    $isAdmin = ([Security.Principal.WindowsPrincipal] `
+        [Security.Principal.WindowsIdentity]::GetCurrent()
+    ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+    if (-not $isAdmin) {
+        Write-Host "❌ Yönetici olarak çalıştırmalısınız." -ForegroundColor Red
+        return
     }
 
-    $vms = Get-VM
+    # Switch var mı kontrol
+    $oldExists = Get-VMSwitch -Name $OldSwitch -ErrorAction SilentlyContinue
+    $newExists = Get-VMSwitch -Name $NewSwitch -ErrorAction SilentlyContinue
+
+    if (-not $oldExists) { Write-Host "❌ OldSwitch bulunamadı: $OldSwitch" -ForegroundColor Red; return }
+    if (-not $newExists) { Write-Host "❌ NewSwitch bulunamadı: $NewSwitch" -ForegroundColor Red; return }
+
+    # VM listesi
+    $vms = if ($VMName) { Get-VM -Name $VMName -ErrorAction Stop } else { Get-VM }
+
+    $changes = 0
+
     foreach ($vm in $vms) {
         $adapters = Get-VMNetworkAdapter -VMName $vm.Name
+
         foreach ($adapter in $adapters) {
-            if ( ($sourceSwitches -contains $adapter.SwitchName) -and ($adapter.SwitchName -ne $targetSwitch) ) {
-                Write-Host "🔄 VM '$($vm.Name)' $($adapter.SwitchName)'ten $targetSwitch'e geçiriliyor..."
-                Connect-VMNetworkAdapter -VMName $vm.Name -SwitchName $targetSwitch
+            if ($adapter.SwitchName -eq $OldSwitch) {
+                $msg = "VM '$($vm.Name)' adapter '$($adapter.Name)' : $OldSwitch -> $NewSwitch"
+                if ($PSCmdlet.ShouldProcess($vm.Name, $msg)) {
+                    Write-Host "🔄 $msg"
+                    Connect-VMNetworkAdapter -VMName $vm.Name -Name $adapter.Name -SwitchName $NewSwitch
+                    $changes++
+                }
             } else {
-                Write-Host "✔️  VM '$($vm.Name)' zaten doğru switch'e bağlı ($($adapter.SwitchName)). Atlanıyor."
+                Write-Host "✔️  VM '$($vm.Name)' adapter '$($adapter.Name)' farklı switch'te ($($adapter.SwitchName)). Atlanıyor."
             }
         }
     }
 
-    Write-Host "`n✅ VM adapter'ları ve metrikler güncellendi."
+    Write-Host "`n✅ Tamamlandı. Değiştirilen adapter sayısı: $changes"
 }
+
+function Add-VMSwitchAdapterToVMs {
+  [CmdletBinding(SupportsShouldProcess=$true)]
+  param(
+    [Parameter(Mandatory=$true)]
+    [string]$SwitchName,                 # eklenecek switch
+
+    [string[]]$VMName,                   # boşsa tüm VM'ler
+    [string[]]$ExcludeVMName = @(),      # hariç tutulacak VM'ler
+    [string]$AdapterNamePrefix = "extra" # yeni NIC adı prefix'i
+  )
+
+  # Admin kontrolü
+  $isAdmin = ([Security.Principal.WindowsPrincipal] `
+      [Security.Principal.WindowsIdentity]::GetCurrent()
+  ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+  if (-not $isAdmin) {
+    Write-Host "❌ Yönetici olarak çalıştırmalısınız." -ForegroundColor Red
+    return
+  }
+
+  # Switch var mı?
+  $sw = Get-VMSwitch -Name $SwitchName -ErrorAction SilentlyContinue
+  if (-not $sw) { Write-Host "❌ Switch bulunamadı: $SwitchName" -ForegroundColor Red; return }
+
+  # VM listesi
+  $vms = if ($VMName) { Get-VM -Name $VMName -ErrorAction Stop } else { Get-VM }
+  if ($ExcludeVMName.Count -gt 0) {
+    $vms = $vms | Where-Object { $ExcludeVMName -notcontains $_.Name }
+  }
+
+  $added = 0
+  foreach ($vm in $vms) {
+    $adapters = Get-VMNetworkAdapter -VMName $vm.Name
+
+    # Zaten bu switch'e bağlı NIC var mı?
+    if ($adapters.SwitchName -contains $SwitchName) {
+      Write-Host "✔️  '$($vm.Name)': zaten '$SwitchName' bağlı. Atlanıyor."
+      continue
+    }
+
+    # Benzersiz NIC adı üret
+    $newName = $AdapterNamePrefix
+    $i = 1
+    while ($adapters.Name -contains $newName) {
+      $i++
+      $newName = "$AdapterNamePrefix$i"
+    }
+
+    $msg = "VM '$($vm.Name)' için yeni adapter ekle: '$newName' -> $SwitchName"
+    if ($PSCmdlet.ShouldProcess($vm.Name, $msg)) {
+      Write-Host "➕ $msg"
+      Add-VMNetworkAdapter -VMName $vm.Name -SwitchName $SwitchName -Name $newName
+      $added++
+    }
+  }
+
+  Write-Host "`n✅ Tamamlandı. Eklenen adapter sayısı: $added"
+}
+

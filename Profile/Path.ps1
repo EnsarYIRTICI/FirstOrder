@@ -1,4 +1,4 @@
-function Path {
+function Get-UserPath {
     $paths = [Environment]::GetEnvironmentVariable("PATH", "User") -split ";"
 
     if (-not $paths) {
@@ -11,7 +11,7 @@ function Path {
     }
 }
 
-function Path-Add {
+function Add-UserPathEntry {
     param (
         [string]$Path
     )
@@ -41,7 +41,7 @@ function Path-Add {
     Write-Output "Dizin başarıyla PATH değişkenine eklendi: $Path"
 }
 
-function Path-Remove {
+function Remove-UserPathEntry {
     param (
         [int]$Index
     )
@@ -90,5 +90,3 @@ function Path-Remove {
 
     Write-Output "İndeks $Index kaldırıldı. Güncellenmiş PATH kaydedildi."
 }
-
-
