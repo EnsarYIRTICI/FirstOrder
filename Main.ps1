@@ -31,7 +31,6 @@ Assert-AdminRights
 . "$scriptDir\Menus\PowerShell-Menu.ps1"
 . "$scriptDir\Menus\WSL-Menu.ps1"
 . "$scriptDir\Menus\HyperV-Menu.ps1"
-. "$scriptDir\Menus\LabNAT20-Menu.ps1"
 
 # == Menü Tanımı ==
 $menuItems = @(
@@ -45,7 +44,6 @@ $menuItems = @(
     @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
     @{ Label = "WSL"; Action = { WSL-Menu } },
     @{ Label = "Hyper-V"; Action = { HyperV-Menu } }
-    @{ Label = "LabNAT20"; Action = { LabNAT20-Menu } }
 )
 
 Show-Menu -MenuItems $menuItems -Title "Ana Menü" # -ClearOnEachLoop # -PauseAfterAction
