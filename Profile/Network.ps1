@@ -17,25 +17,3 @@ function Up-Metric {
         Write-Host "⚠️ '$N' arayüzü bulunamadı, metric değiştirilemedi." -ForegroundColor Yellow
     }
 }
-
-
-# Wi-Fi arayüzünün metric değerini günceller
-function Up-Wifi-Metric {
-    Up-Metric -N "Wi-Fi"
-}
-
-# Hyper-V sanal switch (Wi-Fi) metric değerini günceller
-function Up-Wifi-Ex-Metric {
-    Up-Metric -N "vEthernet (wifi-ext-switch)"
-}
-
-# Ethernet arayüzünün metric değerini günceller
-function Up-Ethernet-Metric {
-    Up-Metric -N "Ethernet"
-}
-
-# Hyper-V sanal switch (Ethernet) metric değerini günceller
-function Up-Eth-Ex-Metric {
-    Up-Metric -N "vEthernet (eth-ext-switch)"
-}
-

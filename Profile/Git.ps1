@@ -17,18 +17,10 @@ function gitfsc {
         $M = Read-Host "Commit mesajını gir"
     }
     if ([string]::IsNullOrWhiteSpace($M)) {
-        $M = "fast"
+        $M = "first"
     }
 
     git add .
     git commit -m $M
     git push origin master
 }
-
-function Git-FirstPush {
-    git add .
-    git commit -m "first"
-    git push origin master
-}
-
-

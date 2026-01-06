@@ -21,6 +21,7 @@ Detect-OS
 Assert-AdminRights
 
 # == Import Modülleri ==
+. "$scriptDir\Menus\PowerShell-Menu.ps1"
 . "$scriptDir\Menus\System-Menu.ps1"
 . "$scriptDir\Menus\Personalize-Menu.ps1"
 . "$scriptDir\Menus\FileExplorer-Menu.ps1"
@@ -28,12 +29,12 @@ Assert-AdminRights
 . "$scriptDir\Menus\Git-Menu.ps1"
 . "$scriptDir\Menus\Vscode-Menu.ps1"
 . "$scriptDir\Menus\Android-Menu.ps1"
-. "$scriptDir\Menus\PowerShell-Menu.ps1"
 . "$scriptDir\Menus\WSL-Menu.ps1"
 . "$scriptDir\Menus\HyperV-Menu.ps1"
 
 # == Menü Tanımı ==
 $menuItems = @(
+    @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
     @{ Label = "Sistem"; Action = { System-Menu } },
     @{ Label = "Kişiselleştirme"; Action = { Personalize-Menu } },
     @{ Label = "Dosya Gezgini"; Action = { FileExplorer-Menu } },
@@ -41,7 +42,6 @@ $menuItems = @(
     @{ Label = "Git"; Action = { Git-Menu } }
     @{ Label = "Vscode"; Action = { Vscode-Menu } }
     @{ Label = "Android"; Action = { Android-Menu } }
-    @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
     @{ Label = "WSL"; Action = { WSL-Menu } },
     @{ Label = "Hyper-V"; Action = { HyperV-Menu } }
 )

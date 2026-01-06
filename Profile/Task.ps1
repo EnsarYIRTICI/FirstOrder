@@ -1,4 +1,4 @@
-function xkill {
+function xKill {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]

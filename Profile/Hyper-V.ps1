@@ -1,13 +1,3 @@
-function Restart-RunningVMs {
-    # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
-    if ( -not (Assert-AdminRights-Windows) ) {
-        Write-Host "❌ Bu işlemi gerçekleştirmek için yönetici haklarına sahip olmalısınız." -ForegroundColor Red
-        return
-    }
-
-    Get-VM | Where-Object { $_.State -eq 'Running' } | Restart-VM -Force
-}
-
 function xNest {
     [CmdletBinding()]
     param(
@@ -35,6 +25,18 @@ function xNest {
         Write-Host "Nested virtualization enabled for VM '$Name'."
     }
 }
+
+
+function Restart-RunningVMs {
+    # Yönetici hakları kontrolü (gerekli, yoksa çıkış)
+    if ( -not (Assert-AdminRights-Windows) ) {
+        Write-Host "❌ Bu işlemi gerçekleştirmek için yönetici haklarına sahip olmalısınız." -ForegroundColor Red
+        return
+    }
+
+    Get-VM | Where-Object { $_.State -eq 'Running' } | Restart-VM -Force
+}
+
 
 function Switch-VMsToVMSwitch {
     [CmdletBinding(SupportsShouldProcess=$true)]
@@ -365,4 +367,76 @@ function New-LabNatNetwork {
       Nat       = (Get-NetNat -Name $Name -ErrorAction SilentlyContinue)
     }
   }
+}
+
+function Remove-LabNatNetwork {
+  [CmdletBinding(SupportsShouldProcess = $true)]
+  param(
+    [Parameter(Mandatory = $true)]
+    [Alias("n")]
+    [string]$Name,
+
+    [switch]$Force
+  )
+
+  if (-not (Assert-AdminRights-Windows)) {
+    Write-Host "❌ Yönetici hakları gerekli." -ForegroundColor Red
+    return
+  }
+
+  $vEthernetName = "vEthernet ($Name)"
+
+  # 1️⃣ VM kullanıyor mu kontrol et
+  $attachedVMs = Get-VM | Get-VMNetworkAdapter |
+    Where-Object { $_.SwitchName -eq $Name }
+
+  if ($attachedVMs) {
+    Write-Host "❌ '$Name' switch'i aşağıdaki VM'ler tarafından kullanılıyor:" -ForegroundColor Red
+    $attachedVMs | Select VMName, SwitchName | Format-Table -AutoSize
+
+    if (-not $Force) {
+      Write-Host "`n➡️ İşlem iptal edildi. (-Force ile NAT+IP temizlenir ama switch silinmez)"
+      return
+    }
+
+    Write-Host "`n⚠️ -Force kullanıldı: Switch silinmeyecek, sadece NAT ve IP temizlenecek." -ForegroundColor Yellow
+  }
+
+  # 2️⃣ NAT sil
+  $nat = Get-NetNat -Name $Name -ErrorAction SilentlyContinue
+  if ($nat) {
+    if ($PSCmdlet.ShouldProcess($Name, "Remove-NetNat")) {
+      Write-Host "🧹 NAT siliniyor: $Name"
+      Remove-NetNat -Name $Name -Confirm:$false
+    }
+  } else {
+    Write-Host "ℹ️ NAT bulunamadı: $Name"
+  }
+
+  # 3️⃣ vEthernet IP'lerini sil
+  $if = Get-NetAdapter -Name $vEthernetName -ErrorAction SilentlyContinue
+  if ($if) {
+    $ips = Get-NetIPAddress -InterfaceIndex $if.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue
+    if ($ips) {
+      if ($PSCmdlet.ShouldProcess($vEthernetName, "Remove-NetIPAddress")) {
+        Write-Host "🧹 vEthernet IPv4 adresleri siliniyor: $vEthernetName"
+        $ips | Remove-NetIPAddress -Confirm:$false -ErrorAction SilentlyContinue
+      }
+    }
+  }
+
+  # 4️⃣ vSwitch sil (sadece VM bağlı değilse)
+  if (-not $attachedVMs) {
+    $sw = Get-VMSwitch -Name $Name -ErrorAction SilentlyContinue
+    if ($sw) {
+      if ($PSCmdlet.ShouldProcess($Name, "Remove-VMSwitch")) {
+        Write-Host "🗑️ vSwitch siliniyor: $Name"
+        Remove-VMSwitch -Name $Name -Force
+      }
+    } else {
+      Write-Host "ℹ️ vSwitch bulunamadı: $Name"
+    }
+  }
+
+  Write-Host "`n✅ Remove-LabNatNetwork tamamlandı: $Name"
 }
