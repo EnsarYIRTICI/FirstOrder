@@ -54,18 +54,6 @@ function Enable-HyperVFeature {
     Write-Host "İşlem tamamlandı. Hyper-V'nin tam çalışması için yeniden başlatma gerekebilir." -ForegroundColor Green
 }
 
-function Disable-HyperVFeature {
-    $featureName = Resolve-HyperVFeatureName
-    if (-not $featureName) {
-        Write-Host "Hyper-V feature adı bulunamadı." -ForegroundColor Red
-        return
-    }
-
-    Write-Host "Hyper-V devre dışı bırakılıyor: $featureName" -ForegroundColor Yellow
-    Disable-WindowsOptionalFeature -Online -FeatureName $featureName -NoRestart | Out-Null
-    Write-Host "İşlem tamamlandı. Yeniden başlatma gerekebilir." -ForegroundColor Green
-}
-
 function Ensure-HyperVModule {
     if (Get-Command Get-VMHost -ErrorAction SilentlyContinue) { return $true }
     try {
@@ -86,20 +74,6 @@ function Show-HyperVStatus {
 
     if ($state -ne "Enabled") {
         Write-Host "Not: Hyper-V etkin değilse 'Get-VMHost/Set-VMHost' çalışmayabilir." -ForegroundColor DarkYellow
-    }
-}
-
-function Show-HyperVHostPaths {
-    if (-not (Ensure-HyperVModule)) {
-        Write-Host "Hyper-V PowerShell modülü yüklenemedi. Hyper-V etkinleştirilip yeniden başlatılmış olmalı." -ForegroundColor Red
-        return
-    }
-
-    try {
-        Write-Host "`n=== VMHost Varsayılan Yolları ===" -ForegroundColor Cyan
-        Get-VMHost | Select-Object VirtualMachinePath, VirtualHardDiskPath | Format-List
-    } catch {
-        Write-Host "Get-VMHost çalıştırılamadı: $_" -ForegroundColor Red
     }
 }
 
@@ -151,3 +125,4 @@ function Set-HyperVHostPathsInteractive {
 
     Set-HyperVHostPaths -VirtualMachinePath $vmPath -VirtualHardDiskPath $vhdPath
 }
+

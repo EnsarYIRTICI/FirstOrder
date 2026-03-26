@@ -17,10 +17,6 @@ function WSL-Menu {
             Write-Host "Default Version: $($s.DefaultVersion)"
         }},
         @{ Label = "WSL Etkinleştir (WSL + VirtualMachinePlatform)"; Action = { Enable-WSL } },
-        @{ Label = "WSL Kapat (WSL + VirtualMachinePlatform)"; Action = { Disable-WSL } },
-        @{ Label = "WSL Kernel Güncelle"; Action = { Update-WSLKernel } },
-        @{ Label = "Default WSL Version = 2"; Action = { Set-WSLDefaultVersion -Version 2 } },
-        @{ Label = "Default WSL Version = 1"; Action = { Set-WSLDefaultVersion -Version 1 } },
         @{ Label = "Distro Listele (wsl -l -v)"; Action = { Show-WSLDistros } },
         @{ Label = "WSL Shutdown (wsl --shutdown)"; Action = { Shutdown-WSL } },
         @{ Label = ".wslconfig oluştur (settings.json -> .wslconfig)"; Action = { Create-WslConfig } },

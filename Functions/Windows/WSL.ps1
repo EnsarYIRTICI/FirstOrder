@@ -40,38 +40,6 @@ function Enable-WSL {
     }
 }
 
-function Disable-WSL {
-    try {
-        Write-Host "WSL devre dışı bırakılıyor..." -ForegroundColor Yellow
-        Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart -ErrorAction Stop | Out-Null
-        Disable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart -ErrorAction Stop | Out-Null
-        Write-Host "✔️ WSL ve VirtualMachinePlatform kapatıldı (restart gerekebilir)." -ForegroundColor Green
-    } catch {
-        Write-Host "❌ WSL kapatma hatası: $($_.Exception.Message)" -ForegroundColor Red
-    }
-}
-
-function Update-WSLKernel {
-    try {
-        Write-Host "WSL kernel güncelleniyor..." -ForegroundColor Cyan
-        wsl --update
-        Write-Host "✔️ WSL kernel update komutu çalıştı." -ForegroundColor Green
-    } catch {
-        Write-Host "❌ WSL update hatası: $($_.Exception.Message)" -ForegroundColor Red
-    }
-}
-
-function Set-WSLDefaultVersion {
-    param([ValidateSet(1,2)][int]$Version = 2)
-
-    try {
-        wsl --set-default-version $Version
-        Write-Host "✔️ Default WSL version = $Version" -ForegroundColor Green
-    } catch {
-        Write-Host "❌ Default version set hatası: $($_.Exception.Message)" -ForegroundColor Red
-    }
-}
-
 function Show-WSLDistros {
     try {
         Write-Host "`n=== WSL Distro Listesi ===" -ForegroundColor Green

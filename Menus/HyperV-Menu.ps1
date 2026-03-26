@@ -17,11 +17,6 @@ function HyperV-Menu {
             Enable-HyperVFeature
             if (Ask-YesNo "Yeniden başlatılsın mı? (Önerilir)") { Restart-Computer }
         }},
-        @{ Label = "Hyper-V Devre Dışı Bırak"; Action = {
-            Disable-HyperVFeature
-            if (Ask-YesNo "Yeniden başlatılsın mı?") { Restart-Computer }
-        }},
-        @{ Label = "Varsayılan VM/VHD Yollarını Göster (Get-VMHost)"; Action = { Show-HyperVHostPaths } },
         @{ Label = "Varsayılan VM/VHD Yollarını Değiştir (Set-VMHost)"; Action = { Set-HyperVHostPathsInteractive } }
     )
 

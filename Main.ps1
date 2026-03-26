@@ -34,16 +34,16 @@ Assert-AdminRights
 
 # == Menü Tanımı ==
 $menuItems = @(
-    @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
-    @{ Label = "Sistem"; Action = { System-Menu } },
     @{ Label = "Kişiselleştirme"; Action = { Personalize-Menu } },
     @{ Label = "Dosya Gezgini"; Action = { FileExplorer-Menu } },
+    @{ Label = "Sistem"; Action = { System-Menu } },
+    @{ Label = "WSL"; Action = { WSL-Menu } },
+    @{ Label = "Hyper-V"; Action = { HyperV-Menu } }
     @{ Label = "Paket Yönetimi"; Action = { Package-Menu } },
     @{ Label = "Git"; Action = { Git-Menu } }
     @{ Label = "Vscode"; Action = { Vscode-Menu } }
     @{ Label = "Android"; Action = { Android-Menu } }
-    @{ Label = "WSL"; Action = { WSL-Menu } },
-    @{ Label = "Hyper-V"; Action = { HyperV-Menu } }
+    @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
 )
 
 Show-Menu -MenuItems $menuItems -Title "Ana Menü" # -ClearOnEachLoop # -PauseAfterAction

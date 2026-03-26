@@ -186,20 +186,5 @@ function Android-UpdateSDK {
     & $sdkMgr --update
 }
 
-function Android-DoAll {
-    if (-not $IsWindows) {
-        Write-Host "Android otomasyonları şu an yalnızca Windows için tanımlı." -ForegroundColor Yellow
-        return
-    }
-
-    Install-AndroidStudio
-    Install-Temurin
-    Install-AndroidCLITools
-    Android-InstallBasePackages
-    Android-AcceptLicenses
-    Android-SetEnvPaths
-
-    Write-Host "`nTamamlandı. Ortam değişkenlerinin uygulanması için yeni bir PowerShell penceresi açman veya oturumu kapatıp açman önerilir." -ForegroundColor Cyan
-}
 
 #endregion

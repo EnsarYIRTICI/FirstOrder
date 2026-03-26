@@ -56,30 +56,6 @@ function Disable-WindowsAutoUpdate {
     }
 }
 
-
-function Create-LocalUser {
-    param (
-        [string]$Fullname = "Misafir",
-        [string]$Username = "misafir",
-        [string]$Password = "1453",
-        [string]$Description = "Misafir Kullanıcı"
-    )
-
-    try {
-        $userExists = Get-LocalUser -Name $Username -ErrorAction SilentlyContinue
-        if ($null -eq $userExists) {
-            New-LocalUser -Name $Username -Password (ConvertTo-SecureString $Password -AsPlainText -Force) -FullName $Fullname -Description $Description | Out-Null
-            Add-LocalGroupMember -Group "Users" -Member $Username | Out-Null
-            Write-Host "'$Username' kullanıcısı başarıyla oluşturuldu."
-        } else {
-            Write-Host "'$Username' kullanıcısı zaten mevcut."
-        }
-    } catch {
-        Write-Host "'$Username' kullanıcısı oluşturulurken bir hata oluştu: $_"
-    }
-}
-
-
 function Enable-DeveloperMode {
     try {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Force | Out-Null

@@ -7,12 +7,6 @@
     "name": "EnsarYIRTICI",
     "email": "ensaryrtc@hotmail.com"
   },
-  // Local kullanıcı bilgileri.
-  "local_user": {
-    "fullname": "Misafir",
-    "username": "misafir",
-    "password": "1453"
-  },
   // Wsl yapılandırması.
   "wsl_config": {
     "wsl2": {
@@ -39,11 +33,14 @@
           "wget",
           "thunderbird",
           "winrar",
+          "7zip",
           "obs-studio",
           "qbittorrent",
           "deluge",
           "steam",
           "epicgameslauncher",
+          "ubisoft-connect",
+          "goggalaxy",
           "discord",
           "slack",
           "zoom",

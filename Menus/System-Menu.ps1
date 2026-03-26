@@ -16,12 +16,6 @@ function System-Menu {
         if (Ask-YesNo "Geliştirici Modu etkinleştirilsin mi?") { Enable-DeveloperMode }
         if (Ask-YesNo "Administrator hesabını etkinleştirmek istiyor musun?") { Enable-AdministratorAccount }
         if (Ask-YesNo "OpenSSH etkinleştirilsin mi?") { Enable-OpenSSHServer }
-
-        $username = $json.local_user.username
-
-        if (Ask-YesNo "'$username' adında bir yerel kullanıcı oluşturmak istiyor musun?") { 
-            Create-LocalUser -Username $username -Fullname $json.local_user.fullname -Password $json.local_user.password -Description $json.local_user.description
-        } 
     }
     elseif ($IsLinux) {
         Write-Host "`nLinux Sistem Ayarları" -ForegroundColor Green

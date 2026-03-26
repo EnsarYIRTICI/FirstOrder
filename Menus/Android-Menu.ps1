@@ -26,7 +26,6 @@ function Android-Menu{
         @{ Label = "Temel SDK paketleri (platform-tools, emulator, platform/build-tools)"; Action = { Invoke-IfExists -Fn 'Android-InstallBasePackages' } },
         @{ Label = "SDK lisanslarını kabul et"; Action = { Invoke-IfExists -Fn 'Android-AcceptLicenses' } },
         @{ Label = "ANDROID_SDK_ROOT / JAVA_HOME / PATH ayarla"; Action = { Invoke-IfExists -Fn 'Android-SetEnvPaths' } },
-        @{ Label = "Hepsini yap (önerilen)"; Action = { Invoke-IfExists -Fn 'Android-DoAll' } }
     )
 
     # Alt menüyü göster
