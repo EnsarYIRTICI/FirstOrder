@@ -38,12 +38,12 @@ $menuItems = @(
     @{ Label = "Dosya Gezgini"; Action = { FileExplorer-Menu } },
     @{ Label = "Sistem"; Action = { System-Menu } },
     @{ Label = "WSL"; Action = { WSL-Menu } },
-    @{ Label = "Hyper-V"; Action = { HyperV-Menu } }
+    @{ Label = "Hyper-V"; Action = { HyperV-Menu } },
     @{ Label = "Paket Yönetimi"; Action = { Package-Menu } },
-    @{ Label = "Git"; Action = { Git-Menu } }
-    @{ Label = "Vscode"; Action = { Vscode-Menu } }
-    @{ Label = "Android"; Action = { Android-Menu } }
-    @{ Label = "PowerShell"; Action = { PowerShell-Menu } },
+    @{ Label = "Git"; Action = { Git-Menu } },
+    @{ Label = "Vscode"; Action = { Vscode-Menu } },
+    @{ Label = "Android"; Action = { Android-Menu } },
+    @{ Label = "PowerShell"; Action = { PowerShell-Menu } }
 )
 
 Show-Menu -MenuItems $menuItems -Title "Ana Menü" # -ClearOnEachLoop # -PauseAfterAction

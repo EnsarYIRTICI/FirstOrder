@@ -87,7 +87,8 @@
           "mysql.workbench",
           "ventoy",
           "nmap",
-          "mobaxterm"
+          "mobaxterm",
+          "qemu-img"
         ],
         "winget": ["Python.Python.3.13"]
       }

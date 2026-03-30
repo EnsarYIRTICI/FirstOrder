@@ -25,7 +25,7 @@ function Android-Menu{
         @{ Label = "Temurin 21 ve 17 kur (17’yi varsayılan yap)"; Action = { Invoke-IfExists -Fn 'Install-Temurin' } },
         @{ Label = "Temel SDK paketleri (platform-tools, emulator, platform/build-tools)"; Action = { Invoke-IfExists -Fn 'Android-InstallBasePackages' } },
         @{ Label = "SDK lisanslarını kabul et"; Action = { Invoke-IfExists -Fn 'Android-AcceptLicenses' } },
-        @{ Label = "ANDROID_SDK_ROOT / JAVA_HOME / PATH ayarla"; Action = { Invoke-IfExists -Fn 'Android-SetEnvPaths' } },
+        @{ Label = "ANDROID_SDK_ROOT / JAVA_HOME / PATH ayarla"; Action = { Invoke-IfExists -Fn 'Android-SetEnvPaths' } }
     )
 
     # Alt menüyü göster
