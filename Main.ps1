@@ -31,15 +31,17 @@ Assert-AdminRights
 . "$scriptDir\Menus\Android-Menu.ps1"
 . "$scriptDir\Menus\WSL-Menu.ps1"
 . "$scriptDir\Menus\HyperV-Menu.ps1"
+. "$scriptDir\Menus\OpenSSH-Menu.ps1"
 
 # == Menü Tanımı ==
 $menuItems = @(
     @{ Label = "Kişiselleştirme"; Action = { Personalize-Menu } },
     @{ Label = "Dosya Gezgini"; Action = { FileExplorer-Menu } },
     @{ Label = "Sistem"; Action = { System-Menu } },
+    @{ Label = "Paket Yönetimi"; Action = { Package-Menu } },
+    @{ Label = "OpenSSH"; Action = { OpenSSH-Menu } },
     @{ Label = "WSL"; Action = { WSL-Menu } },
     @{ Label = "Hyper-V"; Action = { HyperV-Menu } },
-    @{ Label = "Paket Yönetimi"; Action = { Package-Menu } },
     @{ Label = "Git"; Action = { Git-Menu } },
     @{ Label = "Vscode"; Action = { Vscode-Menu } },
     @{ Label = "Android"; Action = { Android-Menu } },
