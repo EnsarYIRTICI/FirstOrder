@@ -1,10 +1,10 @@
 function gitfs {
     param(
-        [string]$M = "fast"
+        [string]$C = "fast"
     )
 
     git add .
-    git commit -m $M
+    git commit -m $C
     git push origin master
 }
 
