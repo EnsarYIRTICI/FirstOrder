@@ -51,8 +51,10 @@ Bu dosya projedeki tum dosya ve klasorleri hiyerarsik olarak gosterir.
 │   ├── Path.ps1
 │   ├── SSH.ps1
 │   ├── Task.ps1
-│   └── Time.ps1
+│   ├── Time.ps1
+│   └── Utils.ps1
 ├── Scripts/
+│   ├── Add-FileHeaders.ps1
 │   └── Project-Structure.ps1
 ├── .gitignore
 ├── Main.ps1
@@ -63,10 +65,10 @@ Bu dosya projedeki tum dosya ve klasorleri hiyerarsik olarak gosterir.
 
 ## Toplam Dosya Sayisi
 
-- Script Dosyalari: 41
+- Script Dosyalari: 43
 - Konfigurasyon Dosyalari: 3
 
 ---
 
 Bu dosya 'Generate-ProjectStructure.ps1' scripti ile otomatik olusturulmustur.
-Son guncelleme: 2026-04-28 21:15:45
+Son guncelleme: 2026-04-28 22:59:02
