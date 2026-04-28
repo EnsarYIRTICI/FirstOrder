@@ -1,3 +1,4 @@
+# Menus\Vscode-Menu.ps1
 . "$scriptDir\Functions\Core\Git.ps1"
 . "$scriptDir\Functions\Core\Vscode.ps1"
 

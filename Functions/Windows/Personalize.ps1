@@ -1,3 +1,4 @@
+# Functions\Windows\Personalize.ps1
 function Set-RegistryDWORD {
     param (
         [string]$Path,

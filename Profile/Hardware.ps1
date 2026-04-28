@@ -1,3 +1,4 @@
+# Profile\Hardware.ps1
 function Set-MouseSpeed {
     [CmdletBinding()]
     param(

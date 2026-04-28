@@ -1,3 +1,4 @@
+# Functions\Core\PowerShell.ps1
 function Set-Profile {
     try {
         # Profil dosyasının olup olmadığını kontrol et, yoksa oluştur

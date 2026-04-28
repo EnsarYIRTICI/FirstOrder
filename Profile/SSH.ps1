@@ -1,3 +1,4 @@
+# Profile\SSH.ps1
 function pubkey {
     $keyPath = "$HOME\.ssh\id_ed25519.pub"
 

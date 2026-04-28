@@ -1,3 +1,4 @@
+# Functions\Windows\FileExplorer.ps1
 function Show-FileExtensions {
     try {
         Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Value 0

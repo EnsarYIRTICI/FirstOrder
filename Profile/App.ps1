@@ -1,4 +1,4 @@
-# Profile/App.ps1
+# Profile\App.ps1
 
 # settings.json'dan app listesini oku
 function Get-Applications {

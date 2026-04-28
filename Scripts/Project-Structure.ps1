@@ -1,3 +1,4 @@
+# Scripts\Project-Structure.ps1
 [CmdletBinding()]
 param(
     # Proje kök dizini (vermezsen script otomatik bulur)

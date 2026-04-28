@@ -1,3 +1,4 @@
+# Profile\Network.ps1
 # Ağ arayüzü için metric değerini 1 olarak ayarlayan yardımcı fonksiyon
 function Up-Metric {
     param(

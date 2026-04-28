@@ -1,3 +1,4 @@
+# Functions\Windows\WSL.ps1
 . "$PSScriptRoot\..\Core\IO.ps1"
 
 function Get-WSLStatus {

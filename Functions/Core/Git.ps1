@@ -1,3 +1,4 @@
+# Functions\Core\Git.ps1
 . "$scriptDir\Functions\Core\IO.ps1"
 . "$scriptDir\Functions\Windows\Package.ps1"
 

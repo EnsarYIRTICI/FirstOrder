@@ -1,3 +1,4 @@
+# Main.ps1
 # == Başlangıç ==
 Write-Host "Script Başlatılıyor..." -ForegroundColor Green
 

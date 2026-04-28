@@ -1,4 +1,4 @@
-# Functions/Windows/HyperV.ps1
+# Functions\Windows\HyperV.ps1
 
 function Resolve-HyperVFeatureName {
     $candidates = @(

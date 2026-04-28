@@ -1,3 +1,4 @@
+# Menus\Personalize-Menu.ps1
 . "$scriptDir\Functions\Windows\System.ps1"
 . "$scriptDir\Functions\Windows\Personalize.ps1"
 . "$scriptDir\Functions\Core\Git.ps1"

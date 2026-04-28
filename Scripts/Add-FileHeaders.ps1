@@ -1,4 +1,4 @@
-# Scripts/Add-FileHeaders.ps1
+# Scripts\Add-FileHeaders.ps1
 
 [CmdletBinding()]
 param(

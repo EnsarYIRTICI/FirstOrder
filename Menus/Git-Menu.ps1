@@ -1,3 +1,4 @@
+# Menus\Git-Menu.ps1
 . "$scriptDir\Functions\Core\Git.ps1"
 
 function Git-Menu {

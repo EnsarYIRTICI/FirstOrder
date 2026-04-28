@@ -1,4 +1,4 @@
-# Menus/HyperV-Menu.ps1
+# Menus\HyperV-Menu.ps1
 
 . "$scriptDir\Functions\Core\IO.ps1"
 . "$scriptDir\Functions\Windows\HyperV.ps1"

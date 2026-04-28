@@ -1,3 +1,4 @@
+# Profile\Git.ps1
 function gitfs {
     param(
         [string]$C = "fast"

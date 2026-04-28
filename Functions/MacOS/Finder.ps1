@@ -1,3 +1,4 @@
+# Functions\MacOS\Finder.ps1
 # macOS Finder (Dosya Gezgini) Ayarları
 
 function Show-HiddenFiles {

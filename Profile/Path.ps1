@@ -1,3 +1,4 @@
+# Profile\Path.ps1
 function Get-UserPath {
     $paths = [Environment]::GetEnvironmentVariable("PATH", "User") -split ";"
 

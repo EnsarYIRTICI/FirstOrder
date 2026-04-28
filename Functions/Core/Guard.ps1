@@ -1,3 +1,4 @@
+# Functions\Core\Guard.ps1
 function Detect-OS {
     if (-not ($IsWindows -or $IsLinux -or $IsMacOS)) {
         try {

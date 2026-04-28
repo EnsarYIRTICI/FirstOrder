@@ -1,3 +1,4 @@
+# Menus\FileExplorer-Menu.ps1
 . "$scriptDir\Functions\Windows\FileExplorer.ps1"
 . "$scriptDir\Functions\MacOS\Finder.ps1"
 
