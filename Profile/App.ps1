@@ -23,8 +23,7 @@ function Get-Applications {
     return $result
 }
 
-$Applications = Get-Applications
-
+$global:Applications = Get-Applications
 
 # Ortak: app adı seçtir ya da -List ile listele
 function Resolve-AppName {
@@ -149,6 +148,30 @@ function xtn {
         }
 
         wt -w 0 nt -d $targetDir
+    }
+    else {
+        Write-Host "Bu fonksiyon sadece Windows üzerinde çalışır." -ForegroundColor Red
+    }
+}
+
+function xte {
+    param(
+        [string]$N,
+        [switch]$List
+    )
+
+    if ($IsWindows) {
+        Ensure-TerminalReady
+
+        $targetDir = (Get-Location).Path
+
+        if ($N -or $List) {
+            $appName = Resolve-AppName -N $N -List:$List
+            if (-not $appName) { return }
+            $targetDir = $Applications[$appName]
+        }
+
+        wt -w new -d $targetDir
     }
     else {
         Write-Host "Bu fonksiyon sadece Windows üzerinde çalışır." -ForegroundColor Red
