@@ -21,6 +21,10 @@
     "vm_path": "D:\\HyperV\\VMs",
     "vhd_path": "D:\\HyperV\\VHDs"
   },
+  "apps": {
+    "FirstOrder": "repo\\powershell\\FirstOrder",
+    "Ssh": ".ssh"
+  },
   "packages": {
     // Windows Paketleri
     "windows": {
@@ -28,6 +32,9 @@
       "common": {
         "chocolatey": [
           "googlechrome",
+          "brave",
+          "firefox",
+          "tor-browser",
           "pwsh",
           "git",
           "wget",
@@ -44,10 +51,9 @@
           "discord",
           "slack",
           "zoom",
-          "tor-browser",
-          "firefox",
           "cpu-z",
           "crystaldiskmark",
+          "anydesk",
           "lghub",
           "itunes"
         ],

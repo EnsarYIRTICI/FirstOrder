@@ -1,23 +1,40 @@
-# Kullanıcı dizinini dinamik al
-$UserHome = $HOME  # PowerShell 7'de Windows/Linux/macOS hepsinde çalışır
+# Profile/App.ps1
 
-# Uygulama yollarını dinamik tanımla
-$Applications = @{
-    "FirstOrder" = Join-Path $UserHome 'repo\powershell\FirstOrder'
-    "SshConfig"  = Join-Path $UserHome '.ssh'
+# settings.json'dan app listesini oku
+function Get-Applications {
+    $settingsPath = Join-Path $HOME 'repo\powershell\FirstOrder\settings.json'
+
+    if (-not (Test-Path $settingsPath)) {
+        Write-Warning "settings.json bulunamadı: $settingsPath"
+        return @{}
+    }
+
+    $json = Get-Content $settingsPath -Raw | ConvertFrom-Json -AsHashtable
+
+    if (-not $json.ContainsKey('apps')) {
+        Write-Warning "settings.json içinde 'apps' bloğu bulunamadı."
+        return @{}
+    }
+
+    $result = @{}
+    foreach ($key in $json['apps'].Keys) {
+        $result[$key] = Join-Path $HOME $json['apps'][$key]
+    }
+
+    return $result
 }
+
+$Applications = Get-Applications
 
 
 function xsh {
-    param(
-        [string]$N = "FirstOrder"
-    )
+    param([string]$N = "FirstOrder")
 
     if ($IsWindows) {
         Ensure-TerminalReady
 
         if ($Applications.ContainsKey($N)) {
-            $appPath = $Applications[$N]
+            $appPath   = $Applications[$N]
             $scriptPath = Join-Path $appPath "Main.ps1"
 
             if (-not (Test-Path $scriptPath)) {
@@ -26,8 +43,8 @@ function xsh {
             }
 
             Start-Process wt.exe -Verb RunAs -ArgumentList "pwsh `"$scriptPath`""
-
-        } else {
+        }
+        else {
             Write-Host "Uygulama bulunamadı: $N" -ForegroundColor Red
         }
     }
@@ -37,9 +54,7 @@ function xsh {
 }
 
 function xvs {
-    param(
-        [string]$N = "FirstOrder"
-    )
+    param([string]$N = "FirstOrder")
 
     Ensure-VscodeReady
 
@@ -52,12 +67,10 @@ function xvs {
 }
 
 function xt {
-    param(
-        [string]$N = "FirstOrder"
-    )
+    param([string]$N = "FirstOrder")
 
     if ($Applications.ContainsKey($N)) {
-        cd $Applications[$N]
+        Set-Location $Applications[$N]
     }
     else {
         Write-Host "Uygulama bulunamadı: $N" -ForegroundColor Red
@@ -67,36 +80,27 @@ function xt {
 function xtn {
     if ($IsWindows) {
         Ensure-TerminalReady
-
         wt -w 0 nt -d .
-        
     }
     else {
         Write-Host "Bu fonksiyon sadece Windows üzerinde çalışır." -ForegroundColor Red
     }
 }
 
-
 function Ensure-TerminalReady {
-    $pwshPath = Get-Command pwsh -ErrorAction SilentlyContinue
-    $wtPath = Get-Command wt -ErrorAction SilentlyContinue
-
-    if (-not $pwshPath) {
-        Write-Error "pwsh (PowerShell 7) yüklü değil veya sistem PATH'inde değil."
+    if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
+        Write-Error "pwsh (PowerShell 7) yüklü değil veya PATH'de değil."
         return
     }
-
-    if (-not $wtPath) {
-        Write-Error "wt (Windows Terminal) yüklü değil veya sistem PATH'inde değil."
+    if (-not (Get-Command wt -ErrorAction SilentlyContinue)) {
+        Write-Error "wt (Windows Terminal) yüklü değil veya PATH'de değil."
         return
     }
 }
 
 function Ensure-VscodeReady {
-    $vscodePath = Get-Command code -ErrorAction SilentlyContinue
-
-    if (-not $vscodePath) {
-        Write-Error "VSCode yüklü değil veya sistem PATH'inde değil."
+    if (-not (Get-Command code -ErrorAction SilentlyContinue)) {
+        Write-Error "VSCode yüklü değil veya PATH'de değil."
         return
     }
 }
