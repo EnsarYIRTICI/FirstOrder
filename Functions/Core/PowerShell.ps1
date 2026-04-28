@@ -10,46 +10,40 @@ function Set-Profile {
         # Script dosyalarının olduğu dizini belirle
         $profileDir = Join-Path -Path $scriptDir -ChildPath "Profile"
 
-        # Boş bir dizi oluştur
-        $profileScripts = @()
-
         # Profile dizini varsa, içindeki .ps1 dosyalarını al
-        if (Test-Path -Path $profileDir) {
-            $ps1Files = Get-ChildItem -Path $profileDir -Filter "*.ps1" -File
-            foreach ($file in $ps1Files) {
-                # Dosya yolunu profileScripts dizisine ekle
-                $profileScripts += $file.FullName
-            }
-        } else {
+        if (-not (Test-Path -Path $profileDir)) {
             Write-Host "Profile klasörü bulunamadı: $profileDir"
             return
         }
 
-        # Profile dizisindeki script dosyalarını eklemek için kod satırını oluştur
+        $profileScripts = Get-ChildItem -Path $profileDir -Filter "*.ps1" -File |
+            Select-Object -ExpandProperty FullName
+
+        # profileScripts satırını oluştur
         $i = 1
-        $lineToAdd = '$profileScripts = @(' + ($profileScripts | ForEach-Object -Begin { $first = $true } { 
-                if ($i -eq $profileScripts.Count) {
-                    "`"$($_)`""  # Son öğe, virgül yok
-                } else {
-                    "`"$($_)`","  # Diğer öğelere virgül ekle
-                }
-                $i++
-            })
-        $lineToAdd += ') | ForEach-Object { . $_ }'
+        $lineToAdd = '$profileScripts = @(' + ($profileScripts | ForEach-Object {
+            if ($i -eq $profileScripts.Count) { "`"$_`"" } else { "`"$_`"," }
+            $i++
+        }) + ') | ForEach-Object { . $_ }'
+
+        # $global:FirstOrderPath satırını oluştur
+        $firstOrderLine = "`$global:FirstOrderPath = `"$scriptDir`""
 
         # Profil içeriğini oku
-        $profileContent = Get-Content -Path $PROFILE
+        $profileContent = Get-Content -Path $PROFILE -ErrorAction SilentlyContinue
 
-        # Eski $profileScripts tanımını kaldır
-        $cleanedContent = $profileContent | Where-Object {$_ -notmatch '^\$profileScripts\s*=' }
+        # Eski satırları temizle
+        $cleanedContent = $profileContent |
+            Where-Object { $_ -notmatch '^\$profileScripts\s*=' } |
+            Where-Object { $_ -notmatch '^\$global:FirstOrderPath\s*=' }
 
-        # Yeni içerik oluştur
-        $newContent = $cleanedContent + "`n" + $lineToAdd
+        # $global:FirstOrderPath en üste, profileScripts en alta
+        $newContent = @($firstOrderLine) + $cleanedContent + $lineToAdd
 
         # Dosyayı yeniden yaz
         Set-Content -Path $PROFILE -Value $newContent
 
-        Write-Host "Script dosyaları profil dosyasına yeniden eklendi."
+        Write-Host "Profil güncellendi: $PROFILE"
     } catch {
         Write-Host "Profile yükleme sırasında bir hata oluştu: $_"
     }
