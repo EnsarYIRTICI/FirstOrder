@@ -7,7 +7,7 @@ function Vscode-Menu{
     if ($IsWindows){
         Write-Host "`nWindows Git Ayarları" -ForegroundColor Green
 
-        $vscodeInstalled = Check-ChocoInstalled
+        $vscodeInstalled = Check-VscodeInstalled
 
         if (-not $vscodeInstalled) {
             if (Ask-YesNo "Visual Studio Code yüklü değil. Chocolatey ile yüklemek ister misiniz?") { Install-VscodeWithChoco }

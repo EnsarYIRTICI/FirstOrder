@@ -1,7 +1,7 @@
 # Profile\App.ps1
 
 function Get-Applications {
-    $settingsPath = Join-Path $HOME 'repo\powershell\FirstOrder\settings.json'
+    $settingsPath = Join-Path $global:FirstOrderPath 'settings.json'
 
     if (-not (Test-Path $settingsPath)) {
         Write-Warning "settings.json bulunamadı: $settingsPath"

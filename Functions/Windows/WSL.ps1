@@ -1,5 +1,5 @@
 # Functions\Windows\WSL.ps1
-. "$PSScriptRoot\..\Core\IO.ps1"
+. "$scriptDir\Functions\Core\IO.ps1"
 
 function Get-WSLStatus {
     $wslCmd = Get-Command wsl -ErrorAction SilentlyContinue
