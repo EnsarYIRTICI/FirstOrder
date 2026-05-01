@@ -1,8 +1,27 @@
 # Profile\Docker.ps1
+
 function dcu {
-    docker-compose up -d --build
+    param (
+        [switch]$dev
+    )
+
+    if ($dev) {
+        docker compose -f .\docker-compose-dev.yml up -d --build
+    }
+    else {
+        docker compose up -d --build
+    }
 }
 
 function dcd {
-    docker-compose down
+    param (
+        [switch]$dev
+    )
+
+    if ($dev) {
+        docker compose -f .\docker-compose-dev.yml down
+    }
+    else {
+        docker compose down
+    }
 }
