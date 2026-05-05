@@ -17,7 +17,7 @@ function Detect-OS {
 
 function Assert-AdminRights {
     if ($IsWindows) {
-        $IsAdmin = [Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544'
+        $IsAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
         if (-not $IsAdmin) {
             Write-Host "Bu script'in Windows'ta yönetici olarak çalıştırılması gerekiyor!" -ForegroundColor Red
             Exit 1
