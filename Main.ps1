@@ -28,7 +28,6 @@ Assert-AdminRights
 . "$scriptDir\Menus\FileExplorer-Menu.ps1"
 . "$scriptDir\Menus\Package-Menu.ps1"
 . "$scriptDir\Menus\Git-Menu.ps1"
-. "$scriptDir\Menus\Vscode-Menu.ps1"
 . "$scriptDir\Menus\WSL-Menu.ps1"
 . "$scriptDir\Menus\HyperV-Menu.ps1"
 . "$scriptDir\Menus\OpenSSH-Menu.ps1"
@@ -43,7 +42,6 @@ $menuItems = @(
     @{ Label = "WSL"; Action = { WSL-Menu } },
     @{ Label = "Hyper-V"; Action = { HyperV-Menu } },
     @{ Label = "Git"; Action = { Git-Menu } },
-    @{ Label = "Vscode"; Action = { Vscode-Menu } },
     @{ Label = "PowerShell"; Action = { PowerShell-Menu } }
 )
 
