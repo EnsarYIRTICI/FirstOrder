@@ -44,6 +44,8 @@
           "obs-studio",
           "qbittorrent",
           "deluge",
+          "picotorrent",
+          "tribler",
           "steam",
           "epicgameslauncher",
           "ubisoft-connect",
