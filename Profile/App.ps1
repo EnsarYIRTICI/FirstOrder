@@ -130,7 +130,7 @@ function xt {
     Set-Location $Applications[$appName]
 }
 
-function xtn {
+function xti {
     param(
         [string]$N,
         [switch]$List
