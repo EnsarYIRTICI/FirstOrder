@@ -48,7 +48,6 @@
           "tribler",
           "steam",
           "epicgameslauncher",
-          "ubisoft-connect",
           "goggalaxy",
           "discord",
           "slack",
@@ -59,7 +58,9 @@
           "lghub",
           "itunes",
           "notepadplusplus",
-          "sharex"
+          "sharex",
+          "exiftool",
+          "geforce-experience"
         ],
         "winget": [
           "WhatsApp",
