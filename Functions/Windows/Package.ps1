@@ -14,9 +14,23 @@ function Install-ChocoPackages {
 
     Write-Host "Kurulacak paketler: $chocoPackages"
 
+    $logFile = "$scriptDir\Logs\choco-errors.log"
+    New-Item -ItemType Directory -Force -Path "$scriptDir\Logs" | Out-Null
+
     foreach ($pkg in $chocoPackages) {
         Write-Host "Kuruluyor: $pkg"
-        choco install $pkg --ignore-checksums -y
+        try {
+            $output = choco install $pkg -y 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                $msg = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] HATA - $pkg (exit code: $LASTEXITCODE)`n$output"
+                Add-Content -Path $logFile -Value $msg
+                Write-Host "HATA: $pkg kurulamadı. Detaylar: $logFile"
+            }
+        } catch {
+            $msg = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] EXCEPTION - $pkg`n$_"
+            Add-Content -Path $logFile -Value $msg
+            Write-Host "HATA: $pkg - $_"
+        }
     }
 }
 
@@ -33,9 +47,23 @@ function Install-WingetPackages {
 
     Write-Host "Kurulacak paketler: $wingetPackages"
 
+    $logFile = "$scriptDir\Logs\winget-errors.log"
+    New-Item -ItemType Directory -Force -Path "$scriptDir\Logs" | Out-Null
+
     foreach ($pkg in $wingetPackages) {
         Write-Host "Kuruluyor: $pkg"
-        winget install --id $pkg --accept-package-agreements --accept-source-agreements
+        try {
+            $output = winget install --id $pkg --accept-package-agreements --accept-source-agreements 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                $msg = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] HATA - $pkg (exit code: $LASTEXITCODE)`n$output"
+                Add-Content -Path $logFile -Value $msg
+                Write-Host "HATA: $pkg kurulamadı. Detaylar: $logFile"
+            }
+        } catch {
+            $msg = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] EXCEPTION - $pkg`n$_"
+            Add-Content -Path $logFile -Value $msg
+            Write-Host "HATA: $pkg - $_"
+        }
     }
 }
 
