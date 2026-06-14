@@ -18,8 +18,8 @@
     }
   },
   "hyperv": {
-    "vm_path": "D:\\HyperV\\VMs",
-    "vhd_path": "D:\\HyperV\\VHDs"
+    "vm_path": "C:\\Users\\ensar\\MyFilesX\\Hyper-V\\Virtual Machines",
+    "vhd_path": "C:\\Users\\ensar\\MyFilesX\\Hyper-V\\Virtual Hard Disks"
   },
   "apps": {
     "FirstOrder": "repo\\powershell\\FirstOrder",
@@ -59,14 +59,12 @@
           "itunes",
           "notepadplusplus",
           "sharex",
-          "exiftool",
           "geforce-experience"
         ],
         "winget": [
           "WhatsApp",
           "Telegram.TelegramDesktop",
           "Microsoft.WindowsTerminal",
-          "9PP9GZM2GN26", // Intel Unison
           "9WZDNCRFJ3P2", // Movies & TV
           "9NVMNJCR03XV" // MSI Center
         ]
@@ -101,9 +99,16 @@
           "ventoy",
           "nmap",
           "mobaxterm",
-          "qemu-img"
+          "qemu-img",
+          "everything",
+          "exiftool"
         ],
-        "winget": ["Python.Python.3.13"]
+        "winget": [
+          "Python.Python.3.13",
+          "Microsoft.PowerToys",
+          "Microsoft.CoreUtils",
+          "Microsoft.DotNet.SDK.9"
+        ]
       }
     },
     // Linux Paketleri
