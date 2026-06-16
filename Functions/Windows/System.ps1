@@ -86,3 +86,17 @@ function Is-DeveloperModeEnabled {
     }
 }
 
+function Expand-PathLimit {
+    try {
+        $regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
+        $currentPath = (Get-ItemProperty -Path $regPath -Name Path).Path
+
+        Set-ItemProperty -Path $regPath -Name "Path" -Value $currentPath -Type ExpandString
+
+        [System.Environment]::SetEnvironmentVariable("Path", $currentPath, "Machine")
+
+        Write-Host "PATH limiti genişletildi (ExpandString olarak ayarlandı)." -ForegroundColor Green
+    } catch {
+        Write-Host "PATH limiti genişletilirken hata oluştu: $_" -ForegroundColor Red
+    }
+}

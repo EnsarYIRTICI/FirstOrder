@@ -101,7 +101,16 @@
           "mobaxterm",
           "qemu-img",
           "everything",
-          "exiftool"
+          "exiftool",
+          "blender",
+          "freecad",
+          "monngo-compass",
+          "burp-suite-free-edition",
+          "bat",
+          "fzf",
+          "ripgrep",
+          "sysinternals",
+          "gpg4win"
         ],
         "winget": [
           "Python.Python.3.13",
